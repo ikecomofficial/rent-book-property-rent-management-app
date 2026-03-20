@@ -1,0 +1,255 @@
+<resources>
+    <string name="app_name3">Rent Book - Rent Property Manager</string>
+
+    <string name="app_name">RN Rental</string>
+    <string name="app_name1">Rentify - Room Rent Management</string>
+
+
+    <!-- Main Activity Strings -->
+    <string name="text_welcome">Welcome Back,</string>
+    <string name="text_value_name">Rahul Kumar</string>
+    <string name="text_occupancy">Occupancy</string>
+    <string name="text_some_percentage">0%</string>
+
+    <string name="text_label_rooms_cap">ROOMS</string>
+    <string name="text_label_shops_cap">SHOPS</string>
+
+    <string name="text_label_collections">Collections</string>
+    <string name="text_sub_rent_elc">Rent &amp; E-Bill</string>
+    <string name="text_label_view_summary_long">View Rent &amp; E-Bill Summary</string>
+    <string name="text_label_view_summary">View Summary</string>
+    <string name="text_value_month_year">Jan 2025</string>
+    <string name="text_total_collected">Total Collected</string>
+    <string name="text_value_amount">₹ 2,500</string>
+    <string name="text_properties">Properties</string>
+    <string name="text_add_property">Add Property</string>
+    <string name="text_elc_meter_readings">Electricity Meter Readings</string>
+
+    <string name="text_no_properties_added_yet">No properties added yet.</string>
+    <string name="text_start_managing_desc">Start managing your\nproperties by adding your\nfirst one!</string>
+    <string name="text_add_first_property">Add Your First Property</string>
+
+    <string name="text_image_desc">TODO</string>
+
+    <!-- Single Property Layout Texts -->
+    <string name="text_property_name">Property Name</string>
+    <string name="text_value_city">New Delhi</string>
+    <string name="text_rooms">Rooms: </string>
+    <string name="text_shops">Shops: </string>
+    <string name="text_slash">/</string>
+
+    <!-- Single Activity Log Layout Texts -->
+    <string name="text_activity_log_title">Rent Recorded</string>
+    <string name="text_activity_log_desc">₹2,801 rent added for Room 01 at Demo Property.</string>
+
+    <!-- Login Screen Texts -->
+    <string name="text_login_subheading">Sign in to manage your properties</string>
+    <string name="text_label_mobile_no">Mobile Number</string>
+    <string name="text_country_code_in">+91</string>
+    <string name="text_hint_mobile_no">e.g. 9876543210</string>
+    <string name="text_hint_mob_no_10">Enter 10-digit Number</string>
+    <string name="text_hint_enter_code">Enter OTP</string>
+    <string name="text_btn_req_otp">Request OTP</string>
+    <string name="text_btn_verify_otp">Verify OTP</string>
+    <string name="text_or">OR</string>
+    <string name="text_btn_sign_with_google">Sign In With Google</string>
+
+    <string name="text_login_terms1">By continuing, you agree to our</string>
+    <string name="text_login_terms2">Terms of Service</string>
+    <string name="text_login_terms3">and</string>
+    <string name="text_login_terms4">Privacy Policy.</string>
+
+    <!-- Account Setting Strings -->
+    <string name="text_account_setting">Account Setting</string>
+    <string name="text_user_info">User Information</string>
+    <string name="text_hint_user_name">Enter User Name</string>
+    <string name="text_owner">Owner</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_update">Update</string>
+    <string name="text_label_mobile_cap">MOBILE</string>
+    <string name="text_label_email_cap">E-MAIL</string>
+    <string name="text_any_number">0</string>
+    <string name="text_value_email">rahulraj82@gmail.com</string>
+
+    <string name="text_support_info">Support &amp; Info</string>
+    <string name="text_contact_support">Contact Support</string>
+    <string name="text_get_assist">Get assistance with your account</string>
+    <string name="text_about_app">About App</string>
+    <string name="text_version_full">Version 1.1.0</string>
+    <string name="text_version">v1.1.2</string>
+    <string name="text_btn_logout">Logout</string>
+    <string name="text_rentify_copyright">Rentify: Rent Manager App © 2024</string>
+
+    <!-- Monthly Collections Activity Screen Strings -->
+    <string name="text_label_total_coll_cap">TOTAL COLLECTIONS</string>
+    <string name="text_rent_colon">Rent:</string>
+    <string name="text_power_colon">Power:</string>
+
+
+    <!-- Property Details Activity Screen Strings -->
+    <string name="text_toolbar_property_details">Property Details</string>
+
+    <string name="text_label_overview">Dashboard Overview</string>
+    <string name="text_label_rent_coll_cap">RENT COLLECTED</string>
+    <string name="text_label_elc_bill_cap">ELEC. BILL</string>
+    <string name="text_label_consumed_cap">CONSUMED</string>
+
+    <string name="text_total">Total</string>
+    <string name="text_occupied">Occupied</string>
+    <string name="text_collected">Collected</string>
+    <string name="text_label_rooms_shops">Rooms &amp; Shops</string>
+
+    <string name="text_menu_edit_property">Edit Property</string>
+    <string name="text_menu_delete_property">Delete Property</string>
+
+    <!-- Single Room Layout Texts -->
+    <string name="text_room_01">Room 01</string>
+    <string name="text_vacant">Vacant</string>
+    <string name="text_rupee_symbol">₹</string>
+    <string name="text_value_mobile_no">9876543210</string>
+    <string name="text_meter_cap">METER</string>
+
+    <string name="text_no_tenant_added">No Tenant Added</string>
+    <string name="text_clk_add_tenant">Click (Add Tenant)</string>
+
+    <!-- Add & Edit Property Screen Strings -->
+    <string name="text_toolbar_add_new_prop">Add New Property</string>
+    <string name="text_toolbar_edit_prop_details">Edit Property Details</string>
+    <string name="text_label_prop_details_cap">PROPERTY DETAILS</string>
+    <string name="text_hint_property_name">e.g., Sunset Apartments</string>
+    <string name="text_label_address">Address</string>
+    <string name="text_hint_address">e.g. Dwarka, New Delhi</string>
+
+    <string name="text_label_configuration_cap">CONFIGURATION</string>
+    <string name="text_label_total_rooms">Total Rooms</string>
+    <string name="text_label_total_shops">Total Shops</string>
+
+    <string name="text_label_financial_cap">FINANCIALS</string>
+    <string name="text_label_base_rent">Base Rent</string>
+    <string name="text_hint_base_rent_amount">e.g. ₹ 2,500</string>
+    <string name="text_label_elc_unit_rent">Electricity Unit Rate</string>
+    <string name="text_hint_elc_unit">e.g. ₹7/unit</string>
+
+    <string name="text_btn_create_property">Create Property</string>
+    <string name="text_btn_update_property">Update Property</string>
+
+    <!-- Room Details Activity Screen Strings -->
+    <string name="text_tenant_info">Tenant Information</string>
+    <string name="text_start_colon">Start:</string>
+    <string name="text_end_colon">End:</string>
+    <string name="text_na">N/A</string>
+    <string name="text_value_date">31 Mar 2025</string>
+    <string name="text_view_profile">View Profile</string>
+    <string name="text_view_past_tenant">View Past Tenant</string>
+    <string name="text_tab_room_rents">Room Rents</string>
+    <string name="text_tab_elc_bills">Electricity Bills</string>
+
+    <string name="text_action_btn_add_rent">Add Rent</string>
+    <string name="text_action_btn_add_elc_bill">Add Electricity Bill</string>
+
+    <string name="text_menu_edit_room">Edit Room</string>
+    <string name="text_menu_edit_shop">Edit Shop</string>
+    <string name="text_menu_edit_tenant">Edit Tenant</string>
+    <string name="text_menu_remove_tenant">Remove Tenant</string>
+
+    <!-- Single Rent & E-Bill Activity Screens Strings -->
+    <string name="text_value_rent_interval">03 Dec - 02 Jan</string>
+    <string name="text_value_date_time">31 Dec 2025, 10:16 PM</string>
+    <string name="text_symbol_plus">+</string>
+    <string name="text_units">units</string>
+    <string name="text_paid_till_colon">Paid Till:</string>
+
+    <!-- Rent & E-Bill Fragment No Record Layout Activity Screens Strings -->
+    <string name="text_heading_no_rent_record">No Rent Record</string>
+    <string name="text_heading_no_elc_bill_record">No Electricity Bill Record</string>
+    <string name="text_btn_add_first_rent_record">Add First Rent Record</string>
+    <string name="text_sub_no_rent_record">Start Managing Rent Payments for this Room.</string>
+    <string name="text_sub_no_elc_bill_record">Start Managing Electricity Bill Records for this Room.</string>
+    <string name="text_btn_add_first_elc_bill_record">Add First E-Bill Record</string>
+
+
+    <!-- Add Rent & Elc Bill Activity Screen Strings -->
+    <string name="text_label_rent_month_cap">RENT MONTH</string>
+    <string name="text_change">Change</string>
+    <string name="text_label_rent_details">RENT DETAILS</string>
+    <string name="text_label_rent_paid">Rent Paid</string>
+    <string name="text_label_payment_mode">Payment Mode</string>
+    <string name="text_cash">Cash</string>
+    <string name="text_online">Online</string>
+    <string name="text_label_payment_date_time_cap">PAYMENT DATE &amp; TIME</string>
+    <string name="text_value_time">10:00 AM</string>
+    <string name="text_btn_add_rent_record">Add Rent Record</string>
+
+    <string name="text_label_ebill_month_cap">E-BILL MONTH</string>    <!-- Add Ebill String Starts here -->
+    <string name="text_label_ebill_details_cap">E-BILL DETAILS</string>
+    <string name="text_label_billing_mode">Billing Mode</string>
+    <string name="text_toggle_enter_units">Enter Units</string>
+    <string name="text_toggle_enter_amount">Enter Amount</string>
+
+    <string name="text_label_last_paid_colon">Last Paid:</string>
+    <string name="text_label_curr_meter_reading">Current Meter Reading</string>
+    <string name="text_hint_curr_meter_unit">Enter Current Meter Unit</string>
+    <string name="text_label_ebill_amount_paid">E-Bill Amount Paid</string>
+    <string name="text_hint_ebill_amount_paid">Enter Amount Paid for Electricity</string>
+    <string name="text_label_last_paid_reading">Last Paid Meter Reading</string>
+    <string name="text_hint_last_paid_reading">Enter last Paid Unit</string>
+    <string name="text_btn_add_ebill_record">Add E-Bill Record</string>
+
+    <!-- Add & Edit Tenant Screen Strings -->
+    <string name="text_toolbar_edit_tenant_details">Edit Tenant Details</string>
+    <string name="text_label_tenant_details_cap">TENANT DETAILS</string>
+    <string name="text_label_tenant_name">Tenant Name</string>
+    <string name="text_hint_tenant_name">Enter Full Name</string>
+    <string name="text_hint_10_digit_no">Enter 10-digit Number</string>
+    <string name="text_btn_add_tenant">Add Tenant</string>
+    <string name="text_btn_add_first_tenant">Add First Tenant</string>
+    <string name="text_btn_update_tenant">Update Tenant</string>
+
+    <!-- Edit Room Screen Strings -->
+    <string name="text_toolbar_edit_room_details">Edit Room Details</string>
+    <string name="text_btn_update_room">Update Room</string>
+
+    <!-- View All Past Tenant & Single Tenant List Screen Strings -->
+    <string name="text_tenant_history">Tenant History</string>
+
+    <string name="text_heading_no_tenant_history">No Tenant History</string>
+    <string name="text_sub_no_tenant_history">The Room Has Not Been Assigned to Any Tenant Yet.</string>
+    <string name="text_sub_list_all_tenants">List of all tenants assigned to this room</string>
+
+    <!-- Bottom Sheet - Contact Tenant & Dialog Screen Strings -->
+    <string name="text_label_contact_tenant">Contact Tenant</string>
+    <string name="text_label_sub_contact_tenant">Choose How You Want to Connect.</string>
+    <string name="text_call_now">Call Now</string>
+    <string name="text_msg_via_wa">Message Via WhatsApp</string>
+    <string name="text_copy_no">Copy Number</string>
+
+    <string name="text_dialog_uploading_file">Uploading File…</string>
+    <string name="text_sub_being_uploading">Your file is being uploaded…</string>
+    <string name="text_sub_finalizing_upload">Finalizing Your Upload…</string>
+
+    <!-- Tenant Details Activity Screen Strings -->
+    <string name="text_toolbar_tenant_details">Tenant Details</string>
+    <string name="text_label_tenancy_details">Tenancy Details</string>
+    <string name="text_label_tenancy_start">Tenancy Start</string>
+    <string name="text_label_tenancy_end">Tenancy End</string>
+    <string name="text_active">Active</string>
+    <string name="text_contact_tenant">Contact Tenant</string>
+    <string name="text_value_prop_name">Sunset, Room 01</string>
+    <string name="text_value_call_wa">Call Or WhatsApp</string>
+    <string name="text_value_billing_start">1st Of Every Month</string>
+    <string name="text_billing_start_day">Billing Start Day</string>
+    <string name="text_label_files_attachments">Files &amp; Attachments</string>
+    <string name="text_documents">Documents</string>
+    <string name="text_add_image">Add Image</string>
+    <string name="text_value_doc_name">Lease Agreement</string>
+
+    <!-- Tenant Details Activity Screen Strings -->
+    <string name="text_toolbar_prop_collections">Properties Collections</string>
+    <string name="text_label_monthly_collections">Monthly Collections</string>
+
+    <string name="text_heading_no_monthly_collection">No Collections Yet</string>
+    <string name="text_sub_no_monthly_collection">Start Tracking Monthly Rent &amp; Electricity Bills for Properties.</string>
+
+
+    <!-- Done Till Here -->
+</resources>

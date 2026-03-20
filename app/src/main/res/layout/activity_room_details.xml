@@ -1,0 +1,334 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_app_surface">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="16sp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_tenant_info"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50" />
+
+        <!-- Status Chip -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardRoomOccupancy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#DCFCE7">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="4dp">
+
+                <!-- Inner Dot -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dotRoomOccupancy"
+                    android:layout_width="11dp"
+                    android:layout_height="11dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="@color/status_occupied"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="0dp" />
+
+                <TextView
+                    android:id="@+id/tvRoomStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/text_occupied"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#16A34A"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16sp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_dashboard_card"
+        app:cardBackgroundColor="@color/bg_dashboard_card">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Top Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Profile Image -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_tenant_profile_default"
+                    android:scaleType="centerCrop" />
+
+                <!-- Name & Phone -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:id="@+id/tvTenantName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_name"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#1C1C1C" />
+
+                    <TextView
+                        android:id="@+id/tvTenantPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_mobile_no"
+                        android:textSize="14sp"
+                        android:textColor="#6E6E6E" />
+
+                </LinearLayout>
+
+                <!-- Call Button -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnContact"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="1dp"
+                    app:strokeWidth="1dp"
+                    android:layout_margin="2dp"
+                    app:strokeColor="@color/border_dashboard_card"
+                    android:backgroundTint="@color/bg_list_layout_primary">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/text_image_desc"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_contact_tenant"
+                        app:tint="@color/icon_primary" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/light_separator" />
+
+            <!-- Bottom Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@string/text_image_desc"
+                    android:src="@drawable/ic_calendar_month"
+                    app:tint="@color/icon_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_start_colon"
+                    android:textSize="14sp"
+                    android:textColor="#1C1C1C"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_value_date"
+                    android:textSize="14sp"
+                    android:textColor="#1C1C1C" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/layoutViewTenantProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_view_profile"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_main" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_exp_arrow_right"
+                            app:tint="@color/icon_primary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutViewPastTenant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_view_past_tenant"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_main" />
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_exp_arrow_right"
+                            app:tint="@color/icon_primary" />
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- TabLayout with tab items -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/rentTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorHeight="4dp"
+        app:tabBackground="@color/bg_app_surface"
+        app:tabSelectedTextColor="@color/primary_main"
+        app:tabIndicatorColor="@color/primary_main"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        android:layout_marginTop="10dp"
+        style="@style/Widget.MaterialComponents.TabLayout"
+        app:tabTextAppearance="@style/TabItemTextStyle">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_rents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_tab_room_rents"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_bills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_tab_elc_bills" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- ViewPager -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/rentViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="8dp"/>
+
+        <!-- Add Tenant FAB (TOP) -->
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabAddTenant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_btn_add_tenant"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_add_user"
+            app:iconTint="@color/white"
+            android:backgroundTint="@color/primary_main"
+            app:iconPadding="8dp"
+            app:iconGravity="start"
+
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp" />
+
+
+        <!-- Speed Dial FAB (BOTTOM) -->
+        <com.leinardi.android.speeddial.SpeedDialView
+            android:id="@+id/fabAddRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+
+            app:sdMainFabOpenedSrc="@drawable/ic_input_minus"
+            app:sdMainFabClosedSrc="@drawable/ic_add_rec_receipt"
+            app:sdMainFabClosedBackgroundColor="@color/primary_main"
+            app:sdMainFabOpenedBackgroundColor="@color/primary_main"
+            app:sdMainFabClosedIconColor="@color/white"
+            app:sdMainFabOpenedIconColor="@color/white" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

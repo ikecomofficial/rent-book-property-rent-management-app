@@ -1,0 +1,12 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/bg_info_container" />
+    <corners android:radius="20dp" />
+
+    <!-- Shiny stroke -->
+    <stroke
+        android:width="0.7dp"
+        android:color="@color/border_info_container" />
+
+</shape>

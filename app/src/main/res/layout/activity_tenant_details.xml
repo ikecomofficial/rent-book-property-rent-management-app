@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_app_surface"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/bg_app_surface">
+
+        <!-- Tenant Information -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_tenant_info"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_muted" />
+
+        <!-- Profile Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            android:layout_marginTop="12sp"
+            app:strokeColor="@color/border_list_layout_primary"
+            app:cardBackgroundColor="@color/bg_list_layout_primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16sp"
+                android:paddingTop="16sp"
+                android:paddingBottom="20dp"
+                android:gravity="center_horizontal">
+
+                <!-- Avatar -->
+                <FrameLayout
+                    android:layout_width="160dp"
+                    android:layout_height="160dp">
+
+                    <!-- Profile Image -->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/cimgTenantProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_tenant_profile_default" />
+
+                    <!-- Verified Tick -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/btnChangeTenantProfile"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="2dp"
+                        android:layout_margin="3dp"
+                        app:strokeColor="@color/white"
+                        app:cardBackgroundColor="@color/bg_btn_call_blue_faded"
+                        android:layout_gravity="bottom|end">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_edit_pencil"
+                            app:tint="@color/icon_primary"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvTenantName"
+                    android:text="@string/text_value_name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/text_heading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvTenantPhone"
+                    android:text="@string/text_value_mobile_no"
+                    android:textSize="14sp"
+                    android:textColor="@color/grey_500"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16sp"
+                    android:layout_marginVertical="4dp"/>
+
+                <!-- Mobile -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/layoutUserMobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/border_info_container"
+                    app:cardBackgroundColor="@color/bg_info_container">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp">
+
+                        <!-- Start Date Section -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_label_tenancy_start"
+                                android:textColor="@color/text_muted"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvTenantStartDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_value_date"
+                                android:textColor="@color/text_heading"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+
+                        <!-- Vertical Divider -->
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="12dp"
+                            android:background="@color/color_separator" />
+
+                        <!-- End Date Section -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_label_tenancy_end"
+                                android:textColor="@color/text_muted"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvTenantEndDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_active"
+                                android:textColor="@color/text_heading"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Tenancy Details -->
+        <TextView
+            android:layout_marginTop="24dp"
+            android:text="@string/text_label_tenancy_details"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_muted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_support_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:strokeWidth="1dp"
+            android:layout_marginTop="12dp"
+            app:strokeColor="@color/border_list_layout_primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Property & Room Name -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <!-- Icon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/bg_dashboard_card">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_properties"
+                            app:tint="@color/icon_primary"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_property_name"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvTenantPropRoom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_prop_name"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_heading"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_list_layout_primary" />
+
+                <!-- Help & Support -->
+                <LinearLayout
+                    android:id="@+id/btnContactTenant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <!-- Icon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/bg_dashboard_card">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_phone"
+                            app:tint="@color/icon_primary"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_contact_tenant"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_call_wa"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_heading"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                    <!-- Arrow -->
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_exp_arrow_right"
+                        app:tint="@color/text_muted"
+                        android:contentDescription="@string/text_image_desc"/>
+
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_list_layout_primary" />
+
+                <!-- Billing Day -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <!-- Icon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/bg_dashboard_card">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_receipt_long"
+                            app:tint="@color/icon_primary"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_billing_start_day"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvBillingStartDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_billing_start"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_heading"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                    <!-- Arrow -->
+                    <ImageView
+                        android:id="@+id/imgEditStartDay"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_edit_pencil"
+                        app:tint="@color/text_muted"
+                        android:contentDescription="@string/text_image_desc"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Files & Attachments -->
+        <TextView
+            android:layout_marginTop="24dp"
+            android:text="@string/text_label_files_attachments"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_muted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16sp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:strokeColor="@color/border_list_layout_primary"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:animateLayoutChanges="true">
+
+                <LinearLayout
+                    android:id="@+id/layoutExpandableHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16sp"
+                    android:paddingVertical="12dp"
+                    android:orientation="horizontal"
+                    android:animateLayoutChanges="true"
+                    android:layout_gravity="center_vertical">
+
+                    <!-- Verified Tick -->
+                    <ImageView
+                        android:id="@+id/imgTenantDocHeader"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="@string/text_image_desc"
+                        android:padding="8dp"
+                        android:background="@drawable/background_ic_tick_circle"
+                        android:src="@drawable/ic_person_document"
+                        app:tint="@color/icon_primary" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_documents"
+                        android:textColor="@color/text_heading"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"/>
+
+                    <ImageView
+                        android:id="@+id/imgExpandToggle"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_exp_arrow_right"
+                        android:rotation="0"
+                        app:tint="@color/text_heading"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="@string/text_image_desc" />
+
+
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:id="@+id/dividerExpandDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:visibility="gone"
+                    android:background="@color/border_list_layout_primary"
+                    android:layout_marginBottom="10dp"/>
+
+                <LinearLayout
+                    android:id="@+id/layoutTenantDocCollapse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp"
+                    android:visibility="visible"
+                    android:animateLayoutChanges="true">
+                    <!-- Add Document Card -->
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_margin="8dp">
+
+                        <TextView
+                            android:id="@+id/btnAddTenantDoc"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:gravity="center"
+                            android:background="@drawable/background_add_doc_dashed"
+                            android:padding="34dp"
+                            app:drawableStartCompat="@drawable/ic_add_photo_32"
+                            app:drawableTint="@color/icon_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_add_image"
+                            android:textColor="@color/text_muted"
+                            android:textSize="15sp"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
+
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTenantDocument"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:overScrollMode="never"
+                        android:clipToPadding="false"
+                        tools:listitem="@layout/single_tenant_document"/>
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>

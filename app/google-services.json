@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "404084289034",
+    "firebase_url": "https://rent-book---rent-manager-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rent-book---rent-manager",
+    "storage_bucket": "rent-book---rent-manager.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404084289034:android:852505b4c43c6a72a0f9f3",
+        "android_client_info": {
+          "package_name": "com.example.rentbook_rentpropertymanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404084289034-k61a80dqib04hna0munasjd07rvltuc7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rentbook_rentpropertymanager",
+            "certificate_hash": "b2ec988b189433fc49b3faf9cabc8075bb52a1d6"
+          }
+        },
+        {
+          "client_id": "404084289034-280pjl3f890psbgnjll8uq6b2chcis0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcWhgMBmX8Gm8V3OQ_CkUxldJP-dQscrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404084289034-280pjl3f890psbgnjll8uq6b2chcis0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

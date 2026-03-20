@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_app_surface">
+
+    <!-- Root content layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="20dp">
+
+        <!-- Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:strokeColor="@color/border_primary_list_layout"
+            app:strokeWidth="1dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="7dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="16sp">
+
+                <!-- Header -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:gravity="center_vertical"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_cash_payment"
+                        app:tint="@color/icon_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/text_label_tenant_details_cap"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_heading"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16sp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@color/border_primary_list_layout"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="16sp">
+
+                    <!-- Tenant Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_label_tenant_name"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_muted"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEditTenantName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/text_hint_tenant_name"
+                        android:padding="14sp"
+                        android:background="@drawable/background_edit_text_input"
+                        android:drawableStart="@drawable/ic_person"
+                        android:inputType="textCapWords"
+                        android:drawablePadding="10dp"
+                        android:layout_marginVertical="10dp"
+                        android:drawableTint="@color/icon_primary"/>
+
+                    <!-- ADDRESS -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/text_label_mobile_no"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_muted"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginVertical="10dp"
+                            android:background="@drawable/background_edit_text_input">
+
+                            <!-- Country Code -->
+                            <TextView
+                                android:id="@+id/textCountryCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_country_code_in"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/icon_primary"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="8dp"
+                                android:gravity="center_vertical"
+                                android:background="@android:color/transparent" />
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etEditTenantPhone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/text_hint_10_digit_no"
+                                android:padding="14sp"
+                                android:background="@drawable/background_edit_text_input"
+                                android:inputType="number"
+                                android:drawableTint="@color/icon_primary"/>
+
+                        </LinearLayout>
+
+
+
+                        <ImageView
+                            android:id="@+id/btnPickContact"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:contentDescription="@string/text_image_desc"
+                            app:tint="@color/icon_primary"
+                            android:src="@drawable/ic_contact_pick"/>
+
+                    </LinearLayout>
+
+                    <!-- Tenant Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_label_address"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_muted"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEditTenantAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/text_hint_address"
+                        android:padding="14sp"
+                        android:background="@drawable/background_edit_text_input"
+                        android:drawableStart="@drawable/ic_home_location"
+                        android:inputType="textCapWords"
+                        android:drawablePadding="10dp"
+                        android:layout_marginTop="10dp"
+                        android:drawableTint="@color/icon_primary"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnUpdateTenant"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="16dp"
+            android:layout_marginHorizontal="3dp"
+            android:layout_marginVertical="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/btn_primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:contentDescription="@string/text_image_desc"
+                    android:src="@drawable/ic_person"
+                    app:tint="#FFFFFF"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/text_btn_update_tenant"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

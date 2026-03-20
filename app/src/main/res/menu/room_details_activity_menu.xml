@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_edit_room"
+        android:title="@string/text_menu_edit_room"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_edit_tenant"
+        android:title="@string/text_menu_edit_tenant"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_remove_tenant"
+        android:title="@string/text_menu_remove_tenant"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_view_all_tenant"
+        android:title="@string/text_view_past_tenant"
+        app:showAsAction="never" />
+
+</menu>

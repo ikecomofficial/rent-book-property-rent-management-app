@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- OUTER CARD -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_property"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_list_layout_primary"
+        app:cardBackgroundColor="@color/bg_list_layout_primary"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginVertical="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- TOP ROW -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- PROPERTY ICON CARD -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/bg_dashboard_card"
+                    app:strokeColor="@color/border_dashboard_card"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/text_image_desc"
+                        android:padding="16dp"
+                        android:src="@drawable/ic_properties"
+                        app:tint="@color/icon_primary" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- TITLE + ADDRESS -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:id="@+id/tvPropertyName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_property_name"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="2dp"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_home_location"
+                            app:tint="#0D9488"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                        <TextView
+                            android:id="@+id/tvPropertyAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_city"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_muted"
+                            android:layout_marginStart="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- STATUS BADGE -->
+
+                <FrameLayout
+                    android:id="@+id/layout_status_indicator"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="top">
+
+                    <!-- Outer Ring -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/dotPropertyOccRing"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/occ_status_bg" />
+
+                    <!-- Inner Dot -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/dotPropertyOcc"
+                        android:layout_width="11dp"
+                        android:layout_height="11dp"
+                        android:layout_gravity="center"
+                        app:cardBackgroundColor="@color/occ_status_dot"
+                        app:cardCornerRadius="7dp"
+                        app:cardElevation="0dp" />
+
+                </FrameLayout>
+
+
+
+            </LinearLayout>
+
+            <!-- BOTTOM INFO CARD -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_info_container"
+                app:cardBackgroundColor="@color/bg_info_container">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:padding="14dp">
+
+                    <!-- ROOMS -->
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_single_bed"
+                        app:tint="@color/icon_primary"
+                        android:contentDescription="@string/text_image_desc"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_rooms"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_subheading"
+                        android:layout_marginStart="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvOccupiedRooms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_any_number"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_marginStart="6dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_slash"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_marginHorizontal="1dp"/>
+                    <TextView
+                        android:id="@+id/tvTotalRooms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_any_number"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading" />
+
+                    <!-- DIVIDER -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="#E5E7EB" />
+
+                    <!-- SHOPS -->
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_store_shop"
+                        app:tint="@color/icon_primary"
+                        android:contentDescription="@string/text_image_desc"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_shops"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_subheading"
+                        android:layout_marginStart="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvOccupiedShops"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_any_number"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_marginStart="6dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_slash"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_marginHorizontal="1dp"/>
+                    <TextView
+                        android:id="@+id/tvTotalShops"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_any_number"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

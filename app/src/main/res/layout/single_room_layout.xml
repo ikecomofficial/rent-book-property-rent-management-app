@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/bg_list_layout_primary"
+    app:strokeColor="@color/border_list_layout_primary"
+    app:strokeWidth="1dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- TOP ROW -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Room name + status -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvRoomName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_room_01"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_heading"/>
+
+                <!-- PAID pill -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardRoomOccupancy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="#DCFCE7">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="4dp">
+
+                        <!-- Inner Dot -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/dotRoomOccupancy"
+                            android:layout_width="11dp"
+                            android:layout_height="11dp"
+                            android:layout_gravity="center"
+                            app:cardBackgroundColor="@color/status_occupied"
+                            app:cardCornerRadius="7dp"
+                            app:cardElevation="0dp" />
+
+                        <TextView
+                            android:id="@+id/tvRoomStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="@string/text_occupied"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#16A34A"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <!-- Price -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rupee_symbol"
+                    android:layout_marginEnd="3dp"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#7C8CF8"/>
+
+                <!-- Price -->
+                <TextView
+                    android:id="@+id/tvRoomRent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_any_number"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#7C8CF8"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- TENANT CARD -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/bg_info_container"
+            app:strokeColor="@color/border_info_container"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="14dp"
+                android:gravity="center_vertical">
+
+                <!-- Avatar -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgTenantProfile"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:src="@drawable/ic_tenant_profile_default"
+                    android:scaleType="centerCrop"/>
+
+                <!-- Name + phone -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTenantName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_name"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"/>
+
+                    <TextView
+                        android:id="@+id/tvTenantNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/text_value_mobile_no"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_muted"/>
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="36dp"
+                    android:background="#E5E7EB"/>
+
+                <!-- Meter -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_meter_cap"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_muted"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="4dp"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/ic_electric_bolt"
+                            android:layout_gravity="center_vertical"
+                            app:tint="@color/icon_lightning_bolt"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                        <TextView
+                            android:id="@+id/tvLastPaidUnit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_any_number"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_main"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

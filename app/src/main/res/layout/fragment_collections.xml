@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_app_surface">
+
+    <HorizontalScrollView
+        android:id="@+id/hsvPropertiesChips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupProperties"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="16sp"
+            android:paddingBottom="12dp"
+            android:orientation="horizontal"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:chipSpacingHorizontal="8dp"/>
+    </HorizontalScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTotalCollection1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="6dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_dashboard_card"
+        app:cardBackgroundColor="@color/bg_dashboard_card">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16sp">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_label_total_coll_cap"
+                android:textAllCaps="true"
+                android:letterSpacing="0.04"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_main" />
+
+            <!-- Amount -->
+            <TextView
+                android:id="@+id/tvTotalPropAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_value_amount"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/text_heading" />
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp"
+                android:background="@color/light_separator" />
+
+            <!-- Rent & Power Row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Rent -->
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:contentDescription="@string/text_image_desc"
+                    android:src="@drawable/ic_single_bed"
+                    app:tint="@color/icon_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rent_colon"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_subheading"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="5dp"/>
+                <TextView
+                    android:id="@+id/tvTotalPropRent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_value_amount"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_heading"
+                    android:textStyle="bold" />
+
+                <!-- Vertical Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="18dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@color/light_separator" />
+
+                <!-- Power -->
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@string/text_image_desc"
+                    android:src="@drawable/ic_electric_bolt"
+                    app:tint="@color/bg_orange" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_power_colon"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_subheading"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <TextView
+                    android:id="@+id/tvTotalPropElcBill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_value_amount"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_heading"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/btnTemp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_label_monthly_collections"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="16sp"
+        android:layout_marginVertical="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/text_heading"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
+        <!-- RecyclerView below the header -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/collectionListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
+
+
+        <LinearLayout
+            android:id="@+id/layoutNoCollection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="center_horizontal"
+            android:paddingTop="50dp">
+
+            <!-- Icon -->
+            <ImageView
+                android:id="@+id/img_empty_property"
+                android:layout_width="220dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_no_rent_record"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="@string/text_image_desc"/>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tv_empty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_heading_no_monthly_collection"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_heading"
+                android:gravity="center" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/tv_empty_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sub_no_monthly_collection"
+                android:textSize="14sp"
+                android:layout_marginHorizontal="28dp"
+                android:textColor="@color/text_muted"
+                android:gravity="center"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

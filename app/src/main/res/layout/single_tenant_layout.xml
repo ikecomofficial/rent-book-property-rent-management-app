@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_list_layout_primary"
+        app:cardBackgroundColor="@color/bg_list_layout_primary"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Top Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Profile Image -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgItemProfile"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_tenant_profile_default"
+                    android:scaleType="centerCrop" />
+
+                <!-- Name & Phone -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:id="@+id/tvItemTenantName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_name"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#1C1C1C" />
+
+                    <TextView
+                        android:id="@+id/tvItemTenantPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_mobile_no"
+                        android:textSize="14sp"
+                        android:textColor="#6E6E6E" />
+
+                </LinearLayout>
+
+                <!-- Call Button -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnContact"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="2dp"
+                    android:layout_margin="3dp"
+                    app:cardBackgroundColor="#E9FBF3">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/text_image_desc"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_phone"
+                        app:tint="@color/icon_primary" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Bottom Section, Dates Row -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                android:layout_marginTop="16dp"
+                app:strokeColor="@color/border_info_container"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/bg_info_container">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16sp"
+                    android:layout_marginVertical="12dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <!-- Start Date -->
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_calendar_start"
+                            app:tint="@color/icon_primary" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_start_colon"
+                            android:textColor="@color/text_heading"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="4dp" />
+                        <TextView
+                            android:id="@+id/tvItemStartDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_date"
+                            android:textColor="@color/text_muted"
+                            android:textSize="13sp"
+                            android:layout_marginStart="4dp" />
+
+                    </LinearLayout>
+
+
+                    <!-- Spacer -->
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTenantEndDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <!-- End Date -->
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_calendar_end"
+                            app:tint="@color/icon_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_end_colon"
+                            android:textColor="@color/text_heading"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="4dp" />
+                        <TextView
+                            android:id="@+id/tvItemEndDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_date"
+                            android:textColor="@color/text_muted"
+                            android:textSize="13sp"
+                            android:layout_marginStart="4dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
