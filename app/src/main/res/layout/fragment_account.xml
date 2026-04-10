@@ -32,7 +32,7 @@
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             android:layout_marginTop="12sp"
-            app:strokeColor="@color/border_inner_layout"
+            app:strokeColor="@color/border_list_layout_primary"
             app:cardBackgroundColor="@color/bg_list_layout_primary">
 
             <LinearLayout
@@ -383,7 +383,7 @@
             app:cardBackgroundColor="@color/bg_list_layout_primary"
             app:strokeWidth="1dp"
             android:layout_marginTop="12dp"
-            app:strokeColor="@color/border_inner_layout">
+            app:strokeColor="@color/border_list_layout_primary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -455,7 +455,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/border_inner_layout" />
+                    android:background="@color/border_list_layout_primary" />
 
                 <!-- About App -->
                 <LinearLayout

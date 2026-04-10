@@ -120,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
                                 bottomNav.setSelectedItemId(R.id.nav_collections);
                                 toolbar.setVisibility(View.VISIBLE);
                                 toolbar.setTitle("Collections");
+                                toolbar.setBackgroundColor(
+                                        ContextCompat.getColor(MainActivity.this, R.color.toolbar_bg)
+                                );
                                 break;
                             case 2:
                                 bottomNav.setSelectedItemId(R.id.nav_activity);

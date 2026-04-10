@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -345,21 +346,14 @@ public class RentsFragment extends Fragment {
 
                 // Apply payment mode card background
                 mcvRentPaymentMode.setCardBackgroundColor(
-                        Color.parseColor("#f0fdf4"));
+                        ContextCompat.getColor(itemView.getContext(), R.color.payment_mode_online_bg));
             }else {
                 imgRentPaymentMode.setImageResource(R.drawable.ic_cash_payment);
                 mcvRentPaymentMode.setCardBackgroundColor(
-                        Color.parseColor("#eff6ff"));
+                        ContextCompat.getColor(itemView.getContext(), R.color.payment_mode_cash_bg));
             }
             rentPaymentModeView.setText(rentPaymentMode);
         }
-
-        /*public void setRentTenantName(String rentTenantName) {
-            TextView rentTenantNameView = mView.findViewById(R.id.tvRentTenantName);
-            rentTenantNameView.setText(rentTenantName);
-        }
-
-         */
 
         public void setTenantHeader(String rentTenantName, boolean showHeader) {
 

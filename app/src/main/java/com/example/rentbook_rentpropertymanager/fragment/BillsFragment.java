@@ -1,9 +1,9 @@
 package com.example.rentbook_rentpropertymanager.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -340,20 +340,18 @@ public class BillsFragment extends Fragment {
 
                 // Apply payment mode card background
                 mcvElcBillPaymentMode.setCardBackgroundColor(
-                        Color.parseColor("#f0fdf4"));
+                        ContextCompat.getColor(itemView.getContext(), R.color.payment_mode_online_bg));
 
             }else {
                 imgBillPaymentMode.setImageResource(R.drawable.ic_cash_payment);
 
                 mcvElcBillPaymentMode.setCardBackgroundColor(
-                        Color.parseColor("#eff6ff"));
+                        ContextCompat.getColor(itemView.getContext(), R.color.payment_mode_cash_bg));
 
             }
         }
 
         public void setElcBillMonthYear(String elcBillMonthYear){
-            //TextView tvElcBillMonthYear = mView.findViewById(R.id.tvElcBillMonthYear);
-            //tvElcBillMonthYear.setText(elcBillMonthYear);
 
             TextView tvElcBillMonth = mView.findViewById(R.id.tvElcBillMonth);
             TextView tvElcBillYear = mView.findViewById(R.id.tvElcBillYear);

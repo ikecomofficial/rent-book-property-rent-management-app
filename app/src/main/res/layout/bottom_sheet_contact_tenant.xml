@@ -16,7 +16,7 @@
         android:layout_marginBottom="12dp"
         app:cardCornerRadius="3dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="#E5E7EB" />
+        app:cardBackgroundColor="@color/light_separator" />
 
     <!-- Title -->
     <TextView
@@ -26,7 +26,7 @@
         android:text="@string/text_contact_tenant"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#0F172A" />
+        android:textColor="@color/text_heading" />
 
     <TextView
         android:id="@+id/tvBSRoomName"
@@ -58,7 +58,8 @@
                 android:layout_height="48dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#EAF2FF">
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/bg_dashboard_card">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -94,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="10dp"
-            android:background="#E5E7EB"/>
+            android:background="@color/light_separator"/>
 
         <!-- WhatsApp -->
         <LinearLayout
@@ -109,7 +110,8 @@
                 android:layout_height="48dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#E8F7EF">
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/bg_dashboard_card">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -117,7 +119,7 @@
                     android:padding="12dp"
                     android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_whatsapp"
-                    app:tint="#16A34A"/>
+                    app:tint="@color/icon_primary"/>
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
@@ -150,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="10dp"
-            android:background="#E5E7EB"/>
+            android:background="@color/light_separator"/>
 
         <!-- Email -->
         <LinearLayout
@@ -165,7 +167,8 @@
                 android:layout_height="48dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#EAF2FF">
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/bg_dashboard_card">
 
                 <ImageView
                     android:layout_width="wrap_content"

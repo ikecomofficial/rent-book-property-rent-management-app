@@ -24,7 +24,7 @@
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="3dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="#E5E7EB" />
+            app:cardBackgroundColor="@color/light_separator" />
 
         <!-- Title -->
         <TextView
@@ -34,7 +34,7 @@
             android:text="@string/text_tenant_history"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#0F172A" />
+            android:textColor="@color/text_heading" />
 
         <!-- Subtitle Row -->
         <LinearLayout

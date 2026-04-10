@@ -31,6 +31,11 @@
 
     <string name="text_image_desc">TODO</string>
 
+    <!-- Main Activity Fragments Texts -->
+
+    <string name="text_track_recent_updates">Track Recent Updates Across Properties.</string>
+
+
     <!-- Single Property Layout Texts -->
     <string name="text_property_name">Property Name</string>
     <string name="text_value_city">New Delhi</string>
@@ -153,6 +158,8 @@
     <string name="text_menu_remove_tenant">Remove Tenant</string>
 
     <!-- Single Rent & E-Bill Activity Screens Strings -->
+    <string name="text_value_month_MMM">MAR</string>
+    <string name="text_value_year">2025</string>
     <string name="text_value_rent_interval">03 Dec - 02 Jan</string>
     <string name="text_value_date_time">31 Dec 2025, 10:16 PM</string>
     <string name="text_symbol_plus">+</string>

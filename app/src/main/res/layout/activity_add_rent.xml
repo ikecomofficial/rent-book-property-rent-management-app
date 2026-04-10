@@ -24,7 +24,7 @@
             app:cardCornerRadius="16dp"
             android:layout_marginTop="14dp"
             app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_primary_list_layout"
+            app:strokeColor="@color/border_inner_layout"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -70,6 +70,8 @@
                     app:cardCornerRadius="22dp"
                     android:layout_gravity="center_vertical"
                     app:cardElevation="0dp"
+                    app:strokeWidth="0.5dp"
+                    app:strokeColor="@color/btn_primary"
                     app:cardBackgroundColor="@color/bg_dashboard_card">
 
                     <LinearLayout
@@ -113,7 +115,7 @@
             app:cardCornerRadius="16dp"
             android:layout_marginVertical="14dp"
             app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_primary_list_layout"
+            app:strokeColor="@color/border_inner_layout"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -154,7 +156,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16sp"
                     android:layout_marginBottom="12dp"
-                    android:background="@color/border_primary_list_layout"/>
+                    android:background="@color/border_inner_layout"/>
 
 
                 <LinearLayout
@@ -236,7 +238,7 @@
             app:cardCornerRadius="16dp"
             android:layout_marginBottom="7dp"
             app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_primary_list_layout"
+            app:strokeColor="@color/border_inner_layout"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -277,7 +279,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16sp"
                     android:layout_marginBottom="12dp"
-                    android:background="@color/border_primary_list_layout"/>
+                    android:background="@color/border_inner_layout"/>
 
 
                 <LinearLayout
@@ -340,6 +342,8 @@
                         app:cardCornerRadius="22dp"
                         android:layout_gravity="center_vertical"
                         app:cardElevation="0dp"
+                        app:strokeWidth="0.5dp"
+                        app:strokeColor="@color/btn_primary"
                         app:cardBackgroundColor="@color/bg_dashboard_card">
 
                         <LinearLayout

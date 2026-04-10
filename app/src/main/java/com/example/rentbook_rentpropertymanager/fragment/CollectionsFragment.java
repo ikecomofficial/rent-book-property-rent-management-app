@@ -255,9 +255,9 @@ public class CollectionsFragment extends Fragment {
                         super.onDataChanged();
 
                         if (getItemCount() == 0){
-                            tvTotalPropAmount.setText("N/A");
-                            tvTotalPropRent.setText("N/A");
-                            tvTotalPropElcBill.setText("N/A");
+                            tvTotalPropAmount.setText(formatAmount(0));
+                            tvTotalPropRent.setText(formatAmount(0));
+                            tvTotalPropElcBill.setText(formatAmount(0));
                             layoutNoCollection.setVisibility(View.VISIBLE);
                         }else {
 
@@ -321,7 +321,7 @@ public class CollectionsFragment extends Fragment {
 
         public void setTotalUnitsUsed(int totalUnitsUsed){
             TextView tvTotalUnitsUsed = mView.findViewById(R.id.tvTotalUnitsUsed);
-            String totalConsumedUnits = "Power Units: " + totalUnitsUsed;
+            String totalConsumedUnits = totalUnitsUsed + " units";
             tvTotalUnitsUsed.setText(totalConsumedUnits);
         }
 

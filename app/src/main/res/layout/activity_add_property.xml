@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:fitsSystemWindows="true"
-        android:paddingHorizontal="12dp"
+        android:layout_marginHorizontal="12dp"
         android:paddingBottom="20dp">
 
         <!-- Card -->

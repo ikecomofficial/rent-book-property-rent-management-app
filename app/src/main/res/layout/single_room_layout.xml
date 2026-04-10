@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="24dp"
-    app:cardElevation="2dp"
+    app:cardElevation="1dp"
     app:cardBackgroundColor="@color/bg_list_layout_primary"
     app:strokeColor="@color/border_list_layout_primary"
     app:strokeWidth="1dp"
@@ -98,7 +98,7 @@
                     android:layout_marginEnd="3dp"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="#7C8CF8"/>
+                    android:textColor="@color/text_purple_300"/>
 
                 <!-- Price -->
                 <TextView
@@ -108,7 +108,7 @@
                     android:text="@string/text_any_number"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="#7C8CF8"/>
+                    android:textColor="@color/text_purple_300"/>
 
             </LinearLayout>
 

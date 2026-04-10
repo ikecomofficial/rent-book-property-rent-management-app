@@ -58,7 +58,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -704,11 +711,15 @@ public class RoomDetailsActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull TenantsViewHolder holder, int position, @NonNull Tenants model) {
                 // Bind your data here
 
+                String startDate = model.getTenant_start_date();
+                String endDate = model.getTenant_end_date();
+
                 holder.setTenantName(model.getTenant_name());
                 holder.setTenantProfileUrl(model.getThumb_tenant_url());
                 holder.setTenantPhone(model.getTenant_phone());
-                holder.setTenantStartDate(model.getTenant_start_date());
-                holder.setTenantEndDate(model.getTenant_end_date());
+                holder.setTenantStartDate(startDate);
+                holder.setTenantEndDate(endDate);
+                holder.setTenancyDuration(startDate, endDate);
 
                 String tid = getRef(position).getKey();
 
@@ -806,9 +817,109 @@ public class RoomDetailsActivity extends AppCompatActivity {
             } else {
                 tenantEndDateView.setText(tenantEndDate);
             }
-        }
-    }
 
+        }
+
+        public void setTenancyDuration(String tenantStartDate, String tenantEndDate) {
+            TextView tenancyDurationView = mView.findViewById(R.id.tvItemTenancyDuration);
+            try {
+                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
+
+                LocalDate s = LocalDate.parse(tenantStartDate, f);
+                LocalDate e = (tenantEndDate == null || "null".equalsIgnoreCase(tenantEndDate) || tenantEndDate.trim().isEmpty())
+                        ? LocalDate.now()
+                        : LocalDate.parse(tenantEndDate, f);
+
+                Period p = Period.between(s, e);
+
+                String d = (p.getYears() > 0)
+                        ? (p.getMonths() > 0 ? p.getYears() + " yr " + p.getMonths() + " mo"
+                        : (p.getYears() == 1 ? "1 year" : p.getYears() + " years"))
+                        : (p.getMonths() > 0 ? (p.getMonths() == 1 ? "1 month" : p.getMonths() + " months")
+                        : (p.getDays() == 1 ? "1 day" : p.getDays() + " days"));
+
+                tenancyDurationView.setText(d);
+
+            } catch (Exception e) {
+                tenancyDurationView.setText("");
+            }
+        }
+
+        /*public void setTenancyDuration(String tenantStartDate, String tenantEndDate) {
+            TextView tenancyDurationView = mView.findViewById(R.id.tvItemTenancyDuration);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+
+                Date startDate = sdf.parse(tenantStartDate);
+
+                boolean isOngoing = (tenantEndDate == null || "null".equalsIgnoreCase(tenantEndDate) || tenantEndDate.trim().isEmpty());
+
+                Date endDate;
+                if (isOngoing) {
+                    endDate = new Date(); // today
+                } else {
+                    endDate = sdf.parse(tenantEndDate);
+                }
+
+                Calendar startCal = Calendar.getInstance();
+                Calendar endCal = Calendar.getInstance();
+
+                startCal.setTime(startDate);
+                endCal.setTime(endDate);
+
+                int years = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
+                int months = endCal.get(Calendar.MONTH) - startCal.get(Calendar.MONTH);
+                int days = endCal.get(Calendar.DAY_OF_MONTH) - startCal.get(Calendar.DAY_OF_MONTH);
+
+                // Fix negative days
+                if (days < 0) {
+                    // Move endCal one month back
+                    endCal.add(Calendar.MONTH, -1);
+
+                    // Get actual max days of that month
+                    int maxDays = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+                    days += maxDays;
+                    months--;
+                }
+
+                // Fix negative months
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+
+                String duration;
+
+                if (years > 0) {
+                    if (months > 0) {
+                        // Year + Month → short format
+                        duration = years + " yr " + months + " mo";
+                    } else {
+                        // Only year → full word
+                        duration = years == 1 ? "1 year" : years + " years";
+                    }
+                }
+                else if (months > 0) {
+                    // Only months → full word
+                    duration = months == 1 ? "1 month" : months + " months";
+                }
+                else {
+                    // Only days → full word
+                    duration = days == 1 ? "1 day" : days + " days";
+                }
+
+                tenancyDurationView.setText(duration);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                tenancyDurationView.setText(""); // fallback
+            }
+        }
+
+         */
+
+    }
 
     @Override
     protected void onStop() {

@@ -4,33 +4,32 @@
     <color name="white">#FFFFFFFF</color>
 
 
-    <color name="bg_app_surface">#F3F4F6</color>
+    <color name="bg_app_surface">#121212</color>
 
     <!-- Primary Colors -->
-    <color name="toolbar_bg">#14B8A6</color>
-
+    <color name="toolbar_bg">#0C4F49</color>
 
     <!-- Primary Colors -->
-    <color name="primary_main">#0D9488</color>
+    <color name="primary_main">#188b7d</color>
 
     <!-- Text Colors -->
-    <color name="text_heading">#020d10</color>
-    <color name="text_subheading">#808080</color>
+    <color name="text_heading">#E3E0DF</color>
+    <color name="text_subheading">#AEB9B5</color>
     <color name="text_heading_inv">#e3f6f9</color>
-    <color name="text_muted">#3b4b4d</color>
+    <color name="text_muted">#BDC9C5</color>
     <color name="text_purple_300">#7C8CF8</color>
 
     <color name="text_heading_white_fixed">#e3f6f9</color>
     <color name="text_heading_black_fixed">#020d10</color>
 
     <!-- Icon Colors -->
-    <color name="icon_primary">#0D9488</color>
+    <color name="icon_primary">#188b7d</color>
 
     <color name="bottom_sheet_handle_grey">#D1D1D1</color>
     <color name="color_separator">#E0E0E0</color>
 
     <!-- Button Colors -->
-    <color name="btn_primary">#0D9488</color>
+    <color name="btn_primary">#188b7d</color>
     <color name="btn_primary_text">#FFFFFF</color>
 
     <color name="bg_btn_call_blue">#5893f3</color>
@@ -38,45 +37,45 @@
     <color name="bg_btn_wa_green">#4ab565</color>
 
     <color name="btn_logout_text">#DC2626</color>
-    <color name="border_btn_logout">#FEF2F2</color>
+    <color name="border_btn_logout">#2A2222</color>
 
     <!-- Overview/Dashboard Layouts #D5D5D5 -->
-    <color name="light_separator">#E5E7EB</color>
-    <color name="bg_dashboard_card">#F0FDFA</color>
-    <color name="border_dashboard_card">#99F6E4</color>
+    <color name="light_separator">#2C3948</color>
+    <color name="bg_dashboard_card">#1E2A29</color>
+    <color name="border_dashboard_card">#324E49</color>
 
     <color name="progress_active">#0D9488</color>
     <color name="progress_inactive">#E5E7EB</color>
 
     <!-- Property/Rooms/Rents Lists Layouts -->
-    <color name="bg_list_layout_primary">#FFFFFF</color>
-    <color name="border_list_layout_primary">#DFEAEB</color>
+    <color name="bg_list_layout_primary">#1c1b1b</color>
+    <color name="border_list_layout_primary">#2F2E2E</color>
 
     <color name="border_primary_list_layout">#CCFBF1</color> <!-- Used for add property inner layouts. -->
-    <color name="border_inner_layout">#CCFBF1</color>
+    <color name="border_inner_layout">#324E49</color>
 
-    <color name="bg_info_container">#F4F4F6</color>
-    <color name="border_info_container">#EBEBED</color>
+    <color name="bg_info_container">#252525</color>
+    <color name="border_info_container">#353534</color>
 
     <color name="rent_year_underline">#92b1f5</color>
     <color name="elc_bill_year_underline">#fdd28a</color>
     <color name="text_amount">#009688</color>
-    <color name="text_subheading_fade">#808080</color>
-    <color name="units_paid_status_bg">#FFF4D6</color>
-    <color name="units_paid_status_text">#F59E0B</color>
+    <color name="text_subheading_fade">#BDC9C5</color>
+    <color name="units_paid_status_bg">#2C2921</color>
+    <color name="units_paid_status_text">#B39c44</color>
 
     <!-- Occupancy Status Colors -->
-    <color name="occ_status_dot">#10B981</color>
-    <color name="occ_status_bg">#D7FAE8</color>
-    <color name="occ_status_text">#047857</color>
+    <color name="occ_status_dot">#39ca9e</color>
+    <color name="occ_status_bg">#23353a</color>
+    <color name="occ_status_text">#94dfd0</color>
 
-    <color name="partial_status_dot">#f97316</color>
-    <color name="partial_status_bg">#fff0dc</color>
-    <color name="partial_status_text">#c34511</color>
+    <color name="partial_status_dot">#FB923C</color>
+    <color name="partial_status_bg">#3A2A1A</color>
+    <color name="partial_status_text">#FDBA74</color>
 
-    <color name="vac_status_dot">#f43f5e</color>
-    <color name="vac_status_bg">#ffe8e9</color>
-    <color name="vac_status_text">#be123c</color>
+    <color name="vac_status_dot">#fb7a88</color>
+    <color name="vac_status_bg">#392731</color>
+    <color name="vac_status_text">#f696a5</color>
 
     <color name="status_occupied">#3BCB9A</color>
     <color name="status_occupied_ring">#B7F3D4</color>
@@ -100,8 +99,8 @@
     <color name="entity_elc_bill_icon">#eb621a</color>
 
     <!-- (Others) Single Layouts Colors -->
-    <color name="payment_mode_online_bg">#f0fdf4</color>
-    <color name="payment_mode_cash_bg">#eff6ff</color>
+    <color name="payment_mode_online_bg">#1e332b</color>
+    <color name="payment_mode_cash_bg">#1f2a33</color>
 
 
     <!-- Done Till Here -->

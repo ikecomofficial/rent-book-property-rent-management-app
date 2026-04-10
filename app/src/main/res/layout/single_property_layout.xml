@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="24dp"
-        app:cardElevation="0dp"
+        app:cardElevation="1dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/border_list_layout_primary"
         app:cardBackgroundColor="@color/bg_list_layout_primary"
@@ -123,7 +123,8 @@
                         android:layout_gravity="center"
                         app:cardBackgroundColor="@color/occ_status_dot"
                         app:cardCornerRadius="7dp"
-                        app:cardElevation="0dp" />
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp"/>
 
                 </FrameLayout>
 

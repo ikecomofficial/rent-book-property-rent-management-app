@@ -101,6 +101,9 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         tvProgressLabel = findViewById(R.id.tvProgressLabel);
         occupancyProgressBar = findViewById(R.id.occupancyProgressBar);
 
+        TextView currMonthYear = findViewById(R.id.currMonthYear);
+        currMonthYear.setText(getCurrentMonthYear());
+
         tvMonthTotalRent = findViewById(R.id.tvMonthTotalRent);
         tvMonthTotalElcBill = findViewById(R.id.tvMonthTotalElcBill);
         tvMonthTotalUnitsUsed = findViewById(R.id.tvMonthTotalUnitsUsed);
@@ -169,6 +172,11 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
     }
 
+    private String getCurrentMonthYear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
+        return sdf.format(new Date());
+    }
+
     public void setProgressBarData(int occupied, int total) {
         if (total > 0) {
             int bar_percentage = (int) ((occupied * 100) / total);
@@ -213,8 +221,8 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     tvMonthTotalElcBill.setText(formatAmount(currentMonthElcBill));
                     tvMonthTotalUnitsUsed.setText(String.valueOf(currentMonthUnitsUsed));
                 } else {
-                    tvMonthTotalRent.setText("N/A");
-                    tvMonthTotalElcBill.setText("N/A");
+                    tvMonthTotalRent.setText(formatAmount(0));
+                    tvMonthTotalElcBill.setText(formatAmount(0));
                     tvMonthTotalUnitsUsed.setText(String.valueOf(0));
                 }
             }

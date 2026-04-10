@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -28,7 +29,7 @@
             android:id="@+id/tvHeaderTenantName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13dp"
+            android:textSize="13sp"
             android:text="@string/text_value_name"
             android:textColor="#92959B"
             android:layout_marginHorizontal="16dp"/>
@@ -51,7 +52,7 @@
         app:cardCornerRadius="18dp"
         app:cardElevation="1dp"
         app:strokeWidth="1dp"
-        app:strokeColor="#E6EAF0"
+        app:strokeColor="@color/border_list_layout_primary"
         android:backgroundTint="@color/bg_list_layout_primary">
 
             <!-- Content Container -->
@@ -73,16 +74,16 @@
                         android:id="@+id/tvRentMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="MAR"
+                        android:text="@string/text_value_month_MMM"
                         android:textSize="14sp"
-                        android:textColor="#8A8A8A"
+                        android:textColor="@color/text_subheading"
                         android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/tvRentYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2025"
+                        android:text="@string/text_value_year"
                         android:textSize="22sp"
                         android:textColor="@color/text_heading"
                         android:textStyle="bold"/>
@@ -93,7 +94,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="3dp"
                         android:layout_marginHorizontal="10dp"
-                        android:background="#92b1f5"/>
+                        android:background="@color/rent_year_underline"/>
 
                 </LinearLayout>
 
@@ -103,7 +104,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginVertical="16dp"
-                    android:background="#E0E0E0"/>
+                    android:background="@color/light_separator"/>
 
                 <!-- Right Content -->
                 <LinearLayout
@@ -127,7 +128,7 @@
                             android:text="@string/text_value_amount"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:textColor="#009688"/>
+                            android:textColor="@color/text_amount"/>
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/mcvRentPaymentMode"
@@ -143,7 +144,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingHorizontal="10dp"
-                                android:paddingVertical="3dp">
+                                android:paddingVertical="3dp"
+                                tools:ignore="UseCompoundDrawables">
                                 <ImageView
                                     android:id="@+id/imgRentPaymentMode"
                                     android:layout_width="14dp"
@@ -179,21 +181,23 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="8dp"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
+                            android:contentDescription="@string/text_image_desc"
                             android:src="@drawable/ic_calendar_month"
-                            app:tint="#6B7280"/>
+                            app:tint="@color/text_subheading_fade"/>
 
                         <TextView
                             android:id="@+id/tvRentPeriod"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="01 Mar - 31 Mar"
+                            android:text="@string/text_value_rent_interval"
                             android:textSize="13sp"
-                            android:textColor="#6B7280"
+                            android:textColor="@color/text_subheading_fade"
                             android:layout_marginStart="8dp"/>
                     </LinearLayout>
 
@@ -203,21 +207,23 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="8dp"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
+                            android:contentDescription="@string/text_image_desc"
                             android:src="@drawable/ic_clock"
-                            app:tint="#6B7280"/>
+                            app:tint="@color/text_subheading_fade"/>
 
                         <TextView
                             android:id="@+id/tvRentDateTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="05 Mar 2025, 10:30 AM"
+                            android:text="@string/text_value_date_time"
                             android:textSize="13sp"
-                            android:textColor="#6B7280"
+                            android:textColor="@color/text_subheading_fade"
                             android:layout_marginStart="8dp"/>
                     </LinearLayout>
 

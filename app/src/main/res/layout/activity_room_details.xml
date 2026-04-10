@@ -24,7 +24,7 @@
             android:text="@string/text_tenant_info"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#2C3E50" />
+            android:textColor="@color/text_heading" />
 
         <!-- Status Chip -->
         <com.google.android.material.card.MaterialCardView
@@ -115,7 +115,7 @@
                         android:text="@string/text_value_name"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#1C1C1C" />
+                        android:textColor="@color/text_heading" />
 
                     <TextView
                         android:id="@+id/tvTenantPhone"
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_value_mobile_no"
                         android:textSize="14sp"
-                        android:textColor="#6E6E6E" />
+                        android:textColor="@color/text_subheading" />
 
                 </LinearLayout>
 
@@ -176,7 +176,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_start_colon"
                     android:textSize="14sp"
-                    android:textColor="#1C1C1C"
+                    android:textColor="@color/text_muted"
+                    android:textStyle="bold"
                     android:layout_marginStart="6dp"
                     android:layout_marginEnd="4dp"/>
 
@@ -186,7 +187,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_value_date"
                     android:textSize="14sp"
-                    android:textColor="#1C1C1C" />
+                    android:textColor="@color/text_muted" />
 
                 <View
                     android:layout_width="0dp"
