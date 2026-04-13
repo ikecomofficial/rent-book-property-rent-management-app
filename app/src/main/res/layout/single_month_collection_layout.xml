@@ -30,9 +30,10 @@
                 android:layout_height="44dp"
                 app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp"
+                app:strokeWidth="1dp"
                 android:layout_gravity="center_vertical"
-                android:backgroundTint="#E9F8F4">
+                app:strokeColor="@color/border_dashboard_card"
+                android:backgroundTint="@color/bg_dashboard_card">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -58,7 +59,7 @@
                     android:text="@string/text_value_month_year"
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/text_heading"/>
 
                 <TextView
                     android:id="@+id/tvTotalUnitsUsed"
@@ -66,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_any_number"
                     android:textSize="14sp"
-                    android:textColor="#7C8CF8"/>
+                    android:textColor="@color/text_purple_300"/>
             </LinearLayout>
 
             <!-- Amount Section -->
@@ -77,7 +78,7 @@
                 android:text="@string/text_value_amount"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:textColor="#49917c"/>
+                android:textColor="@color/text_amount"/>
 
         </LinearLayout>
 

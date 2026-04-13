@@ -1,7 +1,6 @@
 package com.example.rentbook_rentpropertymanager.fragment;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -42,7 +41,7 @@ public class RentsFragment extends Fragment {
 
     private LinearLayout layoutNoRentRecord;
     private RecyclerView rvRentList;
-    private String room_id, property_id;
+    private String property_id;
     private DatabaseReference rentsReference;
     private FirebaseRecyclerAdapter<Rents, RentsFragment.RentsViewHolder> firebaseRecyclerAdapter;
 
@@ -54,10 +53,11 @@ public class RentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rents, container, false);
 
         // Get roomId from arguments
-        room_id = getArguments() != null ? getArguments().getString("room_id") : null;
+        String room_id = getArguments() != null ? getArguments().getString("room_id") : null;
         property_id = getArguments() != null ? getArguments().getString("property_id") : null;
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        assert room_id != null;
         rentsReference = databaseReference.child("rents").child(room_id);
 
         // Rent Recycler View
@@ -156,7 +156,7 @@ public class RentsFragment extends Fragment {
             @Override
             public RentsFragment.RentsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.single_rent_layout_v2, parent, false);
+                        .inflate(R.layout.single_rent_layout, parent, false);
                 return new RentsViewHolder(view);
             }
 
@@ -203,7 +203,7 @@ public class RentsFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
             return sdf.format(new Date(timestamp));
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            Log.e("ParseError", "Invalid number format", e);
             return ""; // fallback if string is invalid
         }
     }
@@ -324,7 +324,7 @@ public class RentsFragment extends Fragment {
                 tvRentPeriod.setText(finalRentPeriod);
 
             } catch (ParseException e) {
-                e.printStackTrace();
+                Log.e("DateParse", "Error setting rent period", e);
             }
         }
 

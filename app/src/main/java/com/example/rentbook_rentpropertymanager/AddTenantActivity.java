@@ -77,21 +77,15 @@ public class AddTenantActivity extends AppCompatActivity {
         MaterialCardView btnAddTenant = findViewById(R.id.btnAddTenant);
         ImageView btnPickContact = findViewById(R.id.btnPickContact);
 
-        btnAddTenant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (saveTenantToFirebase()){
-                    updateRoomDatabase();
-                    updatePropertyOccupancyDataInFirebase();
-                }
+        btnAddTenant.setOnClickListener(view -> {
+            if (saveTenantToFirebase()){
+                updateRoomDatabase();
+                updatePropertyOccupancyDataInFirebase();
             }
         });
-        btnPickContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
-            }
+        btnPickContact.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
         });
 
     }
@@ -130,7 +124,7 @@ public class AddTenantActivity extends AppCompatActivity {
         tenant_id = tenantReference.push().getKey();
         HashMap<String, Object> tenantMap = new HashMap<>();
         tenantMap.put("tenant_name", tenantName);
-        tenantMap.put("tenant_phone", tenantNumber.isEmpty() ? "N/A" : tenantNumber);
+        tenantMap.put("tenant_phone", tenantNumber);
         tenantMap.put("tenant_address", tenantAddress);
         tenantMap.put("tenant_profile_url", "default");
         tenantMap.put("thumb_tenant_url", "default");
@@ -224,6 +218,7 @@ public class AddTenantActivity extends AppCompatActivity {
             Uri contactUri = data.getData();
             String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
 
+            assert contactUri != null;
             try (Cursor cursor = getContentResolver().query(contactUri, projection, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);

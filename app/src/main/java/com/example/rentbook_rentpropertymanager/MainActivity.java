@@ -128,11 +128,17 @@ public class MainActivity extends AppCompatActivity {
                                 bottomNav.setSelectedItemId(R.id.nav_activity);
                                 toolbar.setVisibility(View.VISIBLE);
                                 toolbar.setTitle("Recent Activities");
+                                toolbar.setBackgroundColor(
+                                        ContextCompat.getColor(MainActivity.this, R.color.toolbar_bg)
+                                );
                                 break;
                             case 3:
                                 bottomNav.setSelectedItemId(R.id.nav_settings);
                                 toolbar.setVisibility(View.VISIBLE);
                                 toolbar.setTitle("Account Setting");
+                                toolbar.setBackgroundColor(
+                                        ContextCompat.getColor(MainActivity.this, R.color.toolbar_bg)
+                                );
                                 break;
                         }
                     }

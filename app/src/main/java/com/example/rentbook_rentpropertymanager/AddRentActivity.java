@@ -42,22 +42,33 @@ import java.util.Locale;
 
 public class AddRentActivity extends AppCompatActivity {
 
-    private TextInputEditText etRentAmount;
-    private TextView tvCustomDate, tvCustomTime, tvRentMonthYear;
-    private Calendar calendar;
+    // 🏠 IDs & Property Info
     private String room_id, property_id, room_name, property_name;
-    private String tenant_id, user_id;
+    private String tenant_id;
+
+    // 👤 Tenant Info
     private String tenant_name;
+
+    // 📅 Rent Details
     private String rent_period_start, rent_period_end, rent_month_year;
     private long rent_timestamp;
     private boolean is_rent_month_custom = false;
+
+    // 💳 Payment Info
     private String paymentMode = "Cash";
     private Integer room_rent = 0, billing_start_day = 1;
 
-    private DatabaseReference roomReference;
-    private DatabaseReference tenantReference;
-    private DatabaseReference rentReference;
-    private DatabaseReference activityLogReference;
+    // 📄 Input Fields
+    private TextInputEditText etRentAmount;
+
+    // 📅 Date & Time UI
+    private TextView tvCustomDate, tvCustomTime, tvRentMonthYear;
+
+    // ⏰ Date Handler
+    private Calendar calendar;
+
+    // 🔗 Firebase References
+    private DatabaseReference roomReference, tenantReference, rentReference, activityLogReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +83,8 @@ public class AddRentActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        user_id = user.getUid();
+        assert user != null;
+        String user_id = user.getUid();
 
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -299,7 +311,7 @@ public class AddRentActivity extends AppCompatActivity {
             return sdf.format(cal.getTime());
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e("DateParse", "Error parsing date", e);
             return "";
         }
     }
@@ -425,7 +437,7 @@ public class AddRentActivity extends AppCompatActivity {
             return outputFormat.format(date);
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e("DateParse", "Error converting key", e);
             return null;
         }
     }

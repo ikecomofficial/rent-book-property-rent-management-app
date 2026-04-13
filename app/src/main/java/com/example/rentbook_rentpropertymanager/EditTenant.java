@@ -40,6 +40,7 @@ public class EditTenant extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         String user_id = user.getUid();
 
         if (getSupportActionBar() != null){
@@ -71,12 +72,7 @@ public class EditTenant extends AppCompatActivity {
         etTenantPhone.setText(tenant_phone);
         etTenantAddress.setText(String.valueOf(tenant_address));
 
-        updateTenant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateTenantToFirebase();
-            }
-        });
+        updateTenant.setOnClickListener(view -> updateTenantToFirebase());
     }
 
     private void updateTenantToFirebase(){
@@ -119,6 +115,7 @@ public class EditTenant extends AppCompatActivity {
             return;
         }
         tenantReference.updateChildren(tenantUpdateMap).addOnSuccessListener(aVoid -> {
+            editTenantActivityLog();
                     Toast.makeText(this, "Tenant Updated", Toast.LENGTH_SHORT).show();
                     finish();
                 })

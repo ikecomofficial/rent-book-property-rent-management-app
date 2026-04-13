@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.rentbook_rentpropertymanager.AddProperty;
 import com.example.rentbook_rentpropertymanager.MainActivity;
 import com.example.rentbook_rentpropertymanager.PropertyDetailsActivity;
@@ -37,46 +38,59 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PropertiesFragment extends Fragment {
 
+    // 📊 Property List & Empty State
     private RecyclerView propertyList;
-    private int occupiedSum, totalSum, propertiesItemCount;
-    private int roomOccupiedSum, totalRoomSum, shopOccupiedSum, totalShopSum;
-    private String user_id;
-    private long backPressedTime = 0;
     private LinearLayout layoutNoPropertyList;
+
+    // 👤 User Info
+    private String user_id;
     private TextView tvUserName;
+    private CircleImageView cimgUserProfile;
+
+    // 📈 Overall Property Stats
+    private int occupiedSum, totalSum, propertiesItemCount;
     private TextView tvProgressLabel;
     private TextView tvPropertiesCount;
-    private TextView tvCombinedRoomOcc, tvCombinedRoomTotal, tvCombinedShopOcc, tvCombinedShopTotal;
     private ProgressBar progressBarProperties;
     private CircularProgressIndicator occupancyProgressBar;
+
+    // 🏠 Room & Shop Occupancy Stats
+    private int roomOccupiedSum, totalRoomSum, shopOccupiedSum, totalShopSum;
+    private TextView tvCombinedRoomOcc, tvCombinedRoomTotal, tvCombinedShopOcc, tvCombinedShopTotal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_properties, container, false);
 
-        MaterialCardView btnAddProperty = view.findViewById(R.id.btnAddProperty);
-        progressBarProperties = view.findViewById(R.id.progressBarProperties);
+        // 📊 Property List & Empty State
         layoutNoPropertyList = view.findViewById(R.id.layoutNoPropertyList);
+
+        // 👤 User Info
         tvUserName = view.findViewById(R.id.tvUserName);
+        cimgUserProfile = view.findViewById(R.id.cimgUserAccount);
+
+        // 📈 Overall Property Stats
+        progressBarProperties = view.findViewById(R.id.progressBarProperties);
         tvProgressLabel = view.findViewById(R.id.tvProgressLabel);
+        tvPropertiesCount = view.findViewById(R.id.tvPropertiesCount);
+        occupancyProgressBar = view.findViewById(R.id.occupancyProgressBar);
 
-        //LinearLayout layoutViewCollectionSummary = view.findViewById(R.id.layoutViewCollectionSummary);
-
+        // 🏠 Room & Shop Occupancy Stats
         tvCombinedRoomOcc = view.findViewById(R.id.tvCombinedRoomOcc);
         tvCombinedRoomTotal = view.findViewById(R.id.tvCombinedRoomTotal);
         tvCombinedShopOcc = view.findViewById(R.id.tvCombinedShopOcc);
         tvCombinedShopTotal = view.findViewById(R.id.tvCombinedShopTotal);
 
-        tvPropertiesCount = view.findViewById(R.id.tvPropertiesCount);
-        occupancyProgressBar = view.findViewById(R.id.occupancyProgressBar);
-        CircleImageView cimgUserAccount = view.findViewById(R.id.cimgUserAccount);
+        // 🎯 Actions
+        MaterialCardView btnAddProperty = view.findViewById(R.id.btnAddProperty);
         propertyList = view.findViewById(R.id.propertyListRecycleView);
         propertyList.setHasFixedSize(true);
         propertyList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         user_id = user.getUid();
 
         String providerId = user.getProviderId();
@@ -88,17 +102,10 @@ public class PropertiesFragment extends Fragment {
             fetchUserNameFromFirebase();
         }
 
-        cimgUserAccount.setOnClickListener(v -> {
+        cimgUserProfile.setOnClickListener(v -> {
             ((MainActivity) requireActivity())
                     .goToTab(3, R.id.nav_settings);
 
-        });
-
-        tvUserName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
         });
 
 
@@ -117,8 +124,25 @@ public class PropertiesFragment extends Fragment {
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String user_name = snapshot.child("name").getValue(String.class);
-                tvUserName.setText(user_name);
+                if (snapshot.exists()){
+                    String user_name = snapshot.child("name").getValue(String.class);
+                    String user_thumb_prof = snapshot.child("thumb_profile_url").getValue(String.class);
+
+                    if (user_name == null || user_name.trim().isEmpty()) {
+                        user_name = "User";
+                    }
+
+                    tvUserName.setText(user_name);
+
+                    Glide.with(requireContext())
+                            .load((user_thumb_prof == null || user_thumb_prof.trim().isEmpty() || "default".equals(user_thumb_prof))
+                                    ? R.drawable.ic_tenant_profile_default
+                                    : user_thumb_prof)
+                            .placeholder(R.drawable.ic_tenant_profile_default)
+                            .error(R.drawable.ic_tenant_profile_default)
+                            .into(cimgUserProfile);
+                }
+
             }
 
             @Override
@@ -137,7 +161,7 @@ public class PropertiesFragment extends Fragment {
                 .build();
 
         FirebaseRecyclerAdapter<Properties, PropertiesViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Properties, PropertiesViewHolder>(options) {
+                new FirebaseRecyclerAdapter<>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull PropertiesViewHolder holder, int position, @NonNull Properties model) {
 
@@ -155,16 +179,13 @@ public class PropertiesFragment extends Fragment {
                         // Send pid to PropertyDetails Activity
                         String property_id = getRef(position).getKey();
 
-                        holder.mView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                        holder.mView.setOnClickListener(view -> {
 
-                                Intent propertyDetailIntent = new Intent(getContext(), PropertyDetailsActivity.class);
-                                propertyDetailIntent.putExtra("property_id", property_id);
-                                propertyDetailIntent.putExtra("property_name", property_name);
-                                propertyDetailIntent.putExtra("property_address", property_address);
-                                startActivity(propertyDetailIntent);
-                            }
+                            Intent propertyDetailIntent = new Intent(getContext(), PropertyDetailsActivity.class);
+                            propertyDetailIntent.putExtra("property_id", property_id);
+                            propertyDetailIntent.putExtra("property_name", property_name);
+                            propertyDetailIntent.putExtra("property_address", property_address);
+                            startActivity(propertyDetailIntent);
                         });
                     }
 
@@ -232,7 +253,7 @@ public class PropertiesFragment extends Fragment {
 
     public void setProgressBarData(int occupied, int total) {
         if (total > 0) {
-            int bar_percentage = (int) ((occupied * 100) / total);
+            int bar_percentage = (occupied * 100) / total;
 
             occupancyProgressBar.setMax(100); // make sure max is 100
             occupancyProgressBar.setProgress(bar_percentage);
@@ -240,7 +261,6 @@ public class PropertiesFragment extends Fragment {
             String progressPercentLabel = bar_percentage + "%";
 
             // Update label
-            //String progressLabelPercent = occupied + "/" + total;
             tvProgressLabel.setText(progressPercentLabel);
         } else {
             occupancyProgressBar.setProgress(0);

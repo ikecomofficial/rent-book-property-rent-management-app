@@ -78,7 +78,6 @@ public class LoginScreen extends AppCompatActivity {
         pbSendOtp = findViewById(R.id.progressOtpLogin);
         btnSendOtp = findViewById(R.id.btnRequestOtp);
         tvBtnSendOtp = findViewById(R.id.tvBtnSendOtp);
-        // btnVerifyOtp = findViewById(R.id.btnVerifyOtp);
         layoutOTPCode = findViewById(R.id.layoutOTPCode);
 
         mAuth = FirebaseAuth.getInstance();
@@ -159,6 +158,7 @@ public class LoginScreen extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            assert user != null;
                             String uid = user.getUid();
 
                             // Taking url of Google Signed In user Profile Pic
@@ -268,9 +268,7 @@ public class LoginScreen extends AppCompatActivity {
                     btnSendOtp.setEnabled(true);
                     is_send_otp = false;
                     layoutOTPCode.setVisibility(View.VISIBLE);
-                    //layoutOtpCode.setVisibility(View.VISIBLE);
-                    //btnVerifyOtp.setVisibility(View.VISIBLE);
-                    //btnSendOtp.setVisibility(View.GONE);
+
                     Toast.makeText(LoginScreen.this, "OTP Sent!", Toast.LENGTH_SHORT).show();
                 }
             };
@@ -295,6 +293,7 @@ public class LoginScreen extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = task.getResult().getUser();
+                        assert user != null;
                         Toast.makeText(LoginScreen.this, "Login Success: " + user.getPhoneNumber(), Toast.LENGTH_LONG).show();
 
                         // Save user in Realtime Database if first login

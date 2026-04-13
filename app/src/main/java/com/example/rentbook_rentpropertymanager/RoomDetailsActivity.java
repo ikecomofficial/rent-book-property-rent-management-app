@@ -1,15 +1,17 @@
 package com.example.rentbook_rentpropertymanager;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -58,12 +60,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -72,30 +73,33 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RoomDetailsActivity extends AppCompatActivity {
 
+    // 🏠 Room & Property Info
+    private String room_id, property_id, room_name, property_name;
+    private boolean is_occupied, is_room;
+
+    // 👤 Tenant Info
+    private String tenant_id, tenant_name, tenant_address, tenant_phone, thumb_tenant_url;
+    private String tenant_start_date = "N/A";
+
+    // 📄 Tenant UI Views
     private TextView tvRoomStatus, tvTenantName, tvTenantPhone, tvTenantStartDate;
     private CircleImageView cimgTenantProfilePic;
-    private MaterialCardView btnContact;
-    private String room_id;
-    private String property_id;
-    private String tenant_id;
-    private String room_name, property_name;
-    private String tenant_name;
-    private String tenant_address;
-    private String thumb_tenant_url;
-    private String tenant_phone;
-    private String tenant_start_date = "N/A";
-    private boolean is_occupied, is_room;
-    private SpeedDialView addRecordSpeedDial;
-    private ExtendedFloatingActionButton fabAddTenant;
-    private MaterialCardView cardRoomOccupancy, dotRoomOccupancy;
     private LinearLayout layoutViewTenantProfile, layoutViewPastTenant;
 
+    // 🎯 Actions
+    private MaterialCardView btnContact;
+    private SpeedDialView addRecordSpeedDial;
+    private ExtendedFloatingActionButton fabAddTenant;
+
+    // 📊 Room Occupancy UI
+    private MaterialCardView cardRoomOccupancy, dotRoomOccupancy;
+
+    // 📑 Tabs & Navigation
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
-    private DatabaseReference roomReference, activityLogReference;
-    private DatabaseReference propertyReference;
-    private DatabaseReference tenantReference;
-    private DatabaseReference allTenantReference;
+
+    // 🔗 Firebase References
+    private DatabaseReference roomReference, activityLogReference, propertyReference, tenantReference, allTenantReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         String user_id = user.getUid();
 
         if (getSupportActionBar() != null) {
@@ -133,20 +138,23 @@ public class RoomDetailsActivity extends AppCompatActivity {
         allTenantReference = tenantReference.child(room_id);
 
 
+        // 📄 Tenant UI Views
         tvRoomStatus = findViewById(R.id.tvRoomStatus);
         tvTenantName = findViewById(R.id.tvTenantName);
         tvTenantPhone = findViewById(R.id.tvTenantPhone);
         tvTenantStartDate = findViewById(R.id.tvStartDate);
         cimgTenantProfilePic = findViewById(R.id.imgProfile);
+        layoutViewTenantProfile = findViewById(R.id.layoutViewTenantProfile);
+        layoutViewPastTenant = findViewById(R.id.layoutViewPastTenant);
+
+        // 🎯 Actions
         btnContact = findViewById(R.id.btnContact);
         addRecordSpeedDial = findViewById(R.id.fabAddRecord);
         fabAddTenant = findViewById(R.id.fabAddTenant);
 
+        // 📊 Room Occupancy UI
         cardRoomOccupancy = findViewById(R.id.cardRoomOccupancy);
         dotRoomOccupancy = findViewById(R.id.dotRoomOccupancy);
-
-        layoutViewTenantProfile = findViewById(R.id.layoutViewTenantProfile);
-        layoutViewPastTenant = findViewById(R.id.layoutViewPastTenant);
 
         // Fragment References
         tabLayout = findViewById(R.id.rentTabLayout);
@@ -188,23 +196,15 @@ public class RoomDetailsActivity extends AppCompatActivity {
             }
         }, 10_000); // 10 seconds = 10,000 ms
 
-        fabAddTenant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        fabAddTenant.setOnClickListener(view -> {
 
-                Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
-                addTenantIntent.putExtra("room_id", room_id);
-                startActivity(addTenantIntent);
+            Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
+            addTenantIntent.putExtra("room_id", room_id);
+            startActivity(addTenantIntent);
 
-            }
         });
 
-        btnContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showContactBottomSheet();
-            }
-        });
+        btnContact.setOnClickListener(view -> showContactBottomSheet());
 
 
         // Add menu items
@@ -228,7 +228,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
                         .create()
         );
 
-// Handle click actions
+        // Handle click actions
         addRecordSpeedDial.getMainFab()
                 .setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         addRecordSpeedDial.setOnActionSelectedListener(actionItem -> {
@@ -267,12 +267,25 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 tenant_start_date = snapshot.child("tenant_start_date").getValue(String.class);
                 tenant_address = snapshot.child("tenant_address").getValue(String.class);
 
-                tvTenantName.setText(tenant_name);
-                tvTenantPhone.setText(tenant_phone);
-                tvTenantStartDate.setText(tenant_start_date);
+                // ✅ Null-safe UI
+                tvTenantName.setText(
+                        (tenant_name == null || tenant_name.isEmpty()) ? "N/A" : tenant_name
+                );
+
+                tvTenantPhone.setText(
+                        (tenant_phone == null || tenant_phone.isEmpty()) ? "N/A" : tenant_phone
+                );
+
+                tvTenantStartDate.setText(
+                        (tenant_start_date == null || tenant_start_date.isEmpty()) ? "N/A" : tenant_start_date
+                );
+
 
                 if (thumb_tenant_url == null || thumb_tenant_url.trim().isEmpty() || thumb_tenant_url.equals("default")) {
                     // Show only placeholder
+
+                    // ❗ IMPORTANT: Remove tint (because of view recycling)
+                    cimgTenantProfilePic.clearColorFilter();
 
                     if (!isFinishing() && !isDestroyed()) {
                         Glide.with(RoomDetailsActivity.this)
@@ -305,6 +318,14 @@ public class RoomDetailsActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(R.drawable.ic_no_tenant_profile_default)
                     .into(cimgTenantProfilePic);
+
+            cimgTenantProfilePic.setImageResource(R.drawable.ic_no_tenant_profile_default);
+            // Apply tint
+            cimgTenantProfilePic.setColorFilter(
+                    ContextCompat.getColor(this, R.color.text_heading),
+                    PorterDuff.Mode.SRC_IN
+            );
+
         }
     }
 
@@ -316,7 +337,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    is_occupied = snapshot.child("is_occupied").getValue(Boolean.class);
+                    is_occupied = Boolean.TRUE.equals(snapshot.child("is_occupied").getValue(Boolean.class));
                     tenant_id = snapshot.child("tenant_id").getValue(String.class);
 
                     //GradientDrawable gradientDrawable = (GradientDrawable) tvRoomStatus.getBackground();
@@ -422,29 +443,18 @@ public class RoomDetailsActivity extends AppCompatActivity {
     }
 
     private void tenantRemoveFromRoomConfirmation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this); // 'this' is your context
-        builder.setTitle("Confirm Tenant Removal..!!");
-        builder.setMessage("Want to Remove Current Tenant from this Room?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String title = "Remove Tenant: " + tenant_name + "?";
+        builder.setTitle(title);
+        builder.setMessage("Do you want to remove this tenant from this room.");
 
         // Positive button -> Yes
-        builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                removeTenantFromRoom();
-                // Toast.makeText(RoomDetailsActivity.this, "Error Removing Tenant", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+        builder.setPositiveButton("Remove", (dialog, which) -> removeTenantFromRoom());
 
         // Negative button -> No
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing, just dismiss
-                //dialog.dismiss();
-                Toast.makeText(RoomDetailsActivity.this, "Deletion Cancelled", Toast.LENGTH_SHORT).show();
-            }
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            // Do nothing, just dismiss
+            Toast.makeText(RoomDetailsActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
         });
 
         // Show the dialog
@@ -555,20 +565,17 @@ public class RoomDetailsActivity extends AppCompatActivity {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
 
         // Inflate layout for bottom sheet
-        View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_contact_tenant, null, false);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_contact_tenant, null, false);
         bottomSheetDialog.setContentView(view);
 
         // Make sure we modify the bottom-sheet container after it is shown
-        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                if (bottomSheet != null) {
-                    // clear default background so your drawable shows through
-                    bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
-                    bottomSheet.setClipToPadding(false);
-                }
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                // clear default background so your drawable shows through
+                bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheet.setClipToPadding(false);
             }
         });
 
@@ -602,9 +609,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             // Create WhatsApp chat link
             String url = "https://wa.me/" + phoneWithCountry;
 
-            if (cleanedPhone == null) {
-                return;
-            } else {
+            if (cleanedPhone != null) {
                 bottomSheetDialog.dismiss();
                 Intent intentWhatsApp = new Intent(Intent.ACTION_VIEW);
                 intentWhatsApp.setData(Uri.parse(url));
@@ -654,20 +659,17 @@ public class RoomDetailsActivity extends AppCompatActivity {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
 
         // Inflate layout for bottom sheet
-        View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_tenant_list, null, false);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_tenant_list, null, false);
         bottomSheetDialog.setContentView(view);
 
         // Make sure we modify the bottom-sheet container after it is shown
-        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                if (bottomSheet != null) {
-                    // clear default background so your drawable shows through
-                    bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
-                    bottomSheet.setClipToPadding(false);
-                }
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                // clear default background so your drawable shows through
+                bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheet.setClipToPadding(false);
             }
         });
 
@@ -678,15 +680,12 @@ public class RoomDetailsActivity extends AppCompatActivity {
         LinearLayout layoutNoTenantHistory = view.findViewById(R.id.layoutNoTenantHistory);
         MaterialCardView btnBSAddTenant = view.findViewById(R.id.btnBSAddTenant);
 
-        btnBSAddTenant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnBSAddTenant.setOnClickListener(view1 -> {
 
-                Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
-                addTenantIntent.putExtra("room_id", room_id);
-                startActivity(addTenantIntent);
+            Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
+            addTenantIntent.putExtra("room_id", room_id);
+            startActivity(addTenantIntent);
 
-            }
         });
 
         // Set Room & Property Name in Past Tenants List Bottom Sheet.
@@ -706,7 +705,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 .build();
 
         // Bind your data here
-        FirebaseRecyclerAdapter<Tenants, TenantsViewHolder> firebaseTenantsRecyclerAdapter = new FirebaseRecyclerAdapter<Tenants, TenantsViewHolder>(tenants_options) {
+        FirebaseRecyclerAdapter<Tenants, TenantsViewHolder> firebaseTenantsRecyclerAdapter = new FirebaseRecyclerAdapter<>(tenants_options) {
             @Override
             protected void onBindViewHolder(@NonNull TenantsViewHolder holder, int position, @NonNull Tenants model) {
                 // Bind your data here
@@ -723,16 +722,13 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
                 String tid = getRef(position).getKey();
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                holder.itemView.setOnClickListener(view2 -> {
 
-                        Intent tenantProfileIntent = new Intent(RoomDetailsActivity.this, TenantDetailsActivity.class);
-                        tenantProfileIntent.putExtra("tenant_id", tid);
-                        tenantProfileIntent.putExtra("room_id", room_id);
-                        startActivity(tenantProfileIntent);
+                    Intent tenantProfileIntent = new Intent(RoomDetailsActivity.this, TenantDetailsActivity.class);
+                    tenantProfileIntent.putExtra("tenant_id", tid);
+                    tenantProfileIntent.putExtra("room_id", room_id);
+                    startActivity(tenantProfileIntent);
 
-                    }
                 });
 
             }
@@ -811,7 +807,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         public void setTenantEndDate(String tenantEndDate) {
             TextView tenantEndDateView = mView.findViewById(R.id.tvItemEndDate);
             if (tenantEndDate.equals("null")) {
-                tenantEndDateView.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.text_amount_green));
+                tenantEndDateView.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.text_amount));
                 tenantEndDateView.setTypeface(null, Typeface.BOLD);
                 tenantEndDateView.setText(R.string.text_active);
             } else {
@@ -823,101 +819,30 @@ public class RoomDetailsActivity extends AppCompatActivity {
         public void setTenancyDuration(String tenantStartDate, String tenantEndDate) {
             TextView tenancyDurationView = mView.findViewById(R.id.tvItemTenancyDuration);
             try {
-                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
 
-                LocalDate s = LocalDate.parse(tenantStartDate, f);
-                LocalDate e = (tenantEndDate == null || "null".equalsIgnoreCase(tenantEndDate) || tenantEndDate.trim().isEmpty())
-                        ? LocalDate.now()
-                        : LocalDate.parse(tenantEndDate, f);
+                    LocalDate s = LocalDate.parse(tenantStartDate, f);
+                    LocalDate e = (tenantEndDate == null || "null".equalsIgnoreCase(tenantEndDate) || tenantEndDate.trim().isEmpty())
+                            ? LocalDate.now()
+                            : LocalDate.parse(tenantEndDate, f);
 
-                Period p = Period.between(s, e);
+                    Period p = Period.between(s, e);
 
-                String d = (p.getYears() > 0)
-                        ? (p.getMonths() > 0 ? p.getYears() + " yr " + p.getMonths() + " mo"
-                        : (p.getYears() == 1 ? "1 year" : p.getYears() + " years"))
-                        : (p.getMonths() > 0 ? (p.getMonths() == 1 ? "1 month" : p.getMonths() + " months")
-                        : (p.getDays() == 1 ? "1 day" : p.getDays() + " days"));
+                    String d = (p.getYears() > 0)
+                            ? (p.getMonths() > 0 ? p.getYears() + " yr " + p.getMonths() + " mo"
+                            : (p.getYears() == 1 ? "1 year" : p.getYears() + " years"))
+                            : (p.getMonths() > 0 ? (p.getMonths() == 1 ? "1 month" : p.getMonths() + " months")
+                            : (p.getDays() == 1 ? "1 day" : p.getDays() + " days"));
 
-                tenancyDurationView.setText(d);
+                    tenancyDurationView.setText(d);
+                }
+
 
             } catch (Exception e) {
                 tenancyDurationView.setText("");
             }
         }
-
-        /*public void setTenancyDuration(String tenantStartDate, String tenantEndDate) {
-            TextView tenancyDurationView = mView.findViewById(R.id.tvItemTenancyDuration);
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-
-                Date startDate = sdf.parse(tenantStartDate);
-
-                boolean isOngoing = (tenantEndDate == null || "null".equalsIgnoreCase(tenantEndDate) || tenantEndDate.trim().isEmpty());
-
-                Date endDate;
-                if (isOngoing) {
-                    endDate = new Date(); // today
-                } else {
-                    endDate = sdf.parse(tenantEndDate);
-                }
-
-                Calendar startCal = Calendar.getInstance();
-                Calendar endCal = Calendar.getInstance();
-
-                startCal.setTime(startDate);
-                endCal.setTime(endDate);
-
-                int years = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
-                int months = endCal.get(Calendar.MONTH) - startCal.get(Calendar.MONTH);
-                int days = endCal.get(Calendar.DAY_OF_MONTH) - startCal.get(Calendar.DAY_OF_MONTH);
-
-                // Fix negative days
-                if (days < 0) {
-                    // Move endCal one month back
-                    endCal.add(Calendar.MONTH, -1);
-
-                    // Get actual max days of that month
-                    int maxDays = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-                    days += maxDays;
-                    months--;
-                }
-
-                // Fix negative months
-                if (months < 0) {
-                    years--;
-                    months += 12;
-                }
-
-                String duration;
-
-                if (years > 0) {
-                    if (months > 0) {
-                        // Year + Month → short format
-                        duration = years + " yr " + months + " mo";
-                    } else {
-                        // Only year → full word
-                        duration = years == 1 ? "1 year" : years + " years";
-                    }
-                }
-                else if (months > 0) {
-                    // Only months → full word
-                    duration = months == 1 ? "1 month" : months + " months";
-                }
-                else {
-                    // Only days → full word
-                    duration = days == 1 ? "1 day" : days + " days";
-                }
-
-                tenancyDurationView.setText(duration);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                tenancyDurationView.setText(""); // fallback
-            }
-        }
-
-         */
 
     }
 

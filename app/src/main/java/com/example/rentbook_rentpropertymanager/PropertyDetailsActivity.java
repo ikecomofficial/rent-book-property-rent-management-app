@@ -1,12 +1,12 @@
 package com.example.rentbook_rentpropertymanager;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,14 +16,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rentbook_rentpropertymanager.adapter.RoomCardAdapter;
 import com.example.rentbook_rentpropertymanager.model.Rooms;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,15 +42,24 @@ import java.util.Locale;
 
 public class PropertyDetailsActivity extends AppCompatActivity {
 
-    private TextView tvPropertyName, tvPropertyAddress, tvProgressLabel;
-    private TextView tvMonthTotalRent, tvMonthTotalElcBill, tvMonthTotalUnitsUsed;
+    // 📊 Property Info
     private String property_name, property_address, property_id;
     private int property_default_rent;
     private double property_unit_rate;
+
+    // 📈 Occupancy Stats
     private long rooms_occupied, shops_occupied, total_rooms, total_shops;
+    private TextView tvProgressLabel;
+    private CircularProgressIndicator occupancyProgressBar;
+
+    // 💰 Monthly Summary (Rent & Electricity)
+    private TextView tvMonthTotalRent, tvMonthTotalElcBill, tvMonthTotalUnitsUsed;
+
+    // 🏠 Room Data & Adapter
     private RoomCardAdapter roomCardAdapter;
     private List<Rooms> roomsList;
-    private CircularProgressIndicator occupancyProgressBar;
+
+    // 🔗 Firebase References
     private DatabaseReference roomsReference;
     private DatabaseReference propertiesReference, databaseReference, collectionsReference, activityLogReference;
     private DatabaseReference tenantReference;
@@ -72,6 +79,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         String user_id = user.getUid();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -94,19 +102,21 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         collectionsReference = databaseReference.child("collections").child(property_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
-        //tvPropertyName = (TextView) findViewById(R.id.tvPropertyName);
-        //tvPropertyAddress = (TextView) findViewById(R.id.tvPropertyAddress);
-        MaterialCardView mcvMonthlyCollectionActivity = findViewById(R.id.mcvMonthlyCollectionActivity);
-        RecyclerView roomsRecyclerView = findViewById(R.id.roomsListRecyclerView);
+        // 📈 Occupancy Stats
         tvProgressLabel = findViewById(R.id.tvProgressLabel);
         occupancyProgressBar = findViewById(R.id.occupancyProgressBar);
 
-        TextView currMonthYear = findViewById(R.id.currMonthYear);
-        currMonthYear.setText(getCurrentMonthYear());
-
+        // 💰 Monthly Summary (Rent & Electricity)
         tvMonthTotalRent = findViewById(R.id.tvMonthTotalRent);
         tvMonthTotalElcBill = findViewById(R.id.tvMonthTotalElcBill);
         tvMonthTotalUnitsUsed = findViewById(R.id.tvMonthTotalUnitsUsed);
+
+        // 📅 Current Month Info
+        TextView currMonthYear = findViewById(R.id.currMonthYear);
+        currMonthYear.setText(getCurrentMonthYear());
+
+        // 🏠 Rooms List
+        RecyclerView roomsRecyclerView = findViewById(R.id.roomsListRecyclerView);
 
         roomsRecyclerView.setHasFixedSize(true);
         roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -130,22 +140,29 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    //property_name = snapshot.child("property_name").getValue(String.class);
-                    //property_address = snapshot.child("property_address").getValue(String.class);
-                    property_default_rent = snapshot.child("prop_room_rent").getValue(Integer.class);
-                    property_unit_rate = snapshot.child("prop_unit_rate").getValue(Double.class);
-                    rooms_occupied = snapshot.child("rooms_occupied").getValue(Long.class);
-                    shops_occupied = snapshot.child("shops_occupied").getValue(Long.class);
-                    total_rooms = snapshot.child("total_rooms").getValue(Long.class);
-                    total_shops = snapshot.child("total_shops").getValue(Long.class);
 
-                    Long totalRoomShopOcc = rooms_occupied + shops_occupied;
-                    Long totalRoomShop = total_rooms + total_shops;
+                    Integer rent = snapshot.child("prop_room_rent").getValue(Integer.class);
+                    property_default_rent = rent != null ? rent : 0;
 
-                    //tvPropertyName.setText(property_name);
-                    //tvPropertyAddress.setText(property_address);
+                    Double unitRate = snapshot.child("prop_unit_rate").getValue(Double.class);
+                    property_unit_rate = unitRate != null ? unitRate : 0.0;
 
-                    setProgressBarData(totalRoomShopOcc.intValue(), totalRoomShop.intValue());
+                    Long rOcc = snapshot.child("rooms_occupied").getValue(Long.class);
+                    rooms_occupied = rOcc != null ? rOcc : 0;
+
+                    Long sOcc = snapshot.child("shops_occupied").getValue(Long.class);
+                    shops_occupied = sOcc != null ? sOcc : 0;
+
+                    Long tRooms = snapshot.child("total_rooms").getValue(Long.class);
+                    total_rooms = tRooms != null ? tRooms : 0;
+
+                    Long tShops = snapshot.child("total_shops").getValue(Long.class);
+                    total_shops = tShops != null ? tShops : 0;
+
+                    long totalRoomShopOcc = rooms_occupied + shops_occupied;
+                    long totalRoomShop = total_rooms + total_shops;
+
+                    setProgressBarData((int) totalRoomShopOcc, (int) totalRoomShop);
                 }
             }
 
@@ -157,18 +174,6 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         loadCurrentMonthCollectionFromFirebase();
         loadRooms();
-
-        mcvMonthlyCollectionActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*
-                Intent collectionIntent = new Intent(PropertyDetailsActivity.this, CollectionsActivity.class);
-                collectionIntent.putExtra("property_id", property_id);
-                startActivity(collectionIntent);
-
-                 */
-            }
-        });
 
     }
 
@@ -220,10 +225,6 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     tvMonthTotalRent.setText(formatAmount(currentMonthRent));
                     tvMonthTotalElcBill.setText(formatAmount(currentMonthElcBill));
                     tvMonthTotalUnitsUsed.setText(String.valueOf(currentMonthUnitsUsed));
-                } else {
-                    tvMonthTotalRent.setText(formatAmount(0));
-                    tvMonthTotalElcBill.setText(formatAmount(0));
-                    tvMonthTotalUnitsUsed.setText(String.valueOf(0));
                 }
             }
 
@@ -245,6 +246,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
     private void loadRooms() {
         roomsReference.orderByChild("property_id").equalTo(property_id)
                 .addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot roomsSnapshot) {
                         roomsList.clear();
@@ -270,7 +272,9 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                             model.setIs_room(isRoom != null && isRoom);
 
                             if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
+                                assert roomId != null;
                                 tenantReference.child(roomId).child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @SuppressLint("NotifyDataSetChanged")
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot tenantSnap) {
                                         if (tenantSnap.exists()) {
@@ -324,7 +328,8 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     if (roomPropertyId != null && roomPropertyId.equals(property_id)) {
                         String del_room_id = roomDeleteSnap.getKey();
 
-                        // Delete Tenant, Rent and Ebills for all rooms of the opened property.
+                        // Delete Tenant, Rent and Elc Bills for all rooms of the opened property.
+                        assert del_room_id != null;
                         rentsReference.child(del_room_id).removeValue();
                         e_billReference.child(del_room_id).removeValue();
                         tenantReference.child(del_room_id).removeValue();
@@ -339,7 +344,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     }
                     propertiesReference.removeValue().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
-                            Toast.makeText(PropertyDetailsActivity.this, "Deleted Rooms & Properties", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PropertyDetailsActivity.this, "Property Deleted", Toast.LENGTH_SHORT).show();
                             deletePropertyActivityLog();
                             finish();
                         } else {
@@ -358,16 +363,16 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
 
     private void propertyDeleteConfirmation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this); // 'this' is your context
-        builder.setTitle("Confirm Deletion..!!");
-        builder.setMessage("Do You Want to Delete this Property?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String final_title = "Delete Property: " + property_name + "?";
+        builder.setTitle(final_title);
+        builder.setMessage("This will permanently delete all data for this property."); //To confirm type DELETE below.
 
         // Positive button -> Yes
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Perform deletion here
-                //deleteItem();
                 deletePropertyFromFirebase();
             }
         });
@@ -377,8 +382,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing, just dismiss
-                //dialog.dismiss();
-                Toast.makeText(PropertyDetailsActivity.this, "Deletion Cancelled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PropertyDetailsActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
             }
         });
 

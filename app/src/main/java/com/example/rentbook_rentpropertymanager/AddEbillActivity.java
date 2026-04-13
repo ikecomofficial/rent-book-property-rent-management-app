@@ -40,23 +40,36 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
 public class AddEbillActivity extends AppCompatActivity {
 
-    private TextInputEditText etCurrentReading, etElcBillAmount, etElcLastPaidTill;
-    private TextView tvCustomDate, tvCustomTime, tvPrevPaidTill, tvPrevPaidTillByAmt, tvElcBillMonthYear;
-    private LinearLayout layoutLastPaidUnit, layoutElcBillAmount, layoutElcUnitPaid;
-    private String room_id, property_id;
-    private String tenant_id;
+    // 🏠 IDs
+    private String room_id, property_id, tenant_id;
+
+    // 💳 Payment Info
     private String paymentMode = "Cash";
-    private String ebill_date, ebill_time, ebill_timestamp, elc_bill_month_year;
+    private String ebill_timestamp;
+    private String elc_bill_month_year;
+
+    // 🔢 Electricity Data
     private int last_paid_upto = -1;
     private double elc_unit_rate = 0, elc_bill_amount = 0, units_used = 0, units_paid_upto = 0;
-    private boolean isByUnits = true, isFirstRecord = true;
+    private boolean isByUnits = true;
+
+    // 📄 Input Fields
+    private TextInputEditText etCurrentReading, etElcBillAmount, etElcLastPaidTill;
+
+    // 📊 UI Views
+    private TextView tvCustomDate, tvCustomTime, tvPrevPaidTill, tvPrevPaidTillByAmt, tvElcBillMonthYear;
+    private LinearLayout layoutLastPaidUnit, layoutElcBillAmount, layoutElcUnitPaid;
     private MaterialCardView layoutPrevPaidTill, layoutPrevPaidTillByAmt;
+
+    // ⏰ Date & Time
     private Calendar calendar;
-    private DatabaseReference roomReference;
-    private DatabaseReference elcBillReference, activityLogReference;
+
+    // 🔗 Firebase References
+    private DatabaseReference roomReference, elcBillReference, activityLogReference;
 
 
     @Override
@@ -72,6 +85,7 @@ public class AddEbillActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         String user_id = user.getUid();
 
         if (getSupportActionBar() != null){
@@ -85,33 +99,35 @@ public class AddEbillActivity extends AppCompatActivity {
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         roomReference = databaseReference.child("rooms").child(room_id);
-        DatabaseReference tenantReference = databaseReference.child("tenants").child(tenant_id);
         elcBillReference = databaseReference.child("e-bills").child(room_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
+        // 📄 Input Fields
         etCurrentReading = findViewById(R.id.etCurrentMeterReading);
         etElcBillAmount = findViewById(R.id.etElcBillAmount);
         etElcLastPaidTill = findViewById(R.id.etElcLastPaidUnit);
+
+        // 📊 UI Layouts
         layoutElcUnitPaid = findViewById(R.id.layoutElcUnitPaid);
         layoutElcBillAmount = findViewById(R.id.layoutElcBillAmount);
         layoutElcBillAmount.setVisibility(View.GONE);
         layoutLastPaidUnit = findViewById(R.id.layoutLastPaidTill);
-
         layoutPrevPaidTill = findViewById(R.id.layoutPrevPaidTill);
         layoutPrevPaidTillByAmt = findViewById(R.id.layoutPrevPaidTillByAmt);
 
+        // 🎯 Actions
         MaterialCardView btnSaveElcBill = findViewById(R.id.btnSaveElcBill);
         MaterialButtonToggleGroup tgElcBillMode = findViewById(R.id.toggleElcBillMode);
         MaterialButtonToggleGroup tgPaymentMode = findViewById(R.id.togglePaymentMode);
-
-
-        tvCustomDate = findViewById(R.id.tvCustomDate);
-        tvCustomTime = findViewById(R.id.tvCustomTime);
-
         MaterialCardView btnChangeElcBillMY = findViewById(R.id.btnChangeElcBillMY);
         MaterialCardView btnChangeDateTime = findViewById(R.id.btnChangeDateTime);
+
+        // 📅 Date & Time UI
+        tvCustomDate = findViewById(R.id.tvCustomDate);
+        tvCustomTime = findViewById(R.id.tvCustomTime);
         tvElcBillMonthYear = findViewById(R.id.tvElcBillMonthYear);
 
+        // 📈 Previous Data Display
         tvPrevPaidTill = findViewById(R.id.tvPrevPaidTill);
         tvPrevPaidTillByAmt = findViewById(R.id.tvPrevPaidTillByAmt);
 
@@ -120,32 +136,26 @@ public class AddEbillActivity extends AppCompatActivity {
             fetchElcUnitRate();
         }
 
-        tgElcBillMode.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
-            @Override
-            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                if (isChecked){
-                    if (checkedId == R.id.btnByUnitsSelection){
-                        layoutElcUnitPaid.setVisibility(View.VISIBLE);
-                        layoutElcBillAmount.setVisibility(View.GONE);
-                        isByUnits = true;
-                    } else if (checkedId == R.id.btnByAmountSelection) {
-                        layoutElcUnitPaid.setVisibility(View.GONE);
-                        layoutElcBillAmount.setVisibility(View.VISIBLE);
-                        isByUnits = false;
-                    }
+        tgElcBillMode.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked){
+                if (checkedId == R.id.btnByUnitsSelection){
+                    layoutElcUnitPaid.setVisibility(View.VISIBLE);
+                    layoutElcBillAmount.setVisibility(View.GONE);
+                    isByUnits = true;
+                } else if (checkedId == R.id.btnByAmountSelection) {
+                    layoutElcUnitPaid.setVisibility(View.GONE);
+                    layoutElcBillAmount.setVisibility(View.VISIBLE);
+                    isByUnits = false;
                 }
             }
         });
 
-        tgPaymentMode.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
-            @Override
-            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                if (isChecked){
-                    if (checkedId == R.id.btnCashSelection){
-                        paymentMode = "Cash";
-                    } else if (checkedId == R.id.btnOnlineSelection) {
-                        paymentMode = "Online";
-                    }
+        tgPaymentMode.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked){
+                if (checkedId == R.id.btnCashSelection){
+                    paymentMode = "Cash";
+                } else if (checkedId == R.id.btnOnlineSelection) {
+                    paymentMode = "Online";
                 }
             }
         });
@@ -161,12 +171,7 @@ public class AddEbillActivity extends AppCompatActivity {
             showElcBillMonthYearPicker();
         });
 
-        btnSaveElcBill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveElcBillToFirebase();
-            }
-        });
+        btnSaveElcBill.setOnClickListener(view -> saveElcBillToFirebase());
 
     }
 
@@ -174,9 +179,11 @@ public class AddEbillActivity extends AppCompatActivity {
         roomReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) return;
+
                 Long lastPaidUnit = snapshot.child("last_unit_paid").getValue(Long.class);
-                if (lastPaidUnit != null){
-                    last_paid_upto = lastPaidUnit.intValue();
+                last_paid_upto = (lastPaidUnit != null) ? lastPaidUnit.intValue() : 0;
+
                     if (last_paid_upto == 0){
                         layoutLastPaidUnit.setVisibility(View.VISIBLE);
                         layoutPrevPaidTill.setVisibility(View.GONE);
@@ -193,7 +200,7 @@ public class AddEbillActivity extends AppCompatActivity {
                         tvPrevPaidTillByAmt.setText(tvPrevPaidUpTo);
 
                     }
-                }
+
 
             }
 
@@ -210,7 +217,8 @@ public class AddEbillActivity extends AppCompatActivity {
         roomReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                elc_unit_rate = snapshot.child("elc_unit_rate").getValue(Double.class);
+                Double rate = snapshot.child("elc_unit_rate").getValue(Double.class);
+                elc_unit_rate = (rate != null) ? rate : 0.0;
             }
 
             @Override
@@ -241,8 +249,9 @@ public class AddEbillActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-        ebill_date = dateFormat.format(calendar.getTime());
-        ebill_time = timeFormat.format(calendar.getTime());
+        // 📅 Electricity Bill Meta
+        String ebill_date = dateFormat.format(calendar.getTime());
+        String ebill_time = timeFormat.format(calendar.getTime());
 
         tvCustomDate.setText(ebill_date);
         tvCustomTime.setText(ebill_time);
@@ -252,18 +261,6 @@ public class AddEbillActivity extends AppCompatActivity {
         String monthYear = sdfMonthYear.format(Calendar.getInstance().getTime());
         tvElcBillMonthYear.setText(monthYear);
         elc_bill_month_year = monthYear;
-    }
-
-    private void displayCurrDateTime(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-
-        ebill_date = dateFormat.format(calendar.getTime());
-        ebill_time = timeFormat.format(calendar.getTime());
-
-        tvCustomDate.setText(ebill_date);
-        tvCustomTime.setText(ebill_time);
-
     }
 
     private void showElcBillMonthYearPicker() {
@@ -370,7 +367,7 @@ public class AddEbillActivity extends AppCompatActivity {
 
         // Step 1: Get previous units
         if (last_paid_upto == 0) {
-            String prevUnitPaid = etElcLastPaidTill.getText().toString().trim();
+            String prevUnitPaid = Objects.requireNonNull(etElcLastPaidTill.getText()).toString().trim();
             if (prevUnitPaid.isEmpty()) {
                 etElcLastPaidTill.setError("Enter Previous Units");
                 return;
@@ -379,7 +376,7 @@ public class AddEbillActivity extends AppCompatActivity {
         }
         if (isByUnits){
             // Unit Mode
-            String unitPaidUpTo = etCurrentReading.getText().toString().trim();
+            String unitPaidUpTo = Objects.requireNonNull(etCurrentReading.getText()).toString().trim();
             if (unitPaidUpTo.isEmpty()){
                 etCurrentReading.setError("Enter Current Meter Reading");
                 return;
@@ -388,7 +385,7 @@ public class AddEbillActivity extends AppCompatActivity {
             units_used = units_paid_upto - last_paid_upto;
             elc_bill_amount = units_used * elc_unit_rate;
         }else {
-            String elcBillAmount = etElcBillAmount.getText().toString().trim();
+            String elcBillAmount = Objects.requireNonNull(etElcBillAmount.getText()).toString().trim();
             if (elcBillAmount.isEmpty()){
                 etElcBillAmount.setError("Enter Electricity Bill Paid Amount");
                 return;
@@ -441,7 +438,7 @@ public class AddEbillActivity extends AppCompatActivity {
             return outputFormat.format(date);
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e("DateParse", "Error parsing date", e);
             return null;
         }
     }

@@ -139,7 +139,7 @@ public class BillsFragment extends Fragment {
             @Override
             public BillsFragment.BillsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.single_ebill_layout_v2, parent, false);
+                        .inflate(R.layout.single_ebill_layout, parent, false);
                 return new BillsFragment.BillsViewHolder(view);
             }
 

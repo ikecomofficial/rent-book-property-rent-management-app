@@ -1,5 +1,6 @@
 package com.example.rentbook_rentpropertymanager.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -22,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rentbook_rentpropertymanager.MainActivity;
 import com.example.rentbook_rentpropertymanager.R;
 import com.example.rentbook_rentpropertymanager.model.ActivityLog;
 import com.google.android.material.card.MaterialCardView;
@@ -53,9 +53,8 @@ public class ActivityFragment extends Fragment {
     private final List<ActivityLog> fullList = new ArrayList<>();
     private final List<ActivityLog> filteredList = new ArrayList<>();
     private DatabaseReference activityLogsReference;
-    private static final int ITEMS_TO_LOAD = 30;
+    private static final int ITEMS_TO_LOAD = 25;
     private boolean isLoading = false;
-    private long lastTimestamp = Long.MAX_VALUE;
     private String lastKey = null;
 
     @Override
@@ -212,7 +211,7 @@ public class ActivityFragment extends Fragment {
         chip.setChipCornerRadius(50f);
         chip.setChipStrokeWidth(1f);
         chip.setChipStrokeColorResource(R.color.primary_main);
-        chip.setChipBackgroundColorResource(R.color.white);
+        chip.setChipBackgroundColorResource(R.color.bg_list_layout_primary);
         chip.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.text_heading)
         );
@@ -250,7 +249,7 @@ public class ActivityFragment extends Fragment {
 
     private void setChipUnselected(Chip chip) {
         chip.setChipBackgroundColor(ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.white)));
+                ContextCompat.getColor(requireContext(), R.color.bg_list_layout_primary)));
         chip.setTextColor(ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.text_muted)));
     }
@@ -294,6 +293,7 @@ public class ActivityFragment extends Fragment {
 
         private List<ActivityLog> list = new ArrayList<>();
 
+        @SuppressLint("NotifyDataSetChanged")
         void updateList(List<ActivityLog> newList) {
             list = newList;
             notifyDataSetChanged();
@@ -473,6 +473,7 @@ public class ActivityFragment extends Fragment {
         public static final String UTILITY = "UTILITY";
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void refreshLogsFromStart() {
 
         lastKey = null;

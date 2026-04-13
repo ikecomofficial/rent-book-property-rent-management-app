@@ -52,6 +52,7 @@ public class EditProperty extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         user_id = user.getUid();
 
         property_id = getIntent().getStringExtra("property_id");
@@ -69,19 +70,16 @@ public class EditProperty extends AppCompatActivity {
         etPropertyAddress = findViewById(R.id.etUpdatePropertyAddress);
         etDefaultRentAmount = findViewById(R.id.etUpdateDefaultRent);
         etDefaultUnitRate = findViewById(R.id.etUpdateUnitRate);
-        MaterialCardView updateProperty = (MaterialCardView) findViewById(R.id.btnUpdateProperty);
+        MaterialCardView updateProperty = findViewById(R.id.btnUpdateProperty);
 
         etPropertyName.setText(property_name);
         etPropertyAddress.setText(property_address);
         etDefaultRentAmount.setText(String.valueOf(default_rent));
         etDefaultUnitRate.setText(String.valueOf(default_unit_rate));
 
-        updateProperty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updatePropertyToFirebase();
-                updateRoomRentToFirebase();
-            }
+        updateProperty.setOnClickListener(view -> {
+            updatePropertyToFirebase();
+            updateRoomRentToFirebase();
         });
 
     }

@@ -1,5 +1,6 @@
 package com.example.rentbook_rentpropertymanager;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -66,9 +67,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -76,20 +75,33 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TenantDetailsActivity extends AppCompatActivity {
 
+    // 🏠 IDs
     private String user_id, room_id, tenant_id;
+
+    // 👤 Tenant Info
     private String tenant_phone, tenant_profile_url, thumb_tenant_url;
+
+    // 📄 Tenant UI Views
+    private TextView tvTenantName, tvTenantPhone, tvTenantStartDate, tvTenantEndDate, tvTenantPropRoom, tvBillingStartDay;
     private CircleImageView cimgTenantProfile;
-    private ImageView imgEditStartDay;
+
+    // 📊 Billing Info
     private Integer billing_start_day;
+
+    // 📂 Documents (Recycler + Data)
+    private RecyclerView rvTenantDocument;
+    private FirebaseRecyclerAdapter<Documents, DocumentsViewHolder> documentAdapter;
+
+    // ⬆️ Upload UI
     private AlertDialog uploadDialog;
     private ProgressBar profileUploadBar;
-    private boolean is_add_doc = false;
     private TextView tvUploadPercentage, tvUploadDialogSubHeading;
-    private TextView tvTenantName, tvTenantPhone, tvTenantStartDate, tvTenantEndDate, tvTenantPropRoom, tvBillingStartDay;
-    private RecyclerView rvTenantDocument;
-    private List<Documents> documentList;
-    private FirebaseRecyclerAdapter<Documents, DocumentsViewHolder> documentAdapter;
-    private DatabaseReference roomReference, tenantReference, propertyReference, documentReference, userReference;
+    private boolean is_add_doc = false;
+
+    // 🔗 Firebase References
+    private DatabaseReference roomReference, tenantReference, propertyReference, documentReference;
+
+    // ☁️ Storage References
     private StorageReference profileStorageRef, tenantDocumentRef;
 
     @Override
@@ -118,7 +130,6 @@ public class TenantDetailsActivity extends AppCompatActivity {
         user_id = user.getUid();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        userReference = databaseReference.child("users").child(user_id);
         assert tenant_id != null;
         assert room_id != null;
         tenantReference = databaseReference.child("tenants").child(room_id).child(tenant_id);
@@ -129,19 +140,23 @@ public class TenantDetailsActivity extends AppCompatActivity {
         profileStorageRef = FirebaseStorage.getInstance().getReference().child("tenant_prof_images");
         tenantDocumentRef = FirebaseStorage.getInstance().getReference().child("tenant_doc_images");
 
+        // 📄 Tenant UI Views
         cimgTenantProfile = findViewById(R.id.cimgTenantProfile);
-        MaterialCardView btnChangeTenantProfile = findViewById(R.id.btnChangeTenantProfile);
         tvTenantName = findViewById(R.id.tvTenantName);
         tvTenantPhone = findViewById(R.id.tvTenantPhone);
         tvTenantStartDate = findViewById(R.id.tvTenantStartDate);
         tvTenantEndDate = findViewById(R.id.tvTenantEndDate);
         tvTenantPropRoom = findViewById(R.id.tvTenantPropRoom);
         tvBillingStartDay = findViewById(R.id.tvBillingStartDay);
-        imgEditStartDay = findViewById(R.id.imgEditStartDay);
+        ImageView imgEditStartDay = findViewById(R.id.imgEditStartDay);
+
+        // 🎯 Actions
+        MaterialCardView btnChangeTenantProfile = findViewById(R.id.btnChangeTenantProfile);
         LinearLayout btnContactTenant = findViewById(R.id.btnContactTenant);
-        ImageView imgTenantDocHeader = findViewById(R.id.imgTenantDocHeader);
         TextView btnAddTenantDoc = findViewById(R.id.btnAddTenantDoc);
 
+        // 📂 Tenant Documents UI
+        ImageView imgTenantDocHeader = findViewById(R.id.imgTenantDocHeader);
         LinearLayout layoutExpandableHeader = findViewById(R.id.layoutExpandableHeader);
         LinearLayout layoutTenantDocCollapse = findViewById(R.id.layoutTenantDocCollapse);
         View dividerExpandDoc = findViewById(R.id.dividerExpandDoc);
@@ -157,7 +172,6 @@ public class TenantDetailsActivity extends AppCompatActivity {
         }
 
         rvTenantDocument = findViewById(R.id.rvTenantDocument);
-        documentList = new ArrayList<>();
 
 
         loadTenantData();
@@ -178,70 +192,51 @@ public class TenantDetailsActivity extends AppCompatActivity {
             }
         });
 
-        btnContactTenant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showContactBottomSheet();
-            }
+        btnContactTenant.setOnClickListener(view -> showContactBottomSheet());
+
+        btnChangeTenantProfile.setOnClickListener(view -> {
+            is_add_doc = false;
+            openGallery();
         });
 
-        btnChangeTenantProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                is_add_doc = false;
-                openGallery();
-            }
+        btnAddTenantDoc.setOnClickListener(view -> {
+            is_add_doc = true;
+            openGallery();
         });
 
-        btnAddTenantDoc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                is_add_doc = true;
-                openGallery();
+        cimgTenantProfile.setOnClickListener(v -> {
+            // Create dialog
+            Dialog dialog = new Dialog(v.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+
+            // Create PhotoView dynamically
+            PhotoView photoView = new PhotoView(v.getContext());
+            photoView.setBackgroundColor(Color.BLACK);
+            photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            // Set PhotoView as dialog content
+            dialog.setContentView(photoView);
+
+            if (tenant_profile_url.equals("default")){
+                // Load image using Glide
+                Glide.with(v.getContext())
+                        .load(R.drawable.ic_tenant_profile_default) // your Firebase image URL
+                        .into(photoView);
+            }else {
+                // Load image using Glide
+                Glide.with(v.getContext())
+                        .load(tenant_profile_url) // your Firebase image URL
+                        .placeholder(R.drawable.ic_tenant_profile_default)
+                        .into(photoView);
             }
+
+
+            // Close dialog on tap
+            photoView.setOnClickListener(view -> dialog.dismiss());
+
+            dialog.show();
         });
 
-        cimgTenantProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create dialog
-                Dialog dialog = new Dialog(v.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-
-                // Create PhotoView dynamically
-                PhotoView photoView = new PhotoView(v.getContext());
-                photoView.setBackgroundColor(Color.BLACK);
-                photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-                // Set PhotoView as dialog content
-                dialog.setContentView(photoView);
-
-                if (tenant_profile_url.equals("default")){
-                    // Load image using Glide
-                    Glide.with(v.getContext())
-                            .load(R.drawable.ic_tenant_profile_default) // your Firebase image URL
-                            .into(photoView);
-                }else {
-                    // Load image using Glide
-                    Glide.with(v.getContext())
-                            .load(tenant_profile_url) // your Firebase image URL
-                            .placeholder(R.drawable.ic_tenant_profile_default)
-                            .into(photoView);
-                }
-
-
-                // Close dialog on tap
-                photoView.setOnClickListener(view -> dialog.dismiss());
-
-                dialog.show();
-            }
-        });
-
-        imgEditStartDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                billingStartDaySelector();
-            }
-        });
+        imgEditStartDay.setOnClickListener(v -> billingStartDaySelector());
 
     }
 
@@ -257,7 +252,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
         // Title
         TextView title = new TextView(this);
-        title.setText("Select Billing Start Day");
+        title.setText(R.string.text_sel_billing_start_day);
         title.setTextSize(18f);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setGravity(Gravity.CENTER);
@@ -320,7 +315,6 @@ public class TenantDetailsActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
-        //checkAndRequestPermissions();
 
         Intent intent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -396,8 +390,8 @@ public class TenantDetailsActivity extends AppCompatActivity {
     private void updateUploadProgress(long bytesTransferred, long totalBytes) {
         int progress = (int) ((bytesTransferred * 100) / totalBytes);
         profileUploadBar.setProgress(progress);
-        tvUploadPercentage.setText(progress + "%");
-        //tvUploadSpeed.setText(String.format(Locale.getDefault(), "%.1f MB/s", speedMBps));
+        String progPercent = progress + "%";
+        tvUploadPercentage.setText(progPercent);
     }
 
     private void dismissUploadDialog() {
@@ -488,9 +482,8 @@ public class TenantDetailsActivity extends AppCompatActivity {
                     });
 
         } catch (IOException e) {
-            //progressDialog.dismiss();
             dismissUploadDialog();
-            e.printStackTrace();
+            Log.e("UploadError", "Error while uploading tenant data", e);
         }
     }
 
@@ -579,7 +572,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
                 tvTenantStartDate.setText(tenant_start_date);
                 assert tenant_end_date != null;
                 if (tenant_end_date.equals("null")){
-                    tvTenantEndDate.setTextColor(ContextCompat.getColor(TenantDetailsActivity.this, R.color.text_amount_green));
+                    tvTenantEndDate.setTextColor(ContextCompat.getColor(TenantDetailsActivity.this, R.color.text_amount));
                     tvTenantEndDate.setTypeface(null, Typeface.BOLD);
                     tvTenantEndDate.setText(R.string.text_active);
                 }else {
@@ -658,20 +651,17 @@ public class TenantDetailsActivity extends AppCompatActivity {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
 
         // Inflate layout for bottom sheet
-        View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_contact_tenant, null, false);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_contact_tenant, null, false);
         bottomSheetDialog.setContentView(view);
 
         // Make sure we modify the bottom-sheet container after it is shown
-        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                if (bottomSheet != null) {
-                    // clear default background so your drawable shows through
-                    bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
-                    bottomSheet.setClipToPadding(false);
-                }
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                // clear default background so your drawable shows through
+                bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheet.setClipToPadding(false);
             }
         });
 
@@ -705,9 +695,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
             // Create WhatsApp chat link
             String url = "https://wa.me/" + phoneWithCountry;
 
-            if (cleanedPhone == null){
-                return;
-            } else {
+            if (cleanedPhone != null){
                 bottomSheetDialog.dismiss();
                 Intent intentWhatsApp = new Intent(Intent.ACTION_VIEW);
                 intentWhatsApp.setData(Uri.parse(url));
@@ -747,7 +735,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
                         .build();
         // Create adapter
         FirebaseRecyclerAdapter<Documents, DocumentsViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Documents, DocumentsViewHolder>(options) {
+                new FirebaseRecyclerAdapter<>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull DocumentsViewHolder holder,
                                                     int position,
@@ -858,18 +846,12 @@ public class TenantDetailsActivity extends AppCompatActivity {
             documentNameView.setText(shortDocName);
         }
 
-        public void setTenantDocUrl(String tenantDocUrl){
-            ImageView tenantDocUrlView = mView.findViewById(R.id.imgTenantDocument);
-            //tenantDocUrlView.setText(tenantDocUrl);
-        }
-
         public void setThumbDocUrl(String thumbDocUrl){
             ImageView thumbDocUrlView = mView.findViewById(R.id.imgTenantDocument);
             Glide.with(mView.getContext())
                     .load(thumbDocUrl)
                     .placeholder(R.drawable.img_doc_placeholder)
                     .into(thumbDocUrlView);
-            //thumbDocUrlView.setText(thumbDocUrl);
         }
     }
 

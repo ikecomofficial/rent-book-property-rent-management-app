@@ -48,7 +48,7 @@
     <string name="text_activity_log_desc">₹2,801 rent added for Room 01 at Demo Property.</string>
 
     <!-- Login Screen Texts -->
-    <string name="text_login_subheading">Sign in to manage your properties</string>
+    <string name="text_login_subheading">Manage your properties, tenants &amp; rents effortlessly at one place.</string>
     <string name="text_label_mobile_no">Mobile Number</string>
     <string name="text_country_code_in">+91</string>
     <string name="text_hint_mobile_no">e.g. 9876543210</string>
@@ -81,7 +81,7 @@
     <string name="text_get_assist">Get assistance with your account</string>
     <string name="text_about_app">About App</string>
     <string name="text_version_full">Version 1.1.0</string>
-    <string name="text_version">v1.1.2</string>
+    <string name="text_version">v2.3.1</string>
     <string name="text_btn_logout">Logout</string>
     <string name="text_rentify_copyright">Rentify: Rent Manager App © 2024</string>
 
@@ -214,7 +214,9 @@
 
     <!-- Edit Room Screen Strings -->
     <string name="text_toolbar_edit_room_details">Edit Room Details</string>
+    <string name="text_toolbar_edit_shop_details">Edit Shop Details</string>
     <string name="text_btn_update_room">Update Room</string>
+    <string name="text_btn_update_shop">Update Shop</string>
 
     <!-- View All Past Tenant & Single Tenant List Screen Strings -->
     <string name="text_tenant_history">Tenant History</string>
@@ -245,6 +247,7 @@
     <string name="text_value_call_wa">Call Or WhatsApp</string>
     <string name="text_value_billing_start">1st Of Every Month</string>
     <string name="text_billing_start_day">Billing Start Day</string>
+    <string name="text_sel_billing_start_day">Select Billing Start Day</string>
     <string name="text_label_files_attachments">Files &amp; Attachments</string>
     <string name="text_documents">Documents</string>
     <string name="text_add_image">Add Image</string>

@@ -1,27 +1,17 @@
 package com.example.rentbook_rentpropertymanager;
 
-import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowInsetsController;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.widget.NestedScrollView;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
 public class AddProperty extends AppCompatActivity {
 
@@ -39,60 +30,24 @@ public class AddProperty extends AppCompatActivity {
     private int currTotalRooms = 0, currTotalShops = 0;
     private String user_id, pid, currTimestamp;
     private String propertyName, propertyAddress;
-    private DatabaseReference databaseReference, propertyReference, activityLogReference;
+    private DatabaseReference propertyReference;
+    private DatabaseReference activityLogReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_property);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        Window window = getWindow();
-
-        // Set status bar background (example: white)
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.getInsetsController().setSystemBarsAppearance(
-                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            );
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            );
-        }
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.text_toolbar_add_new_prop);
         }
-
-        // Adjust/Scroll Layout to move view on top of keyboard.
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        NestedScrollView scrollView = findViewById(R.id.main);
-        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            Rect r = new Rect();
-            scrollView.getWindowVisibleDisplayFrame(r);
-            int screenHeight = scrollView.getRootView().getHeight();
-            int keyboardHeight = screenHeight - r.bottom;
-            boolean keyboardVisible = keyboardHeight > screenHeight * 0.15;
-
-            View focused = getCurrentFocus();
-            if (keyboardVisible && focused != null) {
-                int[] loc = new int[2];
-                focused.getLocationOnScreen(loc);
-                int offset = (loc[1] + focused.getHeight()) - r.bottom;
-                if (offset > 0) scrollView.smoothScrollBy(0, offset + 40);
-            } else if (!keyboardVisible) {
-                scrollView.smoothScrollTo(0, 0);
-            }
-        });
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -121,7 +76,7 @@ public class AddProperty extends AppCompatActivity {
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         propertyReference = databaseReference.child("properties");
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
@@ -148,15 +103,14 @@ public class AddProperty extends AppCompatActivity {
             currTotalShops++;
             textTotalShops.setText(String.valueOf(currTotalShops));
         });
-
     }
 
     private boolean savePropertyToFirebase(){
 
-        propertyName = etPropertyName.getText().toString().trim();
-        propertyAddress = etPropertyAddress.getText().toString().trim();
-        String propertyDefaultRent = etDefaultRentAmount.getText().toString().trim();
-        String propertyDefaultUnitRate = etUnitRate.getText().toString().trim();
+        propertyName = Objects.requireNonNull(etPropertyName.getText()).toString().trim();
+        propertyAddress = Objects.requireNonNull(etPropertyAddress.getText()).toString().trim();
+        String propertyDefaultRent = Objects.requireNonNull(etDefaultRentAmount.getText()).toString().trim();
+        String propertyDefaultUnitRate = Objects.requireNonNull(etUnitRate.getText()).toString().trim();
 
         currTimestamp = String.valueOf(System.currentTimeMillis());
 

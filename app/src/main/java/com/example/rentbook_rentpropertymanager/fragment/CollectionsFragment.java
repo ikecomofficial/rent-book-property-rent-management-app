@@ -152,7 +152,7 @@ public class CollectionsFragment extends Fragment {
         chip.setChipCornerRadius(50f);
         chip.setChipStrokeWidth(1f);
         chip.setChipStrokeColorResource(R.color.primary_main);
-        chip.setChipBackgroundColorResource(R.color.white);
+        chip.setChipBackgroundColorResource(R.color.bg_list_layout_primary);
         chip.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.text_heading)
         );
@@ -201,7 +201,7 @@ public class CollectionsFragment extends Fragment {
 
     private void setChipUnselected(Chip chip) {
         chip.setChipBackgroundColor(ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.white)));
+                ContextCompat.getColor(requireContext(), R.color.bg_list_layout_primary)));
         chip.setTextColor(ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.text_muted)));
     }
@@ -343,14 +343,6 @@ public class CollectionsFragment extends Fragment {
             tvTotalElcBill.setText(formatAmount(collectionTotalElcBill));
 
         }
-        /*public void setRentDateTime(String rentDate, String rentTime){
-            TextView rentDateView = mView.findViewById(R.id.tvRentDateTime);
-            String finalDateTime = rentDate + ", " + rentTime;
-            rentDateView.setText(finalDateTime);
-
-        }
-
-         */
     }
 
     public static String convertKeyToMonthYear(String input) {
@@ -371,14 +363,6 @@ public class CollectionsFragment extends Fragment {
             return "N/A";
         }
     }
-/*
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((MainActivity) requireActivity()).showToolbar(true, "Collections");
-    }
-
- */
 
 }
 

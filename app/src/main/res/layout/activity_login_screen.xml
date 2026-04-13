@@ -58,6 +58,7 @@
                     android:layout_marginTop="6dp"
                     android:text="@string/text_login_subheading"
                     android:textSize="14sp"
+                    android:gravity="center"
                     android:layout_marginBottom="42dp"
                     android:textColor="@color/text_muted" />
 
@@ -136,7 +137,7 @@
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/bg_info_container"
                     app:strokeWidth="1dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_marginVertical="10dp"
                     app:strokeColor="@color/border_info_container">
 
@@ -169,7 +170,8 @@
                             android:inputType="phone"
                             android:textSize="16sp"
                             android:textColor="@color/text_heading"
-                            android:textColorHint="@color/text_subheading" />
+                            android:textColorHint="@color/text_subheading"
+                            tools:ignore="Autofill" />
 
                     </LinearLayout>
 

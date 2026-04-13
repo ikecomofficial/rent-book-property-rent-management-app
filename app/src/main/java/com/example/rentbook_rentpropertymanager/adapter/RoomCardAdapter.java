@@ -1,6 +1,7 @@
 package com.example.rentbook_rentpropertymanager.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,10 +83,19 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             Glide.with(context).load(room.getThumb_tenant_url())
                     .placeholder(R.drawable.ic_tenant_profile_default)
                     .into(holder.cimgTenantProfile);
+
+            // ❗ IMPORTANT: Remove tint (because of view recycling)
+            holder.cimgTenantProfile.clearColorFilter();
+
         } else {
             holder.tvTenantName.setText(R.string.text_no_tenant_added);   // "No Tenant Added"
             holder.tvTenantPhone.setText(R.string.text_clk_add_tenant);   // "Click (Add Tenant)"
             holder.cimgTenantProfile.setImageResource(R.drawable.ic_no_tenant_profile_default);
+            // Apply tint
+            holder.cimgTenantProfile.setColorFilter(
+                    ContextCompat.getColor(context, R.color.text_heading),
+                    PorterDuff.Mode.SRC_IN
+            );
         }
 
         if (Boolean.TRUE.equals(room.isIs_occupied())){

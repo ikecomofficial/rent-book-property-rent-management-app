@@ -61,20 +61,34 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountFragment extends Fragment {
 
-    private TextView tvUserName, tvUserPhoneNumber, tvUserEmail, tvUserRole;
+    // 👤 User Info
     private String user_id, profile_url, thumb_profile_url;
+
+    // 📄 User UI Views
+    private TextView tvUserName, tvUserPhoneNumber, tvUserEmail, tvUserRole;
+    private CircleImageView cimgUserProfile;
+
+    // ✏️ Edit User
     private TextInputEditText etUpdatedUserName;
     private LinearLayout layoutEditName;
-    private CircleImageView cimgUserProfile;
+    private ImageView imgUserNameEdit;
+
+    // 📂 Upload UI
     private AlertDialog uploadDialog;
     private ProgressBar profileUploadBar;
     private TextView tvUploadPercentage, tvUploadDialogSubHeading;
 
-    private MaterialCardView layoutUserMobile, layoutUserEmail, btnUserProfileEdit;
-    private ImageView imgUserNameEdit;
+    // 📊 User Info Cards
+    private MaterialCardView layoutUserMobile, layoutUserEmail;
+
+    // 🔐 Authentication
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+
+    // 🔗 Firebase References
     private DatabaseReference userReference;
+
+    // ☁️ Storage Reference
     private StorageReference userProfileRef;
 
     @Override
@@ -88,7 +102,7 @@ public class AccountFragment extends Fragment {
         tvUserPhoneNumber = view.findViewById(R.id.tvUserPhoneNumber);
         tvUserRole = view.findViewById(R.id.tvUserRole);
         cimgUserProfile = view.findViewById(R.id.cimgUserProfile);
-        btnUserProfileEdit = view.findViewById(R.id.btnUserProfileEdit);
+        MaterialCardView btnUserProfileEdit = view.findViewById(R.id.btnUserProfileEdit);
         MaterialCardView layoutUserSignOut = view.findViewById(R.id.layoutUserSignOut);
 
         layoutUserMobile = view.findViewById(R.id.layoutUserMobile);
@@ -402,15 +416,13 @@ public class AccountFragment extends Fragment {
                                 saveUrlsToDatabase(fullUrl, thumbUrl);
                             }))
                     .addOnFailureListener(e -> {
-                        //progressDialog.dismiss();
                         dismissUploadDialog();
                         Toast.makeText(getContext(), "Thumbnail upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
 
         } catch (IOException e) {
-            //progressDialog.dismiss();
             dismissUploadDialog();
-            e.printStackTrace();
+            Log.e("UploadError", "Error uploading profile image", e);
         }
     }
 
@@ -472,8 +484,8 @@ public class AccountFragment extends Fragment {
     private void updateUploadProgress(long bytesTransferred, long totalBytes) {
         int progress = (int) ((bytesTransferred * 100) / totalBytes);
         profileUploadBar.setProgress(progress);
-        tvUploadPercentage.setText(progress + "%");
-        //tvUploadSpeed.setText(String.format(Locale.getDefault(), "%.1f MB/s", speedMBps));
+        String progPercent = progress + "%";
+        tvUploadPercentage.setText(progPercent);
     }
 
     private void dismissUploadDialog() {
@@ -486,7 +498,7 @@ public class AccountFragment extends Fragment {
     private void googleSignOut(){
         // First, sign out from Firebase
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // 'this' is your context
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Sign Out?");
         builder.setMessage("Want to Sign Out from This Account?");
 
@@ -521,7 +533,7 @@ public class AccountFragment extends Fragment {
     private void emailSignOut(){
         // First, sign out from Firebase
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // 'this' is your context
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Sign Out?");
         builder.setMessage("Want to Sign Out from This Account?");
 
@@ -557,14 +569,6 @@ public class AccountFragment extends Fragment {
         startActivity(intent);
         requireActivity().finish(); // End MainActivity so the user can't press back to it
     }
-/*
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((MainActivity) requireActivity()).showToolbar(true, "Account Setting");
-    }
-
- */
 
 }
 

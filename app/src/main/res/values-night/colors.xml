@@ -7,7 +7,7 @@
     <color name="bg_app_surface">#121212</color>
 
     <!-- Primary Colors -->
-    <color name="toolbar_bg">#0C4F49</color>
+    <color name="toolbar_bg">#121212</color>
 
     <!-- Primary Colors -->
     <color name="primary_main">#188b7d</color>
@@ -21,6 +21,12 @@
 
     <color name="text_heading_white_fixed">#e3f6f9</color>
     <color name="text_heading_black_fixed">#020d10</color>
+
+    <color name="text_link_blue">#4889F4</color>
+    <color name="text_sub_grey_600">#5d5d5d</color>
+    <color name="bg_orange">#DB8630</color>
+    <color name="grey_500">#4d4d4d</color>
+    <color name="teal_700">#FF018786</color>
 
     <!-- Icon Colors -->
     <color name="icon_primary">#188b7d</color>
@@ -61,8 +67,10 @@
     <color name="elc_bill_year_underline">#fdd28a</color>
     <color name="text_amount">#009688</color>
     <color name="text_subheading_fade">#BDC9C5</color>
-    <color name="units_paid_status_bg">#2C2921</color>
-    <color name="units_paid_status_text">#B39c44</color>
+    <color name="units_paid_status_bg">#2d2314</color>
+    <color name="units_paid_status_text">#f1ab09</color>
+
+    <color name="border_list_layout">#738486</color>
 
     <!-- Occupancy Status Colors -->
     <color name="occ_status_dot">#39ca9e</color>
@@ -82,153 +90,35 @@
 
     <!-- Recent Activity Logs Icon & BG Colors -->
 
-    <color name="entity_prop_bg">#f7fefc</color>  <!-- Used for Property Activity Logs -->
-    <color name="entity_prop_bg_border">#ccfbf1</color>
-    <color name="entity_prop_icon">#0d9488</color>
+    <color name="entity_prop_bg">#151d1d</color>  <!-- Used for Property Activity Logs -->
+    <color name="entity_prop_bg_border">#214440</color>
+    <color name="entity_prop_icon">#15dccb</color>
 
-    <color name="entity_tenant_bg">#fcfaff</color>  <!-- Used for Tenant Activity Logs -->
-    <color name="entity_tenant_bg_border">#f4eaff</color>
-    <color name="entity_tenant_icon">#9333ea</color>
+    <color name="entity_tenant_bg">#1d1621</color>  <!-- Used for Tenant Activity Logs -->
+    <color name="entity_tenant_bg_border">#342241</color>
+    <color name="entity_tenant_icon">#ca81ff</color>
 
-    <color name="entity_rent_bg">#f7faff</color>  <!-- Used for Rents Activity Logs -->
-    <color name="entity_rent_bg_border">#dbeafe</color>
-    <color name="entity_rent_icon">#2563eb</color>
+    <color name="entity_rent_bg">#1b1c20</color>  <!-- Used for Rents Activity Logs -->
+    <color name="entity_rent_bg_border">#2e3b45</color>
+    <color name="entity_rent_icon">#88c1f2</color>
 
-    <color name="entity_elc_bill_bg">#fffbf6</color>  <!-- Used for Electricity Bills Activity Logs -->
-    <color name="entity_elc_bill_bg_border">#fff1df</color>
-    <color name="entity_elc_bill_icon">#eb621a</color>
+    <color name="entity_elc_bill_bg">#201c14</color>  <!-- Used for Electricity Bills Activity Logs -->
+    <color name="entity_elc_bill_bg_border">#433318</color>
+    <color name="entity_elc_bill_icon">#ffb700</color>
+
+    <color name="chip_bg_default">#ffb700</color>
 
     <!-- (Others) Single Layouts Colors -->
     <color name="payment_mode_online_bg">#1e332b</color>
     <color name="payment_mode_cash_bg">#1f2a33</color>
 
+    <color name="icon_lightning_bolt">#e9b217</color>
+
+    <color name="bg_item_chip_border">#1b6a68</color>
+    <color name="background_list_layout">#f8ffff</color>
+
 
     <!-- Done Till Here -->
-
-
-
-
-
-
-
-
-
-
-    <!-- Primary Colors -->
-
-    <color name="secondary_main">#742e28</color>
-    <color name="bg_main_dark">#E1E5E6</color>
-    <color name="red_700">#c12929</color>
-
-
-    <!-- Icon Colors -->
-    <color name="icon_lightning_bolt">#e9b217</color>
-    <color name="bg_icon_occ_check">#22946E</color>
-    <color name="bg_icon_vac_err">#9C2121</color>
-
-
-
-
-    <!-- Payment Mode Text & Layout BG Colors -->
-    <color name="text_amount_green">#00b821</color>
-    <color name="text_amount_red">#ff676e</color>
-    <color name="bg_payment_mode">#CFD0D3</color>
-
-    <!-- Information Layout/Card Colors -->
-    <color name="bg_info_layout">#E0F7FB</color>
-
-    <!-- Occupancy Status Background Colors -->
-    <color name="bg_room_occupied">#CB5CAF6E</color>
-    <color name="bg_room_vacant">#C0F6695E</color>
-
-    <color name="bg_room_occupied_check">#9AE8CE</color>
-    <color name="bg_room_vacant_err">#EB9E9E</color>
-
-
-    <!-- Recycler View List Layout Colors -->
-    <color name="background_list_layout">#f8ffff</color>
-    <color name="border_list_layout">#738486</color>
-
-    <!-- Edit Text View Colors -->
-    <color name="bg_edit_text">#DDE7E8</color>
-
-    <!-- Alert Colors -->
-    <color name="alert_danger">#7D5952</color>
-    <color name="alert_warning">#6a6443</color>
-    <color name="alert_success">#4a6c59</color>
-    <color name="alert_info">#536480</color>
-
-
-
-
-
-    <color name="purple_700">#1b6a68</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="purple_200">#0c1f1d</color>
-    <color name="purple_500">#27a59e</color>
-    <color name="acc_setting_labels">#505050</color>
-
-
-
-    <color name="icon_grey">#666666</color>
-
-    <color name="purple_100">#f2fbf9</color>
-    <color name="bg_white">#FBFBFB</color>
-    <color name="bg_orange">#DB8630</color>
-    <color name="light_gray_bg">#f4f4f5</color>
-    <color name="black_900">#121212</color>
-    <color name="black_700">#3d3d3d</color>
-    <color name="black_500">#373737</color>
-    <color name="grey_500">#4d4d4d</color>
-    <color name="grey_700">#333333</color>
-    <color name="green_700_status">#CB5CAF6E</color>
-    <color name="toggle_grey">#FF018786</color>
-    <color name="bg_light_teal">#E6F5F3</color>
-    <color name="bg_login_layout">#ffffff</color>
-
-
-    <color name="grey_900">#f1f4f3</color>
-
-    <!-- Heading & Subheading Texts Colors -->
-    <color name="text_black">#000000</color>
-    <color name="text_white">#ffffff</color>
-    <color name="text_red">#c12929</color>
-    <color name="text_sub_grey_600">#5d5d5d</color>
-    <color name="text_sub_grey_900">#3d3d3d</color>
-    <color name="bg_input_grey_50">#f6f6f6</color>
-    <color name="bg_login_google_btn">#ffffff</color>
-
-    <!-- Login Screen Texts Colors -->
-    <color name="text_link_blue">#4889F4</color>
-
-    <!-- Recycler View List Item BG Color -->
-    <color name="bg_list_item">#f7fafa</color>
-    <color name="bg_item_chip_border">#1b6a68</color>
-
-    <color name="bg_primary_list_layout">#F8FAFC</color>
-
-
-    <!-- Occupancy Layout Colors (Main & Property Details Activity) -->
-    <color name="bg_occupancy_layout">#e6f9f8</color>
-
-    <color name="bg_occ_status_green_700">#CB5CAF6E</color>
-    <color name="bg_vac_status_red_700">#CB5CAF6E</color>
-
-    <color name="bg_overview_layout">#F0FDFA</color>
-    <color name="border_overview_layout">#CCFBF1</color>
-
-    <!-- Occupancy Status Icons Colors -->
-    <color name="bg_occ_status_green">#3BCB9A</color>
-    <color name="bg_occ_status_outline_green">#B7F3D4</color>
-
-    <!-- Tenant Info Layout Colors (Room Details Activity) -->
-
-
-    <!-- Temporary Main Activity -->
-    <color name="t_bg">#EBF4F5</color>
-    <color name="t_bg_list_item">#F8FFFF</color>
-    <color name="t_bg_list_item_border">#738486</color>
 
 
 </resources>

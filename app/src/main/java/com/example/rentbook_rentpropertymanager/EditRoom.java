@@ -3,6 +3,7 @@ package com.example.rentbook_rentpropertymanager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -43,34 +44,39 @@ public class EditRoom extends AppCompatActivity {
             return insets;
         });
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        String user_id = user.getUid();
-
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.text_toolbar_edit_room_details);
-        }
-
         room_id = getIntent().getStringExtra("room_id");
         boolean is_room = getIntent().getBooleanExtra("is_room", false);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        String user_id = user.getUid();
+
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         roomReference = databaseReference.child("rooms");
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
+        TextView tvBtnUpdate = findViewById(R.id.tvBtnUpdate);
         etUpdateRoomRent = findViewById(R.id.etUpdateRoomRent);
         etUpdateUnitRate = findViewById(R.id.etUpdateUnitRate);
         MaterialCardView btnUpdateRoom = findViewById(R.id.btnUpdateRoom);
 
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (is_room){
+                getSupportActionBar().setTitle(R.string.text_toolbar_edit_room_details);
+                tvBtnUpdate.setText(R.string.text_btn_update_room);
+            }else {
+                getSupportActionBar().setTitle(R.string.text_toolbar_edit_shop_details);
+                tvBtnUpdate.setText(R.string.text_btn_update_shop);
+            }
+
+        }
+
         loadRoomDataFromFirebase();
 
-        btnUpdateRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateRoomToFirebase();
-            }
-        });
+        btnUpdateRoom.setOnClickListener(view -> updateRoomToFirebase());
 
     }
 
