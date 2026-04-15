@@ -253,10 +253,8 @@ public class AddTenantActivity extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Added";
 
-        // New tenant “{Tenant Name}” added. Contact: {Number}, Address: {Address}.
-
-        String finalLogDesc = "New Tenant " + tenantName + " added with number " + tenantPhone + " from "
-                + tenantAddress;
+        String finalLogDesc = "Tenant: " + tenantName + " (" + tenantPhone + ") " +
+                " added at " + tenantAddress;
 
         long currTimestamp = System.currentTimeMillis();
 

@@ -64,7 +64,7 @@ dependencies {
     implementation(libs.play.services.auth)
 
     // Import the BoM for the Firebase platform
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
 
     implementation(libs.firebase.ui.database)
 

@@ -532,9 +532,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Deleted";
 
-        // Tenant mame deleted from room 01 from prop name
-
-        String finalLogDesc = "Tenant " + tenant_name + " removed from " + room_name + " from " + property_name;
+        String finalLogDesc = "Tenant: " + tenant_name + " removed from " + room_name + ", " + property_name;
 
         long currTimestamp = System.currentTimeMillis();
 

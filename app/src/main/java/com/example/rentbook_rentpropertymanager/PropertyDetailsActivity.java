@@ -395,7 +395,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         String finalLogTitle = "Property Deleted";
 
-        String finalLogDesc = property_name + " at " + property_address + " has been deleted.";
+        String finalLogDesc = "Property: " + property_name + ", " + property_address + " deleted.";
 
         long currTimestamp = System.currentTimeMillis();
 

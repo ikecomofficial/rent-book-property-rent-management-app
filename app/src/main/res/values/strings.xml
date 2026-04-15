@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name3">Rent Book - Rent Property Manager</string>
 
-    <string name="app_name">RN Rental</string>
+    <string name="app_name">RentBook: Property Manager</string>
     <string name="app_name1">Rentify - Room Rent Management</string>
 
 
@@ -81,7 +81,7 @@
     <string name="text_get_assist">Get assistance with your account</string>
     <string name="text_about_app">About App</string>
     <string name="text_version_full">Version 1.1.0</string>
-    <string name="text_version">v2.3.1</string>
+    <string name="text_version">v2.3.2</string>
     <string name="text_btn_logout">Logout</string>
     <string name="text_rentify_copyright">Rentify: Rent Manager App © 2024</string>
 

@@ -64,6 +64,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/text_property_name"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_heading" />
@@ -88,6 +90,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_value_city"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             android:textSize="16sp"
                             android:textColor="@color/text_muted"
                             android:layout_marginStart="6dp" />

@@ -176,7 +176,7 @@ public class EditProperty extends AppCompatActivity {
 
         String finalLogTitle = "Property Updated";
 
-        String finalLogDesc = "Updated Details - " + newPropertyName + " at " + newPropertyAddress + " with rent: ₹"
+        String finalLogDesc = "Property Updated - " + newPropertyName + ", " + newPropertyAddress + " with rent: ₹"
                 + newpPropertyDefaultRent + " & elc rate ₹" + newPropertyUnitRate + "/unit";
 
         long currTimestamp = System.currentTimeMillis();

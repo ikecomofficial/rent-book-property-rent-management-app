@@ -131,8 +131,8 @@ public class EditTenant extends AppCompatActivity {
 
         //
 
-        String finalLogDesc = "Updated Tenant - " + newTenantName + " from " + newTenantAddress + " with contact number: "
-                + newTenantPhone;
+        String finalLogDesc = "Tenant Updated - " + newTenantName + " (" + newTenantPhone + ") " +
+                " at " + newTenantAddress;
 
         long currTimestamp = System.currentTimeMillis();
 

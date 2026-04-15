@@ -400,9 +400,9 @@ public class AddRentActivity extends AppCompatActivity {
         String finalLogTitle = "Rent Recorded";
 
         String finalLogDesc = "₹" + amount +
-                " rent added for " + room_name +
-                " at " + property_name +
-                " for " + rentMY + ".";
+                " rent collected for " + rentMY +
+                " in " + room_name + ", " + property_name +
+                " by " + tenant_name;
 
         // Create unique Activity Log ID
         String log_id = activityLogReference.push().getKey();

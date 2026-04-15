@@ -507,9 +507,9 @@ public class AddEbillActivity extends AppCompatActivity {
 
         String finalLogTitle = "Electricity Bill Recorded";
 
-        String finalLogDesc = "₹" + elc_bill_amount +
-                " elc bill added with units consumed  " + units_used +
-                " units paid up to " + units_paid_upto + " for " + elc_bill_month_year;
+        String finalLogDesc = "Electricity Bill of ₹" + elc_bill_amount + " added for " +
+                elc_bill_month_year + " (" + units_used + " units consumed & paid up to " +
+                units_paid_upto + " units).";
 
         long currTimestamp = System.currentTimeMillis();
 

@@ -28,7 +28,8 @@ public class AddProperty extends AppCompatActivity {
     private TextInputEditText etPropertyName, etPropertyAddress, etDefaultRentAmount, etUnitRate;
     private TextView textTotalRooms, textTotalShops;
     private int currTotalRooms = 0, currTotalShops = 0;
-    private String user_id, pid, currTimestamp;
+    private String user_id, pid;
+    private long currTimestamp;
     private String propertyName, propertyAddress;
     private DatabaseReference propertyReference;
     private DatabaseReference activityLogReference;
@@ -112,7 +113,7 @@ public class AddProperty extends AppCompatActivity {
         String propertyDefaultRent = Objects.requireNonNull(etDefaultRentAmount.getText()).toString().trim();
         String propertyDefaultUnitRate = Objects.requireNonNull(etUnitRate.getText()).toString().trim();
 
-        currTimestamp = String.valueOf(System.currentTimeMillis());
+        currTimestamp = System.currentTimeMillis();
 
         if (propertyName.isEmpty()) {
             etPropertyName.setError("Enter property name");
@@ -228,7 +229,7 @@ public class AddProperty extends AppCompatActivity {
         String finalLogTitle = "Property Added";
 
         String finalLogDesc = propertyName + " added at " + propertyAddress + " with "
-                + currTotalRooms + " rooms, " + currTotalShops + " shops.";
+                + currTotalRooms + " rooms & " + currTotalShops + " shops.";
 
         // Create unique Activity Log ID
         String log_id = activityLogReference.push().getKey();
