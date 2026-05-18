@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/edit_text_bg"/>
+    <corners android:radius="30dp"/>
+
+    <!-- Shiny stroke -->
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/border_info_container" />
+</shape>

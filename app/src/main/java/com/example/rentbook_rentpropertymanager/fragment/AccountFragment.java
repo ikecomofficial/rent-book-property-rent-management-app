@@ -442,30 +442,40 @@ public class AccountFragment extends Fragment {
 
     }
 
-    private void deleteOldProfileFromFirebase(){
-        StorageReference oldFullProfileRef = FirebaseStorage.getInstance().getReferenceFromUrl(profile_url);
-        StorageReference oldThumbProfileRef = FirebaseStorage.getInstance().getReferenceFromUrl(thumb_profile_url);
+    private void deleteOldProfileFromFirebase() {
 
-        if (profile_url != null && !profile_url.isEmpty() && !profile_url.equals("default")){
+        // 🔹 Full profile image
+        if (profile_url != null
+                && !profile_url.isEmpty()
+                && !profile_url.equals("default")) {
+
+            StorageReference oldFullProfileRef = FirebaseStorage.getInstance()
+                    .getReferenceFromUrl(profile_url);
+
             oldFullProfileRef.delete()
                     .addOnSuccessListener(aVoid -> {
-                        Log.d("Firebase Database:", "Full Image Deleted");
+                        Log.d("Firebase", "Full Image Deleted");
                     })
                     .addOnFailureListener(e ->
                             Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-
         }
-        if (thumb_profile_url != null && !thumb_profile_url.isEmpty() && !thumb_profile_url.equals("default")){
+
+        // 🔹 Thumbnail image
+        if (thumb_profile_url != null
+                && !thumb_profile_url.isEmpty()
+                && !thumb_profile_url.equals("default")) {
+
+            StorageReference oldThumbProfileRef = FirebaseStorage.getInstance()
+                    .getReferenceFromUrl(thumb_profile_url);
+
             oldThumbProfileRef.delete()
                     .addOnSuccessListener(aVoid -> {
-                        Log.d("Firebase Database:", "Full Image Deleted");
+                        Log.d("Firebase", "Thumb Image Deleted");
                     })
                     .addOnFailureListener(e ->
                             Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
-
     }
-
     private void showUploadDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View view = getLayoutInflater().inflate(R.layout.dialog_upload_progress, null);

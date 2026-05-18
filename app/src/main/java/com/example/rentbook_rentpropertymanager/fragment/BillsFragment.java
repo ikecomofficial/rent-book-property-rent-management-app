@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
+import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +43,7 @@ public class BillsFragment extends Fragment {
     private LinearLayout layoutNoBillRecord;
     private RecyclerView rvElcBillList;
     private String room_id, property_id;
+    private ProgressBar progressBarElcBills;
     private DatabaseReference databaseReference, ebillsReference;
     private FirebaseRecyclerAdapter<Bills, BillsFragment.BillsViewHolder> firebaseBillsRecyclerAdapter;
 
@@ -68,6 +71,7 @@ public class BillsFragment extends Fragment {
         rvElcBillList.setLayoutManager(layoutBillManager);
 
         layoutNoBillRecord = view.findViewById(R.id.layoutNoBillRecord);
+        progressBarElcBills = view.findViewById(R.id.progressBarElcBills);
 
         loadElcBillRecyclerList();
 
@@ -120,12 +124,22 @@ public class BillsFragment extends Fragment {
 
                 // Long press to delete
                 holder.itemView.setOnLongClickListener(v -> {
+
+                    int lastPosition = getItemCount() - 1;
+
+                    if (position != lastPosition){
+                        Toast.makeText(v.getContext(),
+                                "Only latest record can be deleted",
+                                Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+
                     new MaterialAlertDialogBuilder(v.getContext())
                             .setTitle("Delete Electricity Bill?")
                             .setMessage("Are you sure you want to delete this bill record?")
                             .setPositiveButton("Delete", (dialog, which) -> {
                                 // 🔑 Call your delete function here
-                                deleteElcBillRecord(getRef(position).getKey(), property_id, convertMonthYearToKey(elcBillMonthYear), elcBillAmount, elcUnitsUsed);
+                                deleteElcBillRecord(getRef(position).getKey(), property_id, elcBillMonthYear, elcBillAmount, elcUnitsUsed);
                             })
                             .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                             .show();
@@ -147,6 +161,8 @@ public class BillsFragment extends Fragment {
             public void onDataChanged() {
                 super.onDataChanged();
 
+                progressBarElcBills.setVisibility(View.GONE);
+
                 int itemCount = getItemCount();
                 if (itemCount == 0) {
                     layoutNoBillRecord.setVisibility(View.VISIBLE);
@@ -161,30 +177,12 @@ public class BillsFragment extends Fragment {
 
     }
 
-    public static String convertMonthYearToKey(String input) {
-        if (input == null || input.trim().isEmpty()) return null;
-
-        try {
-            SimpleDateFormat inputFormat =
-                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
-
-            SimpleDateFormat outputFormat =
-                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
-
-            Date date = inputFormat.parse(input.trim());
-            return outputFormat.format(date);
-
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
     private void deleteElcBillRecord(String elc_bill_id, String pid, String elcBillMonthYear,
                                      int elcBillAmount, int elcUnitsUsed) {
         ebillsReference.child(elc_bill_id).removeValue()
                 .addOnSuccessListener(aVoid -> {
                     // ✅ Record deleted successfully
-                    Toast.makeText(getContext(), "E-bill Deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Elc Bill Deleted", Toast.LENGTH_SHORT).show();
                     subtractElcBillFromCollections(pid, elcBillMonthYear, elcBillAmount, elcUnitsUsed);
                     subtractUnitsPaidFromRooms(elcUnitsUsed);
                 })
@@ -245,7 +243,6 @@ public class BillsFragment extends Fragment {
                     Log.e("Firebase", "Failed to subtract rent", error.toException());
                 } else if (committed) {
                     Log.d("Firebase", "Rent subtracted successfully");
-                    Toast.makeText(requireContext(), "E-bill & Units Minus", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -289,7 +286,6 @@ public class BillsFragment extends Fragment {
                     Log.e("Firebase", "Failed to subtract rent", error.toException());
                 } else if (committed) {
                     Log.d("Firebase", "Rent subtracted successfully");
-                    Toast.makeText(requireContext(), "Last Paid Updated", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -356,8 +352,15 @@ public class BillsFragment extends Fragment {
             TextView tvElcBillMonth = mView.findViewById(R.id.tvElcBillMonth);
             TextView tvElcBillYear = mView.findViewById(R.id.tvElcBillYear);
 
-            String month = elcBillMonthYear.substring(0,3).toUpperCase();
-            String year = elcBillMonthYear.substring(elcBillMonthYear.lastIndexOf(" ") + 1);
+            // Extract year
+            String year = elcBillMonthYear.substring(0, 4);
+
+            // Extract month number
+            int monthIndex = Integer.parseInt(elcBillMonthYear.substring(5, 7));
+
+            // Get month name
+            String[] months = new DateFormatSymbols(Locale.ENGLISH).getShortMonths();
+            String month = months[monthIndex - 1].toUpperCase();
 
             tvElcBillMonth.setText(month); // MAR
             tvElcBillYear.setText(year);   // 2025

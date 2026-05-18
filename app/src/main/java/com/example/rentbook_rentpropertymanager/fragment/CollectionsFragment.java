@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +50,7 @@ public class CollectionsFragment extends Fragment {
     private RecyclerView rvCollectionsList;
     private ChipGroup chipGroupProperties;
     private String preSelectedPropertyId;
+    private ProgressBar progressBarCollections;
     private HorizontalScrollView hsvPropertiesChips;
     private LinearLayout layoutNoCollection;
     private FirebaseRecyclerAdapter<MonthlyCollections, CollectionsViewHolder> firebaseRecyclerAdapter;
@@ -71,6 +74,7 @@ public class CollectionsFragment extends Fragment {
         tvTotalPropElcBill = view.findViewById(R.id.tvTotalPropElcBill);
 
         layoutNoCollection = view.findViewById(R.id.layoutNoCollection);
+        progressBarCollections = view.findViewById(R.id.progressBarCollections);
 
         chipGroupProperties = view.findViewById(R.id.chipGroupProperties);
         hsvPropertiesChips = view.findViewById(R.id.hsvPropertiesChips);
@@ -100,6 +104,20 @@ public class CollectionsFragment extends Fragment {
 
                 chipGroupProperties.removeAllViews();
 
+                // 🚫 No properties at all
+                if (!snapshot.hasChildren()) {
+
+                    hsvPropertiesChips.setVisibility(View.GONE);
+
+                    // 🔥 THIS IS WHAT YOU WERE MISSING
+                    showNoCollectionUI();
+
+                    return;
+                }
+
+                // ✅ Properties exist
+                hsvPropertiesChips.setVisibility(View.VISIBLE);
+
                 Chip chipToSelect = null;
 
                 for (DataSnapshot property : snapshot.getChildren()) {
@@ -112,19 +130,17 @@ public class CollectionsFragment extends Fragment {
                     Chip chip = createChip(propertyId, propertyName);
                     chipGroupProperties.addView(chip);
 
-                    // If coming from a specific property
                     if (preSelectedPropertyId != null &&
                             preSelectedPropertyId.equals(propertyId)) {
                         chipToSelect = chip;
                     }
 
-                    // Otherwise, select first property
                     if (preSelectedPropertyId == null && chipToSelect == null) {
                         chipToSelect = chip;
                     }
                 }
 
-                // Auto-select correct chip
+                // ✅ Auto select first chip → THIS triggers collection load
                 if (chipToSelect != null) {
                     chipToSelect.setChecked(true);
                     property_id = (String) chipToSelect.getTag();
@@ -137,6 +153,16 @@ public class CollectionsFragment extends Fragment {
                         "Failed to load properties", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showNoCollectionUI() {
+        layoutNoCollection.setVisibility(View.VISIBLE);
+        rvCollectionsList.setVisibility(View.GONE);
+    }
+
+    private void showCollectionList() {
+        layoutNoCollection.setVisibility(View.GONE);
+        rvCollectionsList.setVisibility(View.VISIBLE);
     }
 
     private Chip createChip(String propertyId, String propertyName) {
@@ -171,11 +197,6 @@ public class CollectionsFragment extends Fragment {
 
                 loadMonthlyCollectionsFromFirebase(propertyId);
 
-                if (firebaseRecyclerAdapter != null) {
-                    rvCollectionsList.setAdapter(firebaseRecyclerAdapter);
-                    firebaseRecyclerAdapter.startListening();
-                }
-
             } else {
 
                 // 🚫 If user tapped the already-selected chip, ignore unselect
@@ -209,6 +230,7 @@ public class CollectionsFragment extends Fragment {
     // Demo loader (replace later with real logic)
 
     private void loadMonthlyCollectionsFromFirebase(String pid){
+
         DatabaseReference collectionsReference = FirebaseDatabase.getInstance().getReference().child("collections").child(pid);
 
         Query propertyCollections = collectionsReference.orderByKey();
@@ -259,6 +281,7 @@ public class CollectionsFragment extends Fragment {
                             tvTotalPropRent.setText(formatAmount(0));
                             tvTotalPropElcBill.setText(formatAmount(0));
                             layoutNoCollection.setVisibility(View.VISIBLE);
+                            rvCollectionsList.setVisibility(View.GONE);
                         }else {
 
                             propTotalAmount = 0;
@@ -283,7 +306,9 @@ public class CollectionsFragment extends Fragment {
                             tvTotalPropRent.setText(formatAmount(propTotalRent));
                             tvTotalPropElcBill.setText(formatAmount(propTotalElcBill));
 
+                            progressBarCollections.setVisibility(View.GONE);
                             layoutNoCollection.setVisibility(View.GONE);
+                            rvCollectionsList.setVisibility(View.VISIBLE);
                         }
 
                     }
@@ -314,8 +339,24 @@ public class CollectionsFragment extends Fragment {
 
         public void setCollectionMonthYear(String collectionMonthYear){
 
-            TextView tvCollectionMY = mView.findViewById(R.id.tvCollectionMY);
-            tvCollectionMY.setText(convertKeyToMonthYear(collectionMonthYear));
+            TextView tvCollectionMonth = mView.findViewById(R.id.tvCollectionMonth);
+            TextView tvCollectionYear = mView.findViewById(R.id.tvCollectionYear);
+            //tvCollectionMY.setText(convertKeyToMonthYear(collectionMonthYear));
+
+            // Extract year
+            String year = collectionMonthYear.substring(0, 4);
+
+            // Extract month number
+            int monthIndex = Integer.parseInt(collectionMonthYear.substring(5, 7));
+
+            // Get month name
+            String[] months = new DateFormatSymbols(Locale.ENGLISH).getShortMonths();
+            String month = months[monthIndex - 1].toUpperCase();
+
+            // Results
+            tvCollectionMonth.setText(month); // MAR
+            tvCollectionYear.setText(year);   // 2025
+
 
         }
 
@@ -345,7 +386,7 @@ public class CollectionsFragment extends Fragment {
         }
     }
 
-    public static String convertKeyToMonthYear(String input) {
+    /*public static String convertKeyToMonthYear(String input) {
         if (input == null || input.trim().isEmpty()) return "N/A";
 
         try {
@@ -363,6 +404,8 @@ public class CollectionsFragment extends Fragment {
             return "N/A";
         }
     }
+
+     */
 
 }
 

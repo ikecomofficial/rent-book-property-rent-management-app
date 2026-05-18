@@ -5,16 +5,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.rentbook_rentpropertymanager.fragment.CollectionsFragment;
@@ -43,16 +40,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        toolbar = findViewById(R.id.toolbarMain);
-        setSupportActionBar(toolbar);
-
-
-        // Set your ONE fixed background color here
-        toolbar.setBackground(
-                new ColorDrawable(ContextCompat.getColor(this, R.color.primary_main))
-        );
-
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
@@ -61,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
             goToLoginScreen();
             return;
         }
+
+        toolbar = findViewById(R.id.toolbarMain);
+        setSupportActionBar(toolbar);
+
+        // Set your ONE fixed background color here
+        toolbar.setBackground(
+                new ColorDrawable(ContextCompat.getColor(this, R.color.primary_main))
+        );
 
         int openTab = getIntent().getIntExtra("open_tab", -1);
         preSelectedPropertyId = getIntent().getStringExtra("property_id");
@@ -119,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                             case 1:
                                 bottomNav.setSelectedItemId(R.id.nav_collections);
                                 toolbar.setVisibility(View.VISIBLE);
-                                toolbar.setTitle("Collections");
+                                toolbar.setTitle("Collection Overview");
                                 toolbar.setBackgroundColor(
                                         ContextCompat.getColor(MainActivity.this, R.color.toolbar_bg)
                                 );

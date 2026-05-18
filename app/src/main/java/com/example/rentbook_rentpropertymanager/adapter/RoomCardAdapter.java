@@ -5,7 +5,9 @@ import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -17,7 +19,10 @@ import com.example.rentbook_rentpropertymanager.model.Rooms;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -43,8 +48,8 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
     }
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomName, tvRentAmount, tvTenantName, tvTenantPhone, tvLastPaidUnit, tvRoomStatus;
-        // LinearLayout layoutRoomStatusOcc, layoutRoomStatusVac;
+        TextView tvRoomName, tvRentAmount, tvTenantName, tvTenantPhone, tvLastPaidUnit, tvRoomStatus, tvRoomRentStatus;
+        ImageView imgRentStatus;
         MaterialCardView cardRoomOccupancy, dotRoomOccupancy;
         CircleImageView cimgTenantProfile;
 
@@ -59,6 +64,9 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             tvLastPaidUnit = itemView.findViewById(R.id.tvLastPaidUnit);
             cardRoomOccupancy = itemView.findViewById(R.id.cardRoomOccupancy);
             dotRoomOccupancy = itemView.findViewById(R.id.dotRoomOccupancy);
+
+            tvRoomRentStatus = itemView.findViewById(R.id.tvRoomRentStatus);
+            imgRentStatus = itemView.findViewById(R.id.imgRentStatus);
         }
     }
 
@@ -75,7 +83,8 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
 
         holder.tvRoomName.setText(room.getRoom_name());
         String rentFormat = NumberFormat.getNumberInstance().format(room.getRoom_rent());
-        holder.tvRentAmount.setText(rentFormat);
+        String monthlyRent = "₹" + rentFormat;
+        holder.tvRentAmount.setText(monthlyRent);
 
         if (room.getTenant_name() != null && room.getTenant_phone() != null && room.getThumb_tenant_url() != null) {
             holder.tvTenantName.setText(room.getTenant_name());
@@ -98,7 +107,7 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             );
         }
 
-        if (Boolean.TRUE.equals(room.isIs_occupied())){
+        if (room.isIs_occupied()){
             holder.tvRoomStatus.setText(R.string.text_occupied);   // "Occupied"
             holder.tvRoomStatus.setTextColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.occ_status_text)); // green text
@@ -109,6 +118,29 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             holder.dotRoomOccupancy.setCardBackgroundColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.occ_status_dot));
 
+            holder.tvRentAmount.setTextColor(ContextCompat.getColor(context, R.color.text_purple_300));
+
+            // Set Rent Status
+            String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+                    .format(new Date());
+            String lastRentMonth = room.getLast_rent_month(); // from Firebase
+
+            if (lastRentMonth != null && lastRentMonth.equals(currentMonth)) {
+                // ✅ PAID
+                holder.tvRoomRentStatus.setText(R.string.text_paid);
+                holder.tvRoomRentStatus.setTextColor(ContextCompat.getColor(context, R.color.occ_status_dot));
+
+                holder.imgRentStatus.setImageResource(R.drawable.ic_verified);
+                holder.imgRentStatus.setColorFilter(ContextCompat.getColor(context, R.color.occ_status_dot));
+
+            } else {
+                // 🟠 PENDING
+                holder.tvRoomRentStatus.setText(R.string.text_due);
+                holder.tvRoomRentStatus.setTextColor(ContextCompat.getColor(context, R.color.due_status_text));
+
+                holder.imgRentStatus.setImageResource(R.drawable.ic_clock);
+                holder.imgRentStatus.setColorFilter(ContextCompat.getColor(context, R.color.due_status_text));
+            }
 
         } else {
             holder.tvRoomStatus.setText(R.string.text_vacant);   // "Vacant"
@@ -120,6 +152,15 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
 
             holder.dotRoomOccupancy.setCardBackgroundColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.vac_status_dot));
+
+            holder.tvRentAmount.setTextColor(ContextCompat.getColor(context, R.color.not_app_status_text));
+
+            // 🟠 Rent Status - Not Applicable
+            holder.tvRoomRentStatus.setText(R.string.text_na);
+            holder.tvRoomRentStatus.setTextColor(ContextCompat.getColor(context, R.color.not_app_status_text));
+
+            holder.imgRentStatus.setImageResource(R.drawable.ic_dnd_na);
+            holder.imgRentStatus.setColorFilter(ContextCompat.getColor(context, R.color.not_app_status_text));
 
         }
         holder.tvLastPaidUnit.setText(String.valueOf(room.getLast_unit_paid()));

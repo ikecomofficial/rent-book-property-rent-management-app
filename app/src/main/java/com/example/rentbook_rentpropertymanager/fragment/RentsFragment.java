@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
+import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -42,7 +45,8 @@ public class RentsFragment extends Fragment {
     private LinearLayout layoutNoRentRecord;
     private RecyclerView rvRentList;
     private String property_id;
-    private DatabaseReference rentsReference;
+    private ProgressBar progressBarRents;
+    private DatabaseReference rentsReference, roomsReference;
     private FirebaseRecyclerAdapter<Rents, RentsFragment.RentsViewHolder> firebaseRecyclerAdapter;
 
     @Override
@@ -59,6 +63,7 @@ public class RentsFragment extends Fragment {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         assert room_id != null;
         rentsReference = databaseReference.child("rents").child(room_id);
+        roomsReference = databaseReference.child("rooms").child(room_id);
 
         // Rent Recycler View
         rvRentList = view.findViewById(R.id.rvRentRecord);
@@ -68,6 +73,7 @@ public class RentsFragment extends Fragment {
         rvRentList.setLayoutManager(layoutRentManager);
 
         layoutNoRentRecord = view.findViewById(R.id.layoutNoRentRecord);
+        progressBarRents = view.findViewById(R.id.progressBarRents);
 
         loadRentRecyclerList();
 
@@ -142,7 +148,7 @@ public class RentsFragment extends Fragment {
                             .setMessage("Are you sure you want to delete this rent record?")
                             .setPositiveButton("Delete", (dialog, which) -> {
                                 // 🔑 Call your delete function here
-                                deleteRentRecord(getRef(position).getKey(), property_id, convertMonthYearToKey(rentMonthYear), rentAmount);
+                                deleteRentRecord(getRef(position).getKey(), property_id, rentMonthYear, rentAmount);
                             })
                             .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                             .show();
@@ -166,6 +172,7 @@ public class RentsFragment extends Fragment {
                 super.onDataChanged();
                 rvRentList.post(() -> firebaseRecyclerAdapter.notifyDataSetChanged());
 
+                progressBarRents.setVisibility(View.GONE);
                 int itemCount = getItemCount();
                 if (itemCount == 0) {
                     layoutNoRentRecord.setVisibility(View.VISIBLE);
@@ -177,24 +184,6 @@ public class RentsFragment extends Fragment {
         };
 
         rvRentList.setAdapter(firebaseRecyclerAdapter);
-    }
-
-    public static String convertMonthYearToKey(String input) {
-        if (input == null || input.trim().isEmpty()) return null;
-
-        try {
-            SimpleDateFormat inputFormat =
-                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
-
-            SimpleDateFormat outputFormat =
-                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
-
-            Date date = inputFormat.parse(input.trim());
-            return outputFormat.format(date);
-
-        } catch (ParseException e) {
-            return null;
-        }
     }
 
     private String getMonthYear(String timestampStr) {
@@ -213,12 +202,29 @@ public class RentsFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     // ✅ Record deleted successfully
                     Toast.makeText(getContext(), "Rent Deleted", Toast.LENGTH_SHORT).show();
+
+                    String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+                            .format(new Date());
+                    if (rentMonthYear.equals(currentMonth)){
+                        updateRoomRentStatus();
+                    }
                     subtractRentFromCollections(pid, rentMonthYear, rentAmount);
                 })
                 .addOnFailureListener(e -> {
                     // ❌ Handle failure
                     Toast.makeText(getContext(), "Rent Not Deleted", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    public void updateRoomRentStatus(){
+        roomsReference.child("last_rent_month").setValue(null)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("Rents Fragment", "Rent Status Changed successfully");
+                    })
+                    .addOnFailureListener(e ->
+                            Log.e("Rents Fragment",
+                                    "Failed to add log: " + e.getMessage()));
+
     }
 
     public void subtractRentFromCollections(
@@ -234,8 +240,6 @@ public class RentsFragment extends Fragment {
                         .child(pid)
                         .child(monthYearKey)
                         .child("total_rent");
-
-        Toast.makeText(requireContext(), "Rent Amount:" + rentToSubtract + monthYearKey, Toast.LENGTH_SHORT).show();
 
         rentCollectionReference.runTransaction(new Transaction.Handler() {
 
@@ -268,7 +272,6 @@ public class RentsFragment extends Fragment {
                     Log.e("Firebase", "Failed to subtract rent", error.toException());
                 } else if (committed) {
                     Log.d("Firebase", "Rent subtracted successfully");
-                    Toast.makeText(requireContext(), "Rent Minus", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -298,12 +301,17 @@ public class RentsFragment extends Fragment {
             TextView tvRentMonth = mView.findViewById(R.id.tvRentMonth);
             TextView tvRentYear = mView.findViewById(R.id.tvRentYear);
 
-            //TextView tvRentMY = mView.findViewById(R.id.tvRentMonthYear);
-            //tvRentMY.setText(rentMonthYear);
+            // Extract year
+            String year = rentMonthYear.substring(0, 4);
 
-            String month = rentMonthYear.substring(0,3).toUpperCase();
-            String year = rentMonthYear.substring(rentMonthYear.lastIndexOf(" ") + 1);
+            // Extract month number
+            int monthIndex = Integer.parseInt(rentMonthYear.substring(5, 7));
 
+            // Get month name
+            String[] months = new DateFormatSymbols(Locale.ENGLISH).getShortMonths();
+            String month = months[monthIndex - 1].toUpperCase();
+
+            // Results
             tvRentMonth.setText(month); // MAR
             tvRentYear.setText(year);   // 2025
 
@@ -312,14 +320,38 @@ public class RentsFragment extends Fragment {
         public void setRentPeriodStartEnd(String rentPeriodStart, String rentPeriodEnd){
             TextView tvRentPeriod = mView.findViewById(R.id.tvRentPeriod);
             try {
-                SimpleDateFormat inputFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+                // Input format (your new format)
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-                SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
+                // Output formats
+                SimpleDateFormat dayMonthFormat = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
+                SimpleDateFormat fullFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
 
                 Date startDate = inputFormat.parse(rentPeriodStart);
-                Date endDate   = inputFormat.parse(rentPeriodEnd);
+                Date endDate = inputFormat.parse(rentPeriodEnd);
 
-                String finalRentPeriod = outputFormat.format(startDate) + " - " + outputFormat.format(endDate);
+                if (startDate == null || endDate == null) return;
+
+                Calendar startCal = Calendar.getInstance();
+                Calendar endCal = Calendar.getInstance();
+
+                startCal.setTime(startDate);
+                endCal.setTime(endDate);
+
+                String finalRentPeriod;
+
+                // ✅ Check if years are different
+                if (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
+                    // Show year in end date
+                    finalRentPeriod = dayMonthFormat.format(startDate)
+                            + " - "
+                            + fullFormat.format(endDate);
+                } else {
+                    // Same year → no year needed
+                    finalRentPeriod = dayMonthFormat.format(startDate)
+                            + " - "
+                            + dayMonthFormat.format(endDate);
+                }
 
                 tvRentPeriod.setText(finalRentPeriod);
 

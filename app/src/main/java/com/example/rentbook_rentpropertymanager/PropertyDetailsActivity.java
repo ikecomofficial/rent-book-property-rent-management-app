@@ -3,10 +3,19 @@ package com.example.rentbook_rentpropertymanager;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rentbook_rentpropertymanager.adapter.RoomCardAdapter;
 import com.example.rentbook_rentpropertymanager.model.Rooms;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,14 +59,18 @@ public class PropertyDetailsActivity extends AppCompatActivity {
     private double property_unit_rate;
 
     // 📈 Occupancy Stats
-    private long rooms_occupied, shops_occupied, total_rooms, total_shops;
+    private int rooms_occupied, shops_occupied, total_rooms, total_shops;
     private TextView tvProgressLabel;
     private CircularProgressIndicator occupancyProgressBar;
 
     // 💰 Monthly Summary (Rent & Electricity)
     private TextView tvMonthTotalRent, tvMonthTotalElcBill, tvMonthTotalUnitsUsed;
+    private TextView tvRoomOcc, tvRoomTotal, tvShopOcc, tvShopTotal;
+
+    private boolean isCollectionExpanded = false;
 
     // 🏠 Room Data & Adapter
+    private TextView tvTotalRentPaid, tvTotalRentDue;
     private RoomCardAdapter roomCardAdapter;
     private List<Rooms> roomsList;
 
@@ -111,6 +126,22 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         tvMonthTotalElcBill = findViewById(R.id.tvMonthTotalElcBill);
         tvMonthTotalUnitsUsed = findViewById(R.id.tvMonthTotalUnitsUsed);
 
+        LinearLayout layoutCollectionHeader = findViewById(R.id.layoutCollectionHeader);
+        LinearLayout layoutCurrMonthCollection = findViewById(R.id.layoutCurrMonthCollection);
+        layoutCurrMonthCollection.setVisibility(View.GONE);
+        ImageView imgExpandCollection = findViewById(R.id.imgExpandCollection);
+
+        // Property Rents Payment Status
+        tvTotalRentPaid = findViewById(R.id.tvTotalRentPaid);
+        tvTotalRentDue = findViewById(R.id.tvTotalRentDue);
+
+        // Property Occupancy
+        tvRoomOcc = findViewById(R.id.tvRoomOcc);
+        tvRoomTotal = findViewById(R.id.tvRoomTotal);
+        tvShopOcc = findViewById(R.id.tvShopOcc);
+        tvShopTotal = findViewById(R.id.tvShopTotal);
+
+
         // 📅 Current Month Info
         TextView currMonthYear = findViewById(R.id.currMonthYear);
         currMonthYear.setText(getCurrentMonthYear());
@@ -135,7 +166,27 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         });
 
+        layoutCollectionHeader.setOnClickListener(v -> {
+            if (layoutCurrMonthCollection.getVisibility() == View.VISIBLE){
+                // Collapse Collection Data
+                layoutCurrMonthCollection.setVisibility(View.GONE);
+                imgExpandCollection.animate().rotation(90).setDuration(200).start();
+            }else {
+                // Expand Collection Data
+                layoutCurrMonthCollection.setVisibility(View.VISIBLE);
+                imgExpandCollection.animate().rotation(270).setDuration(200).start();
+            }
+        });
+
         roomsRecyclerView.setAdapter(roomCardAdapter);
+        loadPropertyData();
+        loadCurrentMonthCollectionFromFirebase();
+        loadRooms();
+
+    }
+
+    private void loadPropertyData(){
+
         propertiesReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -148,21 +199,22 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     property_unit_rate = unitRate != null ? unitRate : 0.0;
 
                     Long rOcc = snapshot.child("rooms_occupied").getValue(Long.class);
-                    rooms_occupied = rOcc != null ? rOcc : 0;
+                    rooms_occupied = rOcc != null ? rOcc.intValue() : 0;
 
                     Long sOcc = snapshot.child("shops_occupied").getValue(Long.class);
-                    shops_occupied = sOcc != null ? sOcc : 0;
+                    shops_occupied = sOcc != null ? sOcc.intValue() : 0;
 
                     Long tRooms = snapshot.child("total_rooms").getValue(Long.class);
-                    total_rooms = tRooms != null ? tRooms : 0;
+                    total_rooms = tRooms != null ? tRooms.intValue() : 0;
 
                     Long tShops = snapshot.child("total_shops").getValue(Long.class);
-                    total_shops = tShops != null ? tShops : 0;
+                    total_shops = tShops != null ? tShops.intValue() : 0;
 
-                    long totalRoomShopOcc = rooms_occupied + shops_occupied;
-                    long totalRoomShop = total_rooms + total_shops;
+                    int totalRoomShopOcc = rooms_occupied + shops_occupied;
+                    int totalRoomShop = total_rooms + total_shops;
 
-                    setProgressBarData((int) totalRoomShopOcc, (int) totalRoomShop);
+                    setProgressBarData(totalRoomShopOcc, totalRoomShop);
+                    setPropRoomShopOccupancy(rooms_occupied, total_rooms, shops_occupied, total_shops);
                 }
             }
 
@@ -172,9 +224,13 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             }
         });
 
-        loadCurrentMonthCollectionFromFirebase();
-        loadRooms();
+    }
 
+    private void setPropRoomShopOccupancy(int occRoom, int totalRoom, int occShop, int totalShop){
+        tvRoomOcc.setText(String.valueOf(occRoom));
+        tvRoomTotal.setText(String.valueOf(totalRoom));
+        tvShopOcc.setText(String.valueOf(occShop));
+        tvShopTotal.setText(String.valueOf(totalShop));
     }
 
     private String getCurrentMonthYear() {
@@ -190,11 +246,11 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             occupancyProgressBar.setProgress(bar_percentage);
 
             // Update label
-            String progressLabelPercent = occupied + "/" + total;
+            String progressLabelPercent = bar_percentage + "%";
             tvProgressLabel.setText(progressLabelPercent);
         } else {
             occupancyProgressBar.setProgress(0);
-            tvProgressLabel.setText("N/A");
+            tvProgressLabel.setText("0%");
         }
     }
 
@@ -251,6 +307,13 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot roomsSnapshot) {
                         roomsList.clear();
 
+                        int paidRooms = 0;
+
+                        int totalRooms = (int) roomsSnapshot.getChildrenCount(); // ✅ TOTAL ROOMS
+
+                        String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault())
+                                .format(new Date());
+
                         for (DataSnapshot roomSnap : roomsSnapshot.getChildren()) {
                             String roomId = roomSnap.getKey();
                             String roomName = roomSnap.child("room_name").getValue(String.class);
@@ -260,6 +323,20 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                             String tenantId = roomSnap.child("tenant_id").getValue(String.class);
                             Integer roomNo = roomSnap.child("room_no").getValue(Integer.class);
                             Boolean isRoom = roomSnap.child("is_room").getValue(Boolean.class);
+                            String lastRentMonth = roomSnap.child("last_rent_month").getValue(String.class);
+
+                            if (currentMonth.equals(lastRentMonth)) {
+                                paidRooms++;
+                            }
+
+                            int pendingRooms = totalRooms - paidRooms;
+
+                            // 🔹 Update UI
+                            String finalPaidRooms = paidRooms + " Paid";
+                            tvTotalRentPaid.setText(finalPaidRooms);
+
+                            String finalDueRooms = pendingRooms + " Due";
+                            tvTotalRentDue.setText(finalDueRooms);
 
                             Rooms model = new Rooms();
                             model.setRoom_id(roomId);
@@ -270,6 +347,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                             model.setIs_occupied(isOccupied != null && isOccupied);
                             model.setRoom_no(roomNo != null ? roomNo : 0);
                             model.setIs_room(isRoom != null && isRoom);
+                            model.setLast_rent_month(lastRentMonth);
 
                             if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
                                 assert roomId != null;
@@ -361,41 +439,79 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void showPropertyDeleteBottomSheet(){
 
-    private void propertyDeleteConfirmation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String final_title = "Delete Property: " + property_name + "?";
-        builder.setTitle(final_title);
-        builder.setMessage("This will permanently delete all data for this property."); //To confirm type DELETE below.
+        // Create BottomSheetDialog
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
 
-        // Positive button -> Yes
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Perform deletion here
+        // Inflate layout for bottom sheet
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_delete_property, null, false);
+        bottomSheetDialog.setContentView(view);
+
+        // Make sure we modify the bottom-sheet container after it is shown
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                // clear default background so your drawable shows through
+                bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheet.setClipToPadding(false);
+            }
+        });
+
+        // Find the option buttons inside the sheet
+        TextView tvDeleteDescription = view.findViewById(R.id.tvDeleteDescription);
+        EditText etDeleteConfirmation = view.findViewById(R.id.etDeleteConfirmation);
+        MaterialCardView btnDeleteProperty = view.findViewById(R.id.btnDeleteProperty);
+        TextView btnCancelDelete = view.findViewById(R.id.btnCancelDelete);
+
+        String deleteDesc = getString(R.string.delete_property_desc, property_name);
+
+        tvDeleteDescription.setText(deleteDesc);
+
+        // Set click listeners
+        btnDeleteProperty.setOnClickListener(v -> {
+            // handle call action
+
+            // Get the text and trim any accidental whitespace
+            String userInput = etDeleteConfirmation.getText().toString().trim();
+
+            // Check if the input exactly matches "DELETE"
+            if (userInput.equals("DELETE")) {
+                // Clear any previous error
+                etDeleteConfirmation.setError(null);
+                // TODO: Proceed with your actual delete logic here
                 deletePropertyFromFirebase();
+
+            } else if (userInput.isEmpty()) {
+                // Handle empty input case
+                etDeleteConfirmation.setError("Please type DELETE to confirm");
+                etDeleteConfirmation.requestFocus();
+            } else {
+                // Handle incorrect input case
+                etDeleteConfirmation.setError("Confirmation text does not match");
+                etDeleteConfirmation.requestFocus();
             }
+
         });
 
-        // Negative button -> No
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing, just dismiss
-                Toast.makeText(PropertyDetailsActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
-            }
+        btnCancelDelete.setOnClickListener(v -> {
+            // handle call action
+            bottomSheetDialog.dismiss();
+            Toast.makeText(PropertyDetailsActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
         });
 
-        // Show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        // Set the content and show
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+
     }
 
     public void deletePropertyActivityLog(){
 
         String finalLogTitle = "Property Deleted";
 
-        String finalLogDesc = "Property: " + property_name + ", " + property_address + " deleted.";
+        String finalLogDesc = "Property at " + property_address + " deleted.";
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -407,6 +523,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         logMap.put("log_entity", "PROPERTY");
         logMap.put("log_type", "PROP_DELETED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", property_name);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)
@@ -455,7 +572,8 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_delete_property) {
             // Confirm and delete property
-            propertyDeleteConfirmation();
+            //propertyDeleteConfirmation();
+            showPropertyDeleteBottomSheet();
             return true;
         }
 

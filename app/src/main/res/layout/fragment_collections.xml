@@ -11,7 +11,8 @@
         android:id="@+id/hsvPropertiesChips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:layout_gravity="center_vertical">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupProperties"
@@ -27,123 +28,196 @@
     </HorizontalScrollView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardTotalCollection1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        app:cardCornerRadius="24dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="2dp"
-        app:cardUseCompatPadding="true"
+        android:layout_marginHorizontal="14dp"
+        android:layout_marginBottom="8dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/border_dashboard_card"
         app:cardBackgroundColor="@color/bg_dashboard_card">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16sp">
+            android:padding="12dp">
 
-            <!-- Title -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_label_total_coll_cap"
-                android:textAllCaps="true"
-                android:letterSpacing="0.04"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_main" />
+            <!-- Wallet Icon (Top Right) -->
+            <ImageView
+                android:id="@+id/imgWallet"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/text_image_desc"
+                android:src="@drawable/ic_wallet_rupee"
+                app:tint="@color/icon_wallet_color"
+                android:layout_marginEnd="4dp"/>
 
-            <!-- Amount -->
-            <TextView
-                android:id="@+id/tvTotalPropAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_value_amount"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/text_heading" />
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="12dp"
-                android:background="@color/light_separator" />
-
-            <!-- Rent & Power Row -->
+            <!-- Content Container -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:orientation="vertical">
 
-                <!-- Rent -->
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:contentDescription="@string/text_image_desc"
-                    android:src="@drawable/ic_single_bed"
-                    app:tint="@color/icon_primary" />
-
+                <!-- Title -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_rent_colon"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_subheading"
-                    android:textStyle="bold"
-                    android:layout_marginHorizontal="5dp"/>
+                    android:text="@string/text_total_collected"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="6dp"
+                    android:textColor="@color/text_heading" />
+
+                <!-- Amount -->
                 <TextView
-                    android:id="@+id/tvTotalPropRent"
+                    android:id="@+id/tvTotalPropAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_value_amount"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_heading"
-                    android:textStyle="bold" />
-
-                <!-- Vertical Divider -->
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="18dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/light_separator" />
-
-                <!-- Power -->
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:contentDescription="@string/text_image_desc"
-                    android:src="@drawable/ic_electric_bolt"
-                    app:tint="@color/bg_orange" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_power_colon"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_subheading"
+                    android:textSize="28sp"
                     android:textStyle="bold"
-                    android:layout_marginHorizontal="5dp"/>
+                    android:textColor="@color/primary_main"
+                    android:layout_marginStart="6dp" />
 
-                <TextView
-                    android:id="@+id/tvTotalPropElcBill"
-                    android:layout_width="wrap_content"
+                <!-- Inner Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_value_amount"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_heading"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="16dp" />
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/border_info_container"
+                    app:cardBackgroundColor="@color/bg_list_layout_primary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="10dp">
+
+                        <!-- Rent -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <!-- Icon BG -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardBackgroundColor="@color/bg_dashboard_card"
+                                app:cardCornerRadius="12dp"
+                                app:strokeWidth="0dp"
+                                app:cardElevation="0dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:contentDescription="@string/text_image_desc"
+                                    android:padding="5dp"
+                                    android:src="@drawable/ic_home_rent"
+                                    app:tint="@color/icon_primary" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Text -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_label_rent"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/text_subheading_fade"/>
+
+                                <TextView
+                                    android:id="@+id/tvTotalPropRent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_value_amount"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/primary_main"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="0.7dp"
+                            android:layout_height="32dp"
+                            android:layout_marginHorizontal="16dp"
+                            android:background="@color/light_separator"/>
+
+                        <!-- Electricity -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <!-- Icon BG -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardBackgroundColor="@color/bg_dashboard_card"
+                                app:cardCornerRadius="12dp"
+                                app:strokeWidth="0dp"
+                                app:cardElevation="0dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:contentDescription="@string/text_image_desc"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_electric_bolt"
+                                    app:tint="@color/bg_orange" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Text -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_label_elc_bill"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_subheading_fade"/>
+
+                                <TextView
+                                    android:id="@+id/tvTotalPropElcBill"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_value_amount"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/bg_orange"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -175,6 +249,14 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp" />
 
+        <ProgressBar
+            android:id="@+id/progressBarCollections"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:indeterminateTint="@color/primary_main"/>
+
 
         <LinearLayout
             android:id="@+id/layoutNoCollection"
@@ -188,10 +270,10 @@
             <!-- Icon -->
             <ImageView
                 android:id="@+id/img_empty_property"
-                android:layout_width="220dp"
+                android:layout_width="180dp"
                 android:layout_height="120dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_no_rent_record"
+                android:src="@drawable/img_no_monthly_coll_record"
                 android:layout_marginBottom="24dp"
                 android:contentDescription="@string/text_image_desc"/>
 

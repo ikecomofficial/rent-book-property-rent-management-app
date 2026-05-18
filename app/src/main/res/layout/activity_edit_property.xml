@@ -1,235 +1,325 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/bg_app_surface">
+    android:background="@color/bg_app_surface"
+    android:fillViewport="true">
 
-    <!-- Root content layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="12dp"
-        android:paddingBottom="20dp">
+        android:paddingHorizontal="12dp">
 
-        <!-- Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="18dp">
+
+            <!-- TITLE -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_label_prop_details_cap"
+                android:textAllCaps="true"
+                android:textColor="@color/text_muted"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="14dp"
+                android:background="@color/text_subheading_fade"/>
+
+        </LinearLayout>
+
+        <!-- CARD -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="7dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="1dp"
             app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_inner_layout"
-            app:strokeWidth="1dp">
+            app:strokeColor="@color/border_dashboard_card"
+            app:strokeWidth="0.5dp"
+            android:layout_marginHorizontal="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingVertical="16sp">
+                android:padding="16dp">
 
-                <!-- Header -->
-                <LinearLayout
+                <!-- PROPERTY NAME LABEL -->
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/text_property_name"
+                    android:textColor="@color/text_subheading"
+                    android:textSize="13sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"
+                    android:paddingBottom="8dp"/>
+
+                <!-- PROPERTY NAME INPUT -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
                     android:gravity="center_vertical"
-                    tools:ignore="UseCompoundDrawables">
+                    android:background="@drawable/bg_et_input"
+                    android:paddingHorizontal="16dp">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:contentDescription="@string/text_image_desc"
                         android:src="@drawable/ic_properties"
                         app:tint="@color/icon_primary"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/text_label_prop_details_cap"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_heading"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16sp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@color/border_inner_layout"/>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="16sp">
-
-                    <!-- PROPERTY NAME -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_property_name"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_muted"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
+                    <EditText
                         android:id="@+id/etUpdatePropertyName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/text_hint_property_name"
-                        android:padding="14sp"
-                        android:background="@drawable/background_edit_text_input"
+                        android:textColorHint="@color/text_subheading_fade"
+                        android:textColor="@color/text_heading"
+                        android:background="@android:color/transparent"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="2dp"
                         android:inputType="textCapWords"
-                        android:drawablePadding="10dp"
-                        android:layout_marginVertical="10dp"
-                        android:drawableTint="@color/icon_primary"/>
+                        android:textSize="16sp"
+                        android:paddingVertical="10dp"/>
+                </LinearLayout>
 
-                    <!-- ADDRESS -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/text_label_address"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_muted"/>
+                <!-- SPACE -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
+                <!-- ADDRESS LABEL -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_label_address"
+                    android:textColor="@color/text_subheading"
+                    android:textSize="13sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"
+                    android:paddingBottom="8dp"/>
+
+                <!-- ADDRESS INPUT -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_et_input"
+                    android:paddingHorizontal="16dp">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_home_location"
+                        app:tint="@color/icon_primary"/>
+
+                    <EditText
                         android:id="@+id/etUpdatePropertyAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/text_hint_address"
-                        android:padding="14sp"
-                        android:background="@drawable/background_edit_text_input"
-                        android:drawableStart="@drawable/ic_home_location"
+                        android:textColorHint="@color/text_subheading_fade"
+                        android:textColor="@color/text_heading"
+                        android:background="@android:color/transparent"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="2dp"
                         android:inputType="textCapWords"
-                        android:drawablePadding="10dp"
-                        android:layout_marginTop="10dp"
-                        android:drawableTint="@color/icon_primary"/>
-
+                        android:textSize="16sp"
+                        android:paddingVertical="10dp"/>
                 </LinearLayout>
 
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card -->
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_inner_layout"
-            app:strokeWidth="1dp"
-            android:layout_marginVertical="7dp">
+            android:gravity="center_vertical"
+            android:layout_marginVertical="18dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- TITLE -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="16sp">
+                android:text="@string/text_label_financial_cap"
+                android:textAllCaps="true"
+                android:textColor="@color/text_muted"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"/>
 
-                <!-- Header -->
-                <LinearLayout
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="14dp"
+                android:background="@color/text_subheading_fade"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:paddingHorizontal="8dp">
+
+            <!-- BASE RENT -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <!-- Label -->
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:gravity="center_vertical"
-                    tools:ignore="UseCompoundDrawables">
+                    android:text="@string/text_label_base_rent"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/text_subheading"
+                    android:letterSpacing="0.1" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@string/text_image_desc"
-                        android:src="@drawable/ic_cash_payment"
-                        app:tint="@color/icon_primary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/text_label_financial_cap"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_heading"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16sp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@color/border_inner_layout"/>
-
-
-                <LinearLayout
+                <!-- Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="16sp">
+                    app:cardCornerRadius="35dp"
+                    app:strokeWidth="0.5dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/border_dashboard_card"
+                    app:cardBackgroundColor="@color/bg_list_layout_primary">
 
-                    <!-- PROPERTY NAME -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_label_base_rent"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_muted"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etUpdateDefaultRent"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/text_hint_base_rent_amount"
-                        android:padding="14sp"
-                        android:background="@drawable/background_edit_text_input"
-                        android:drawableStart="@drawable/ic_rupee_symbol"
-                        android:inputType="number"
-                        android:drawablePadding="10dp"
-                        android:layout_marginVertical="10dp"
-                        android:drawableTint="@color/icon_primary"/>
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp">
 
-                    <!-- ADDRESS -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/text_label_elc_unit_rent"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_muted"/>
+                        <!-- Icon -->
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_cash_payment"
+                            app:tint="@color/icon_primary" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etUpdateUnitRate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/text_hint_elc_unit"
-                        android:padding="14sp"
-                        android:background="@drawable/background_edit_text_input"
-                        android:drawableStart="@drawable/ic_home_location"
-                        android:inputType="numberDecimal"
-                        android:drawablePadding="10dp"
-                        android:layout_marginTop="10dp"
-                        android:drawableTint="@color/icon_primary"/>
+                        <!-- EditText -->
+                        <EditText
+                            android:id="@+id/etUpdateDefaultRent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/text_value_amount"
+                            android:textSize="16sp"
+                            android:paddingVertical="6dp"
+                            android:textColor="@color/text_heading"
+                            android:textColorHint="@color/text_subheading_fade"
+                            android:inputType="number"
+                            android:paddingHorizontal="12dp"/>
 
-                </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+
+
+            <!-- ELEC RATE -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
+
+                <!-- Label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_label_elc_unit_rate"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/text_subheading"
+                    android:letterSpacing="0.1" />
+
+                <!-- Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="35dp"
+                    app:strokeWidth="0.5dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/border_dashboard_card"
+                    app:cardBackgroundColor="@color/bg_list_layout_primary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp">
+
+                        <!-- Icon -->
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_electric_bolt"
+                            app:tint="@color/bg_orange" />
+
+                        <!-- EditText -->
+                        <EditText
+                            android:id="@+id/etUpdateUnitRate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/text_value_amount"
+                            android:textSize="16sp"
+                            android:paddingVertical="6dp"
+                            android:textColor="@color/text_heading"
+                            android:textColorHint="@color/text_subheading_fade"
+                            android:inputType="numberDecimal"
+                            android:paddingHorizontal="12dp"/>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnUpdateProperty"
@@ -237,9 +327,8 @@
             android:layout_height="56dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardCornerRadius="16dp"
-            android:layout_marginHorizontal="3dp"
-            android:layout_marginVertical="12dp"
+            app:cardCornerRadius="50dp"
+            android:layout_margin="3dp"
             app:cardElevation="2dp"
             app:cardBackgroundColor="@color/btn_primary">
 
@@ -255,7 +344,7 @@
                     android:layout_height="22dp"
                     android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_add_property"
-                    app:tint="#FFFFFF"/>
+                    app:tint="@color/white"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -264,11 +353,15 @@
                     android:text="@string/text_btn_update_property"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"/>
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp"/>
+
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

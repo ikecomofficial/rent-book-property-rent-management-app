@@ -35,13 +35,76 @@
             app:chipSpacingHorizontal="8dp"/>
     </HorizontalScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvActivityLogs"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginHorizontal="12dp"
-        android:scrollbars="vertical"
-        android:fadeScrollbars="false"
-        android:scrollbarStyle="insideOverlay"/>
+        android:layout_height="match_parent">
+
+
+
+
+        <!-- RecyclerView below the header -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvActivityLogs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarStyle="insideOverlay"/>
+
+        <ProgressBar
+            android:id="@+id/pbActivityLog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/primary_main"/>
+
+
+        <LinearLayout
+            android:id="@+id/layoutNoActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="center_horizontal"
+            android:paddingTop="75dp">
+
+            <!-- Icon -->
+            <ImageView
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_no_activity_log"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="@string/text_image_desc"/>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tv_empty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_heading_no_recent_log"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_heading"
+                android:gravity="center" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/tv_empty_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sub_no_recent_log"
+                android:textSize="14sp"
+                android:layout_marginHorizontal="28dp"
+                android:textColor="@color/text_muted"
+                android:gravity="center"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>

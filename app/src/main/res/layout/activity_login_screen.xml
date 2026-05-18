@@ -5,348 +5,425 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/bg_app_surface">
+    android:background="@drawable/bg_login"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center">
+        android:paddingHorizontal="28dp">
 
-        <!-- Main Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Top Layout (30%) -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/border_primary_list_layout">
+            android:paddingTop="65dp"
+            android:paddingBottom="20dp">
 
+            <!-- Your Image + Text row here -->
             <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:paddingHorizontal="32dp"
-                android:paddingVertical="48dp">
+                android:gravity="center_vertical">
 
-                <!-- App Icon -->
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_home_lock"
-                    android:contentDescription="@string/text_image_desc" />
-
-                <!-- Title -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/text_welcome"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_heading" />
-
-                <TextView
-                    android:id="@+id/errorhelp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/text_login_subheading"
-                    android:textSize="14sp"
-                    android:gravity="center"
-                    android:layout_marginBottom="42dp"
-                    android:textColor="@color/text_muted" />
-
-                <!-- Phone Label -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_label_mobile_no"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_muted"
-                    android:layout_gravity="start" />
-
-                <!-- Phone Number Container -->
+                <!-- Icon -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/layoutPhoneNumber"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="#1FA89A">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_app_logo"/>
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <!-- Text Section -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="5dp">
+
+                    <!-- Title Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rent"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_heading"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Book"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="2dp"
+                            android:textColor="@color/primary_main"/>
+                    </LinearLayout>
+
+                    <!-- Subtitle -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Property Rent Manager"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_muted"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="65dp"/>
+
+        <!-- Bottom Layout (70%) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Your Login Card here -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/bg_list_layout_primary"
+                app:strokeWidth="1dp"
+                android:layout_margin="5dp"
+                app:strokeColor="@color/border_dashboard_card"
+                android:layout_gravity="center_vertical">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/bg_info_container"
-                    app:strokeWidth="1dp"
-                    android:layout_marginVertical="10dp"
-                    app:strokeColor="@color/border_info_container">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Title -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_welcome"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/text_heading" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage your properties effortlessly."
+                        android:textSize="14sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/text_subheading"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="4dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <!-- Icon Background -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            android:layout_marginEnd="8dp"
+                            app:cardBackgroundColor="@color/bg_dashboard_card">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@string/text_image_desc"
+                                android:src="@drawable/ic_phone"
+                                android:padding="2dp"
+                                app:tint="@color/icon_primary"/>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Login With Phone"
+                            android:textColor="@color/text_heading"/>
+                    </LinearLayout>
+
+                    <!-- MOBILE NUMBER INPUT -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp">
+                        android:background="@drawable/bg_et_input"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginVertical="8dp">
 
                         <!-- Country Code -->
                         <TextView
-                            android:id="@+id/tv_country_code"
+                            android:id="@+id/textCountryCode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_country_code_in"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="@color/text_muted" />
+                            android:textColor="@color/icon_primary"
+                            android:gravity="center_vertical"
+                            android:background="@android:color/transparent" />
 
-                        <!-- Vertical Divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="12dp"
-                            android:background="@color/light_separator" />
-
-                        <!-- Phone Number Input -->
                         <EditText
                             android:id="@+id/etPhoneNumber"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:autofillHints="phone"
-                            android:background="@null"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="0dp"
-                            android:hint="@string/text_hint_mob_no_10"
-                            android:inputType="phone"
-                            android:textSize="16sp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/text_hint_10_digit_no"
+                            android:textColorHint="@color/text_subheading_fade"
                             android:textColor="@color/text_heading"
-                            android:textColorHint="@color/text_subheading" />
+                            android:background="@android:color/transparent"
+                            android:layout_weight="1"
+                            android:paddingStart="12dp"
+                            android:paddingVertical="10dp"
+                            android:paddingEnd="2dp"
+                            android:maxLength="10"
+                            android:inputType="phone"
+                            android:textSize="16sp"/>
 
                     </LinearLayout>
 
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/layoutOTPCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/bg_info_container"
-                    app:strokeWidth="1dp"
-                    android:visibility="gone"
-                    android:layout_marginVertical="10dp"
-                    app:strokeColor="@color/border_info_container">
-
+                    <!-- OTP INPUT -->
                     <LinearLayout
+                        android:id="@+id/layoutOTPCode"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="48dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp">
+                        android:background="@drawable/bg_et_input"
+                        android:paddingHorizontal="16dp"
+                        android:visibility="gone"
+                        android:layout_marginVertical="8dp">
 
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:contentDescription="@string/text_image_desc"
                             android:src="@drawable/ic_otp_key"
-                            app:tint="@color/text_muted"/>
+                            app:tint="@color/icon_primary"/>
 
-
-                        <!-- Phone Number Input -->
                         <EditText
                             android:id="@+id/etOtpCode"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="0dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="phone"
                             android:hint="@string/text_hint_enter_code"
-                            android:inputType="phone"
-                            android:textSize="16sp"
+                            android:textColorHint="@color/text_subheading_fade"
                             android:textColor="@color/text_heading"
-                            android:textColorHint="@color/text_subheading"
-                            tools:ignore="Autofill" />
-
+                            android:background="@android:color/transparent"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="2dp"
+                            android:maxLength="6"
+                            android:paddingVertical="10dp"
+                            android:inputType="number"
+                            android:textSize="16sp"/>
                     </LinearLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                    <!-- Get OTP Button -->
 
-
-
-                <!-- Get OTP Button -->
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btnRequestOtp"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:layout_marginHorizontal="3dp"
-                        android:layout_marginVertical="2dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="2dp"
-                        app:cardBackgroundColor="@color/btn_primary"
-                        android:clickable="true"
-                        android:focusable="true">
-
-                        <TextView
-                            android:id="@+id/tvBtnSendOtp"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/text_btn_req_otp"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@android:color/white" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Circular Loader (hidden by default) -->
-                    <ProgressBar
-                        android:id="@+id/progressOtpLogin"
-                        style="?android:attr/progressBarStyleSmall"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:indeterminateTint="@color/white"
-                        android:elevation="2dp"
-                        android:layout_gravity="center"
-                        android:visibility="gone" />
-
-
-                </FrameLayout>
-
-
-                <!-- Divider -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/light_separator" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="12dp"
-                        android:text="@string/text_or"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_muted" />
+                        android:layout_marginTop="10dp">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/light_separator" />
-                </LinearLayout>
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnRequestOtp"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginHorizontal="3dp"
+                            android:layout_marginVertical="2dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="@color/btn_primary"
+                            android:clickable="true"
+                            android:focusable="true">
 
-                <!-- Google Sign In -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/btnGoogleSignIn"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginHorizontal="3dp"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/border_info_container"
-                    app:cardBackgroundColor="@android:color/white"
-                    android:clickable="true"
-                    android:focusable="true">
+                            <TextView
+                                android:id="@+id/tvBtnSendOtp"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="@string/text_btn_req_otp"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white" />
+                        </com.google.android.material.card.MaterialCardView>
 
+                        <!-- Circular Loader (hidden by default) -->
+                        <ProgressBar
+                            android:id="@+id/progressOtpLogin"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:indeterminateTint="@color/white"
+                            android:elevation="2dp"
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
+
+
+                    </FrameLayout>
+
+                    <!-- Divider -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        tools:ignore="UseCompoundDrawables">
+                        android:gravity="center_vertical"
+                        android:layout_marginVertical="14dp">
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:contentDescription="@string/text_image_desc"
-                            android:src="@drawable/ic_google_logo" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/light_separator" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/text_btn_sign_with_google"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_heading" />
+                            android:layout_marginHorizontal="12dp"
+                            android:text="@string/text_or"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_muted" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/light_separator" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
-                <!-- Terms -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginHorizontal="24dp">
+                    <!-- Google Sign In -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/btnGoogleSignIn"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginHorizontal="3dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="0.7dp"
+                        app:strokeColor="@color/border_dashboard_card"
+                        app:cardBackgroundColor="@color/bg_dashboard_card"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                    <TextView
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            tools:ignore="UseCompoundDrawables">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:contentDescription="@string/text_image_desc"
+                                android:src="@drawable/ic_google_logo" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/text_btn_sign_with_google"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_heading" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Terms -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_login_terms1"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="3dp"
-                        android:textColor="@color/text_sub_grey_600" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginHorizontal="12dp">
 
-                    <TextView
-                        android:id="@+id/tvTermsLink"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_login_terms1"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="3dp"
+                            android:textColor="@color/text_sub_grey_600" />
+
+                        <TextView
+                            android:id="@+id/tvTermsLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_login_terms2"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_link_blue"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_login_terms2"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_link_blue"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="24dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_login_terms3"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="3dp"
+                            android:textColor="@color/text_sub_grey_600" />
+
+                        <TextView
+                            android:id="@+id/tvPrivacyLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_login_terms4"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_link_blue"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginHorizontal="24dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_login_terms3"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="3dp"
-                        android:textColor="@color/text_sub_grey_600" />
 
-                    <TextView
-                        android:id="@+id/tvPrivacyLink"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_login_terms4"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_link_blue"
-                        android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
 
 
-                </LinearLayout>
+        </LinearLayout>
 
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
+
 </ScrollView>

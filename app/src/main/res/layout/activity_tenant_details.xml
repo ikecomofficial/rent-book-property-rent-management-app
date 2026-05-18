@@ -44,62 +44,122 @@
                 android:paddingBottom="20dp"
                 android:gravity="center_horizontal">
 
-                <!-- Avatar -->
-                <FrameLayout
-                    android:layout_width="160dp"
-                    android:layout_height="160dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="4dp">
 
-                    <!-- Profile Image -->
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/cimgTenantProfile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_tenant_profile_default" />
+                    <!-- Avatar -->
+                    <FrameLayout
+                        android:layout_width="100dp"
+                        android:layout_height="100dp">
 
-                    <!-- Verified Tick -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btnChangeTenantProfile"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="2dp"
-                        android:layout_margin="3dp"
-                        app:strokeColor="@color/white"
-                        app:cardBackgroundColor="@color/bg_btn_call_blue_faded"
-                        android:layout_gravity="bottom|end">
-
-                        <ImageView
+                        <!-- Profile Image -->
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/cimgTenantProfile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_edit_pencil"
-                            app:tint="@color/icon_primary"
-                            android:contentDescription="@string/text_image_desc"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_tenant_profile_default" />
 
-                    </com.google.android.material.card.MaterialCardView>
-                </FrameLayout>
+                        <!-- Verified Tick -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnChangeTenantProfile"
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="2dp"
+                            app:strokeColor="@color/white"
+                            app:cardBackgroundColor="@color/bg_btn_call_blue_faded"
+                            android:layout_gravity="bottom|end">
 
-                <TextView
-                    android:id="@+id/tvTenantName"
-                    android:text="@string/text_value_name"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="12dp"
-                    android:textColor="@color/text_heading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="9dp"
+                                android:src="@drawable/ic_edit_name"
+                                app:tint="@color/icon_primary"
+                                android:contentDescription="@string/text_image_desc"/>
 
-                <TextView
-                    android:id="@+id/tvTenantPhone"
-                    android:text="@string/text_value_mobile_no"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_muted"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16sp"
-                    android:layout_marginVertical="4dp"/>
+                        </com.google.android.material.card.MaterialCardView>
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvTenantName"
+                            android:text="@string/text_value_name"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_heading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="6dp"
+                            tools:ignore="UseCompoundDrawables"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription="@string/text_image_desc"
+                                android:src="@drawable/ic_phone"
+                                app:tint="@color/icon_primary"/>
+
+                            <TextView
+                                android:id="@+id/tvTenantPhone"
+                                android:text="@string/text_value_mobile_no"
+                                android:textSize="14sp"
+                                android:layout_marginStart="6dp"
+                                android:textColor="@color/text_muted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="UseCompoundDrawables"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription="@string/text_image_desc"
+                                android:src="@drawable/ic_home_location"
+                                app:tint="@color/icon_primary" />
+
+                            <TextView
+                                android:id="@+id/tvTenantAddress"
+                                android:text="@string/text_value_city"
+                                android:textSize="14sp"
+                                android:layout_marginStart="6dp"
+                                android:textColor="@color/text_muted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <!-- Mobile -->
                 <com.google.android.material.card.MaterialCardView

@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/bg_app_surface">
+    android:background="@color/bg_app_surface"
+    android:fillViewport="true">
 
-    <!-- Root content layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
-        android:paddingBottom="20dp">
+        android:paddingVertical="18dp">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardSelectedPeriod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            android:layout_marginTop="14dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="1dp"
             app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_inner_layout"
-            app:strokeWidth="1dp">
+            app:strokeColor="@color/border_dashboard_card"
+            app:strokeWidth="0.5dp"
+            android:layout_marginHorizontal="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,20 +40,20 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvSelectedPeriodLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/text_label_ebill_month_cap"
-                        android:textSize="12sp"
+                        android:textColor="@color/primary_main"
+                        android:textSize="13sp"
+                        android:textAllCaps="true"
                         android:textStyle="bold"
-                        android:letterSpacing="0.08"
-                        android:textColor="@color/primary_main"/>
+                        android:letterSpacing="0.08"/>
 
                     <TextView
                         android:id="@+id/tvElcBillMonthYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="2dp"
                         android:text="@string/text_value_month_year"
                         android:textSize="22sp"
                         android:textStyle="bold"
@@ -78,16 +76,470 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="20dp"
-                        android:paddingBottom="12dp"
-                        android:paddingTop="10dp"
+                        android:paddingHorizontal="16dp"
+                        android:paddingBottom="9dp"
+                        android:paddingTop="8dp"
                         android:gravity="center_vertical"
                         tools:ignore="UseCompoundDrawables">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription="@string/text_image_desc"
                             android:src="@drawable/ic_calendar_month"
+                            app:tint="@color/icon_primary"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/text_change"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_main"/>
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="18dp">
+
+            <!-- TITLE -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_label_ebill_details_cap"
+                android:textAllCaps="true"
+                android:textColor="@color/text_muted"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="14dp"
+                android:background="@color/text_subheading_fade"/>
+
+        </LinearLayout>
+
+        <!-- CARD -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:strokeColor="@color/border_dashboard_card"
+            app:strokeWidth="0.5dp"
+            android:layout_marginHorizontal="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- ADDRESS LABEL -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_label_billing_mode"
+                    android:textColor="@color/text_subheading"
+                    android:textSize="13sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"/>
+
+                <!-- Payment Mode Selector -->
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleElcBillMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    android:layout_marginVertical="10dp"
+                    app:checkedButton="@+id/btnByUnitsSelection">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnByUnitsSelection"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_toggle_enter_units"
+                        android:textAllCaps="false"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnByAmountSelection"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_toggle_enter_amount"
+                        android:textAllCaps="false"/>
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <LinearLayout
+                    android:id="@+id/layoutElcUnitPaid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <!-- PROPERTY NAME LABEL -->
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_label_curr_meter_reading"
+                            android:textColor="@color/text_subheading"
+                            android:layout_weight="1"
+                            android:textSize="13sp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04"/>
+
+                        <!-- Paid Till Chip -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/layoutPrevPaidTill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="18dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            android:backgroundTint="@color/units_paid_status_bg">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="3dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:contentDescription="@string/text_image_desc"
+                                    android:src="@drawable/ic_clock"
+                                    app:tint="@color/units_paid_status_text" />
+
+                                <TextView
+                                    android:id="@+id/tvPrevPaidTill"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_paid_till_colon"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/units_paid_status_text"
+                                    android:layout_marginStart="6dp"
+                                    android:layout_marginEnd="3dp"/>
+
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+
+                    </LinearLayout>
+
+                    <!-- PROPERTY NAME INPUT -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_et_input"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginBottom="20dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_meter_reading"
+                            app:tint="@color/icon_primary"/>
+
+                        <EditText
+                            android:id="@+id/etCurrentMeterReading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/text_hint_curr_meter_unit"
+                            android:textColorHint="@color/text_subheading_fade"
+                            android:textColor="@color/text_heading"
+                            android:background="@android:color/transparent"
+                            android:paddingStart="12dp"
+                            android:paddingVertical="8dp"
+                            android:paddingEnd="2dp"
+                            android:inputType="number"
+                            android:textSize="16sp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutElcBillAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <!-- PROPERTY NAME LABEL -->
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_label_ebill_amount_paid"
+                            android:textColor="@color/text_subheading"
+                            android:layout_weight="1"
+                            android:textSize="13sp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04"/>
+
+                        <!-- Paid Till Chip -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/layoutPrevPaidTillByAmt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="18dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            android:backgroundTint="@color/units_paid_status_bg">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="3dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:contentDescription="@string/text_image_desc"
+                                    android:src="@drawable/ic_clock"
+                                    app:tint="@color/units_paid_status_text" />
+
+                                <TextView
+                                    android:id="@+id/tvPrevPaidTillByAmt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_paid_till_colon"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/units_paid_status_text"
+                                    android:layout_marginStart="6dp"
+                                    android:layout_marginEnd="3dp"/>
+
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+
+                    </LinearLayout>
+
+                    <!-- PROPERTY NAME INPUT -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_et_input"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginBottom="20dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:contentDescription="@string/text_image_desc"
+                            android:src="@drawable/ic_cash_payment"
+                            app:tint="@color/icon_primary"/>
+
+                        <EditText
+                            android:id="@+id/etElcBillAmount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/text_hint_ebill_amount_paid"
+                            android:textColorHint="@color/text_subheading_fade"
+                            android:textColor="@color/text_heading"
+                            android:background="@android:color/transparent"
+                            android:paddingStart="12dp"
+                            android:paddingVertical="8dp"
+                            android:paddingEnd="2dp"
+                            android:inputType="number"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- ADDRESS LABEL -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_label_payment_mode"
+                    android:textColor="@color/text_subheading"
+                    android:textSize="13sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"/>
+
+                <!-- Payment Mode Selector -->
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/togglePaymentMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    android:layout_marginVertical="10dp"
+                    app:checkedButton="@+id/btnCashSelection">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCashSelection"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_cash"
+                        android:textAllCaps="false"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOnlineSelection"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_online"
+                        android:textAllCaps="false"/>
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="18dp">
+
+            <!-- TITLE -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_label_payment_date_time_cap"
+                android:textAllCaps="true"
+                android:textColor="@color/text_muted"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="14dp"
+                android:background="@color/text_subheading_fade"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:strokeColor="@color/border_dashboard_card"
+            app:strokeWidth="0.5dp"
+            android:layout_marginHorizontal="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <!-- PAYMENT DATE & TIME -->
+                <!-- Left Icon Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    android:backgroundTint="@color/bg_dashboard_card">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_calendar_month"
+                        app:tint="@color/primary_main"
+                        android:contentDescription="@string/text_image_desc"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Date & Time -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvCustomDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_date"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"/>
+
+                    <TextView
+                        android:id="@+id/tvCustomTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/text_value_time"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_main"/>
+                </LinearLayout>
+
+                <!-- Edit Button -->
+                <!-- Change Button -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnChangeDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="22dp"
+                    android:layout_gravity="center_vertical"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0.5dp"
+                    app:strokeColor="@color/btn_primary"
+                    app:cardBackgroundColor="@color/bg_dashboard_card">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp"
+                        android:paddingBottom="9dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_vertical"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_edit_pencil"
                             app:tint="@color/icon_primary"
                             android:contentDescription="@string/text_image_desc"/>
 
@@ -108,472 +560,9 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-        <!-- Card -->
-        <com.google.android.material.card.MaterialCardView
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            android:layout_marginVertical="14dp"
-            app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_inner_layout"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="16sp">
-
-                <!-- Header -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:gravity="center_vertical"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@string/text_image_desc"
-                        android:src="@drawable/ic_receipt"
-                        app:tint="@color/icon_primary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/text_label_ebill_details_cap"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_heading"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16sp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@color/border_inner_layout"/>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="16sp">
-
-                    <!-- ADDRESS -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/text_label_billing_mode"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_muted"/>
-
-                    <!-- Payment Mode Selector -->
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleElcBillMode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:singleSelection="true"
-                        app:selectionRequired="true"
-                        android:layout_marginVertical="10dp"
-                        app:checkedButton="@+id/btnByUnitsSelection">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnByUnitsSelection"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_toggle_enter_units"
-                            android:textAllCaps="false"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnByAmountSelection"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_toggle_enter_amount"
-                            android:textAllCaps="false"/>
-
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                    <LinearLayout
-                        android:id="@+id/layoutElcUnitPaid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_label_curr_meter_reading"
-                                android:textSize="14sp"
-                                android:layout_weight="1"
-                                android:layout_gravity="center_vertical"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_muted"/>
-
-                            <!-- Paid Till Chip -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/layoutPrevPaidTill"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:cardCornerRadius="18dp"
-                                app:cardElevation="0dp"
-                                app:strokeWidth="1dp"
-                                app:strokeColor="@color/border_dashboard_card"
-                                app:cardBackgroundColor="@color/bg_dashboard_card">
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:gravity="center_vertical"
-                                    android:paddingHorizontal="12dp"
-                                    android:paddingVertical="4dp"
-                                    tools:ignore="UseCompoundDrawables">
-
-                                    <ImageView
-                                        android:layout_width="14dp"
-                                        android:layout_height="14dp"
-                                        android:contentDescription="@string/text_image_desc"
-                                        android:src="@drawable/ic_clock"
-                                        app:tint="@color/icon_primary" />
-
-                                    <TextView
-                                        android:id="@+id/tvPrevPaidTill"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/text_label_last_paid_colon"
-                                        android:textSize="14sp"
-                                        android:textColor="@color/icon_primary"
-                                        android:layout_marginStart="6dp" />
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                        </LinearLayout>
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etCurrentMeterReading"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/text_hint_curr_meter_unit"
-                            android:padding="14sp"
-                            android:background="@drawable/background_edit_text_input"
-                            android:drawableStart="@drawable/ic_rupee_symbol"
-                            android:inputType="number"
-                            android:drawablePadding="10dp"
-                            android:layout_marginVertical="10dp"
-                            android:drawableTint="@color/icon_primary"/>
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/layoutElcBillAmount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_label_ebill_amount_paid"
-                                android:textSize="14sp"
-                                android:layout_weight="1"
-                                android:layout_gravity="center_vertical"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_muted"/>
-
-                            <!-- Paid Till Chip -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/layoutPrevPaidTillByAmt"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:cardCornerRadius="18dp"
-                                app:cardElevation="0dp"
-                                app:strokeWidth="1dp"
-                                app:strokeColor="@color/border_dashboard_card"
-                                app:cardBackgroundColor="@color/bg_dashboard_card">
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:gravity="center_vertical"
-                                    android:paddingHorizontal="12dp"
-                                    android:paddingVertical="4dp"
-                                    tools:ignore="UseCompoundDrawables">
-
-                                    <ImageView
-                                        android:layout_width="14dp"
-                                        android:layout_height="14dp"
-                                        android:contentDescription="@string/text_image_desc"
-                                        android:src="@drawable/ic_clock"
-                                        app:tint="@color/primary_main" />
-
-                                    <TextView
-                                        android:id="@+id/tvPrevPaidTillByAmt"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/text_label_last_paid_colon"
-                                        android:textSize="14sp"
-                                        android:textColor="@color/primary_main"
-                                        android:layout_marginStart="6dp" />
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                        </LinearLayout>
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etElcBillAmount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/text_hint_ebill_amount_paid"
-                            android:padding="14sp"
-                            android:background="@drawable/background_edit_text_input"
-                            android:drawableStart="@drawable/ic_rupee_symbol"
-                            android:inputType="number"
-                            android:drawablePadding="10dp"
-                            android:layout_marginVertical="10dp"
-                            android:drawableTint="@color/icon_primary"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layoutLastPaidTill"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <!-- PROPERTY NAME -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_label_last_paid_reading"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_muted"/>
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etElcLastPaidUnit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/text_hint_last_paid_reading"
-                            android:padding="14sp"
-                            android:background="@drawable/background_edit_text_input"
-                            android:drawableStart="@drawable/ic_rupee_symbol"
-                            android:inputType="number"
-                            android:drawablePadding="10dp"
-                            android:layout_marginVertical="10dp"
-                            android:drawableTint="@color/icon_primary"/>
-                    </LinearLayout>
-
-                    <!-- ADDRESS -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/text_label_payment_mode"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_muted"/>
-
-                    <!-- Payment Mode Selector -->
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/togglePaymentMode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:singleSelection="true"
-                        app:selectionRequired="true"
-                        android:layout_marginVertical="10dp"
-                        app:checkedButton="@+id/btnCashSelection">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCashSelection"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_cash"
-                            android:textAllCaps="false"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnOnlineSelection"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_online"
-                            android:textAllCaps="false"/>
-
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            android:layout_marginBottom="7dp"
-            app:cardBackgroundColor="@color/bg_list_layout_primary"
-            app:strokeColor="@color/border_inner_layout"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="16sp">
-
-                <!-- Header -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:gravity="center_vertical"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@string/text_image_desc"
-                        android:src="@drawable/ic_clock"
-                        app:tint="@color/icon_primary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/text_label_payment_date_time_cap"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_heading"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16sp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@color/border_inner_layout"/>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginHorizontal="16sp">
-
-                    <!-- PAYMENT DATE & TIME -->
-                    <!-- Left Icon Card -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
-                        android:backgroundTint="@color/bg_dashboard_card">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_calendar_month"
-                            app:tint="@color/primary_main"
-                            android:contentDescription="@string/text_image_desc"/>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Date & Time -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tvCustomDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_value_date"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_heading"/>
-
-                        <TextView
-                            android:id="@+id/tvCustomTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/text_value_time"
-                            android:textSize="14sp"
-                            android:textColor="@color/primary_main"/>
-                    </LinearLayout>
-
-                    <!-- Edit Button -->
-                    <!-- Change Button -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btnChangeDateTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardCornerRadius="22dp"
-                        android:layout_gravity="center_vertical"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="0.5dp"
-                        app:strokeColor="@color/btn_primary"
-                        app:cardBackgroundColor="@color/bg_dashboard_card">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="20dp"
-                            android:paddingBottom="12dp"
-                            android:paddingTop="10dp"
-                            android:gravity="center_vertical"
-                            tools:ignore="UseCompoundDrawables">
-
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_edit_pencil"
-                                app:tint="@color/icon_primary"
-                                android:contentDescription="@string/text_image_desc"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="@string/text_change"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/primary_main"/>
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            android:layout_height="32dp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnSaveElcBill"
@@ -581,9 +570,8 @@
             android:layout_height="56dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardCornerRadius="16dp"
-            android:layout_marginHorizontal="3dp"
-            android:layout_marginVertical="12dp"
+            app:cardCornerRadius="50dp"
+            android:layout_margin="3dp"
             app:cardElevation="2dp"
             app:cardBackgroundColor="@color/btn_primary">
 
@@ -599,7 +587,7 @@
                     android:layout_height="22dp"
                     android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_add_rec_receipt"
-                    app:tint="#FFFFFF"/>
+                    app:tint="@color/white"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -608,11 +596,15 @@
                     android:text="@string/text_btn_add_ebill_record"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"/>
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp"/>
+
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

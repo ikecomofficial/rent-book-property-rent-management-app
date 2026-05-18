@@ -1,8 +1,14 @@
 package com.example.rentbook_rentpropertymanager;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,10 +28,11 @@ import java.util.HashMap;
 
 public class EditTenant extends AppCompatActivity {
 
-    private TextInputEditText etTenantName, etTenantPhone, etTenantAddress;
+    private EditText etTenantName, etTenantPhone, etTenantAddress;
     private String tenant_name, tenant_phone, tenant_address;
     private String newTenantName, newTenantPhone, newTenantAddress;
     private DatabaseReference tenantReference, activityLogReference;
+    private static final int PICK_CONTACT = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,7 @@ public class EditTenant extends AppCompatActivity {
         etTenantPhone = findViewById(R.id.etEditTenantPhone);
         etTenantAddress = findViewById(R.id.etEditTenantAddress);
         MaterialCardView updateTenant = (MaterialCardView) findViewById(R.id.btnUpdateTenant);
+        ImageView btnPickContact = findViewById(R.id.btnPickContact);
 
         etTenantName.setText(tenant_name);
         if (tenant_phone.length() > 10){
@@ -73,6 +81,11 @@ public class EditTenant extends AppCompatActivity {
         etTenantAddress.setText(String.valueOf(tenant_address));
 
         updateTenant.setOnClickListener(view -> updateTenantToFirebase());
+
+        btnPickContact.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
+        });
     }
 
     private void updateTenantToFirebase(){
@@ -129,10 +142,7 @@ public class EditTenant extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Updated";
 
-        //
-
-        String finalLogDesc = "Tenant Updated - " + newTenantName + " (" + newTenantPhone + ") " +
-                " at " + newTenantAddress;
+        String finalLogDesc = "+91 " + newTenantPhone + " • " + newTenantAddress;
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -144,6 +154,7 @@ public class EditTenant extends AppCompatActivity {
         logMap.put("log_entity", "TENANT");
         logMap.put("log_type", "TENANT_EDITED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", newTenantName);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)
@@ -155,6 +166,45 @@ public class EditTenant extends AppCompatActivity {
                                     "Failed to add log: " + e.getMessage()));
         }
 
+    }
+
+    // Format Picked contact to proper 10-digit number
+    private String cleanPhoneNumberPick(String cleanNumber){
+
+        if (cleanNumber == null) return "";
+
+        // 1️⃣ Remove all spaces
+        String cleaned = cleanNumber.replaceAll("\\s+", "");
+
+        // 2️⃣ Remove any non-digit characters (like +, -, etc.)
+        cleaned = cleaned.replaceAll("\\D", "");
+
+        // 3️⃣ If there are more than 10 digits, take the last 10
+        if (cleaned.length() > 10) {
+            cleaned = cleaned.substring(cleaned.length() - 10);
+        }
+
+        return cleaned;
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_CONTACT && resultCode == RESULT_OK) {
+            Uri contactUri = data.getData();
+            String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+            assert contactUri != null;
+            try (Cursor cursor = getContentResolver().query(contactUri, projection, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    String number = cursor.getString(numberIndex);
+                    etTenantPhone.setText(cleanPhoneNumberPick(number));
+                }
+            }
+        }
     }
 
     @Override

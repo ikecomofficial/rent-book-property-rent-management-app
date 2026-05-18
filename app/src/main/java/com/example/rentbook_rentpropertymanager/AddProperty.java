@@ -2,6 +2,7 @@ package com.example.rentbook_rentpropertymanager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import java.util.Objects;
 
 public class AddProperty extends AppCompatActivity {
 
-    private TextInputEditText etPropertyName, etPropertyAddress, etDefaultRentAmount, etUnitRate;
+    private EditText etPropertyName, etPropertyAddress, etDefaultRentAmount, etUnitRate;
     private TextView textTotalRooms, textTotalShops;
     private int currTotalRooms = 0, currTotalShops = 0;
     private String user_id, pid;
@@ -228,14 +229,14 @@ public class AddProperty extends AppCompatActivity {
 
         String finalLogTitle = "Property Added";
 
-        String finalLogDesc = propertyName + " added at " + propertyAddress + " with "
-                + currTotalRooms + " rooms & " + currTotalShops + " shops.";
+        String finalLogDesc = propertyAddress + " • Rooms: " + currTotalRooms + " • Shops: " + currTotalShops;
 
         // Create unique Activity Log ID
         String log_id = activityLogReference.push().getKey();
         HashMap<String, Object> logMap = new HashMap<>();
         logMap.put("log_title", finalLogTitle);
         logMap.put("log_desc", finalLogDesc);
+        logMap.put("log_primary_value", propertyName);
         logMap.put("log_entity", "PROPERTY");
         logMap.put("log_type", "PROP_ADDED");
         logMap.put("log_ts", currTimestamp);

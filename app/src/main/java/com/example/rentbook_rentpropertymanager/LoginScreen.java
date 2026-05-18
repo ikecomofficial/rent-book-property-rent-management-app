@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -50,7 +52,8 @@ public class LoginScreen extends AppCompatActivity {
     private static final String TAG = "GoogleSignIn";
     private long backPressedTime = 0;
     private EditText etPhoneNumber, etOtpCode;
-    private MaterialCardView layoutOTPCode, btnSendOtp;
+    private MaterialCardView btnSendOtp;
+    private LinearLayout layoutOTPCode;
     private TextView tvBtnSendOtp;
     private ProgressBar pbSendOtp;
     private boolean is_send_otp = true;
@@ -63,6 +66,7 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         setContentView(R.layout.activity_login_screen);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -161,7 +165,7 @@ public class LoginScreen extends AppCompatActivity {
                             assert user != null;
                             String uid = user.getUid();
 
-                            // Taking url of Google Signed In user Profile Pic
+                            // Taking url of Google Signed-In user Profile Pic
                             String originalProfileUrl = Objects.requireNonNull(user.getPhotoUrl()).toString();
 
                             // Replace the size suffix (e.g., =s96-c) with your own
@@ -174,7 +178,6 @@ public class LoginScreen extends AppCompatActivity {
                             HashMap<String, String> userMap = new HashMap<>();
                             userMap.put("name", user.getDisplayName());
                             userMap.put("email", user.getEmail());
-                            userMap.put("user_id", uid);
                             userMap.put("role", "Owner");
                             userMap.put("profile_url", profileUrl);
                             userMap.put("thumb_profile_url", thumbProfileUrl);
@@ -280,6 +283,10 @@ public class LoginScreen extends AppCompatActivity {
             etOtpCode.requestFocus();
             return;
         }
+        tvBtnSendOtp.setText("");
+        pbSendOtp.bringToFront();
+        pbSendOtp.setVisibility(View.VISIBLE);
+        btnSendOtp.setEnabled(false);
         verifyCode(code);
     }
 
@@ -292,6 +299,7 @@ public class LoginScreen extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        pbSendOtp.setVisibility(View.GONE);
                         FirebaseUser user = task.getResult().getUser();
                         assert user != null;
                         Toast.makeText(LoginScreen.this, "Login Success: " + user.getPhoneNumber(), Toast.LENGTH_LONG).show();
@@ -308,7 +316,6 @@ public class LoginScreen extends AppCompatActivity {
 
                                     userMap.put("name", "User");
                                     userMap.put("email", "null");
-                                    userMap.put("user_id", uid);
                                     userMap.put("role", "Owner");
                                     userMap.put("profile_url", "default");
                                     userMap.put("thumb_profile_url", "default");
@@ -338,6 +345,7 @@ public class LoginScreen extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(LoginScreen.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        btnSendOtp.setEnabled(true);
                     }
                 });
     }

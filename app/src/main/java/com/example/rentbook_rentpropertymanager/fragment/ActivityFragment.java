@@ -12,7 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,8 +56,12 @@ public class ActivityFragment extends Fragment {
     private ActivityLogAdapter activityLogAdapter;
     private final List<ActivityLog> fullList = new ArrayList<>();
     private final List<ActivityLog> filteredList = new ArrayList<>();
+    private RecyclerView rvActivityLogs;
+    private HorizontalScrollView hsvLogEntityChips;
     private DatabaseReference activityLogsReference;
-    private static final int ITEMS_TO_LOAD = 25;
+    private LinearLayout layoutNoActivity;
+    private ProgressBar pbActivityLog;
+    private static final int ITEMS_TO_LOAD = 40;
     private boolean isLoading = false;
     private String lastKey = null;
 
@@ -67,8 +75,12 @@ public class ActivityFragment extends Fragment {
         assert user != null;
         String user_id = user.getUid();
 
-        RecyclerView rvActivityLogs = view.findViewById(R.id.rvActivityLogs);
+        rvActivityLogs = view.findViewById(R.id.rvActivityLogs);
         chipGroup = view.findViewById(R.id.chipGroupActivityLogs);
+
+        pbActivityLog = view.findViewById(R.id.pbActivityLog);
+        layoutNoActivity = view.findViewById(R.id.layoutNoActivity);
+        hsvLogEntityChips = view.findViewById(R.id.hsvLogEntityChips);
 
         rvActivityLogs.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -152,27 +164,44 @@ public class ActivityFragment extends Fragment {
                         tempList.add(log);
                     }
                 }
+                // 🔥 HANDLE EMPTY STATE HERE
+                if (tempList.isEmpty() && fullList.isEmpty()) {
+
+                    showNoActivityUI();   // 👈 ADD THIS
+                    isLoading = false;
+                    return;
+                }
+
+                // ✅ DATA EXISTS
+                hideNoActivityUI();  // 👈 ADD THIS
+                pbActivityLog.setVisibility(View.GONE);
 
                 if (!tempList.isEmpty()) {
-
                     lastKey = firstKeyInBatch;  // update for next page
-
                     Collections.reverse(tempList);
-
                     fullList.addAll(tempList);
-
                     generateDynamicChips();
                     applyFilter(null);
                 }
-
                 isLoading = false;
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 isLoading = false;
             }
         });
+    }
+
+    private void showNoActivityUI() {
+        layoutNoActivity.setVisibility(View.VISIBLE);
+        rvActivityLogs.setVisibility(View.GONE);
+        hsvLogEntityChips.setVisibility(View.GONE); // optional
+    }
+
+    private void hideNoActivityUI() {
+        layoutNoActivity.setVisibility(View.GONE);
+        rvActivityLogs.setVisibility(View.VISIBLE);
+        hsvLogEntityChips.setVisibility(View.VISIBLE);
     }
 
 
@@ -301,19 +330,21 @@ public class ActivityFragment extends Fragment {
 
         static class ActivityLogViewHolder extends RecyclerView.ViewHolder {
 
-            TextView logTitle, logDesc, logDate, logTime;
-            MaterialCardView mcvEntityDesc, mcvEntityIconBG;
+            TextView logTitle, logDesc, logDateTime, tvLogPrimaryValue;
+            MaterialCardView mcvEntityDesc, mcvEntityIconBG, mcvLogPrimaryValueBG;
             ImageView imgEntityIcon;
 
             ActivityLogViewHolder(View itemView) {
                 super(itemView);
                 logTitle = itemView.findViewById(R.id.tvActivityLogTitle);
                 logDesc = itemView.findViewById(R.id.tvActivityLogDesc);
-                logDate = itemView.findViewById(R.id.tvActivityLogDate);
-                logTime = itemView.findViewById(R.id.tvActivityLogTime);
+                logDateTime = itemView.findViewById(R.id.tvActivityLogDateTime);
+                tvLogPrimaryValue = itemView.findViewById(R.id.tvLogPrimaryValue);
                 mcvEntityIconBG = itemView.findViewById(R.id.mcvEntityIconBG);
                 imgEntityIcon = itemView.findViewById(R.id.imgEntityIcon);
                 mcvEntityDesc = itemView.findViewById(R.id.mcvEntityDesc);
+                mcvLogPrimaryValueBG = itemView.findViewById(R.id.mcvLogPrimaryValueBG);
+
             }
         }
 
@@ -341,15 +372,11 @@ public class ActivityFragment extends Fragment {
             long log_ts = log.getLog_ts();
             Date date = new Date(log_ts);
 
-            String dateOnly = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
-            String timeOnly = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date);
+            String finalDate = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(date);
 
-            //String finalDateTime = dateOnly + ", " + timeOnly;
+            holder.logDateTime.setText(finalDate);
 
-            holder.logDate.setText(dateOnly);
-            holder.logTime.setText(timeOnly);
-
-            applyColorsByEntity(holder, log.getLog_entity());
+            applyColorsByEntity(holder, log.getLog_entity(), log.getLog_primary_value());
 
         }
 
@@ -359,7 +386,7 @@ public class ActivityFragment extends Fragment {
         }
     }
 
-    private static void applyColorsByEntity(ActivityLogAdapter.ActivityLogViewHolder holder, String entity) {
+    private static void applyColorsByEntity(ActivityLogAdapter.ActivityLogViewHolder holder, String entity, Object value) {
 
         Context context = holder.itemView.getContext();
 
@@ -387,6 +414,20 @@ public class ActivityFragment extends Fragment {
                 holder.mcvEntityDesc.setStrokeColor(
                         ContextCompat.getColor(context, R.color.entity_prop_bg_border));
 
+                // Apply primary value card background
+                holder.mcvLogPrimaryValueBG.setCardBackgroundColor(
+                        ContextCompat.getColor(context, R.color.entity_prop_bg));
+
+                // Apply primary value text color
+                holder.tvLogPrimaryValue.setTextColor(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.entity_prop_icon));
+
+                if (value instanceof String) {
+                    holder.tvLogPrimaryValue.setText((String) value);
+                }else {
+                    holder.tvLogPrimaryValue.setText("N/A");
+                }
+
                 break;
 
 
@@ -411,6 +452,22 @@ public class ActivityFragment extends Fragment {
                 // Apply stroke
                 holder.mcvEntityDesc.setStrokeColor(
                         ContextCompat.getColor(context, R.color.entity_rent_bg_border));
+
+                // Apply primary value card background
+                holder.mcvLogPrimaryValueBG.setCardBackgroundColor(
+                        ContextCompat.getColor(context, R.color.entity_rent_bg));
+
+                // Apply primary value text color
+                holder.tvLogPrimaryValue.setTextColor(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.entity_rent_icon));
+
+                if (value instanceof Long) {
+                    long amount = (Long) value;
+                    String finalValue = "+ " + formatAmount((int) amount);
+                    holder.tvLogPrimaryValue.setText(finalValue);
+                }else {
+                    holder.tvLogPrimaryValue.setText("N/A");
+                }
 
                 break;
 
@@ -437,6 +494,20 @@ public class ActivityFragment extends Fragment {
                 holder.mcvEntityDesc.setStrokeColor(
                         ContextCompat.getColor(context, R.color.entity_tenant_bg_border));
 
+                // Apply primary value card background
+                holder.mcvLogPrimaryValueBG.setCardBackgroundColor(
+                        ContextCompat.getColor(context, R.color.entity_tenant_bg));
+
+                // Apply primary value text color
+                holder.tvLogPrimaryValue.setTextColor(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.entity_tenant_icon));
+
+                if (value instanceof String) {
+                    holder.tvLogPrimaryValue.setText((String) value);
+                }else {
+                    holder.tvLogPrimaryValue.setText("N/A");
+                }
+
                 break;
 
 
@@ -462,15 +533,38 @@ public class ActivityFragment extends Fragment {
                 holder.mcvEntityDesc.setStrokeColor(
                         ContextCompat.getColor(context, R.color.entity_elc_bill_bg_border));
 
+                // Apply primary value card background
+                holder.mcvLogPrimaryValueBG.setCardBackgroundColor(
+                        ContextCompat.getColor(context, R.color.entity_elc_bill_bg));
+
+                // Apply primary value text color
+                holder.tvLogPrimaryValue.setTextColor(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.entity_elc_bill_icon));
+
+                if (value instanceof Long) {
+                    long amount = (Long) value;
+                    String finalValue = "+" + amount + " units";
+                    holder.tvLogPrimaryValue.setText(finalValue);
+                }else {
+                    holder.tvLogPrimaryValue.setText("N/A");
+                }
+
                 break;
         }
     }
 
-    public class LogEntity {
+    public static class LogEntity {
         public static final String PROPERTY = "PROPERTY";
         public static final String RENT = "RENT";
         public static final String TENANT = "TENANT";
         public static final String UTILITY = "UTILITY";
+    }
+
+    public static String formatAmount(int amount) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
+        format.setMaximumFractionDigits(0);
+        format.setMinimumFractionDigits(0);
+        return format.format(amount);
     }
 
     @SuppressLint("NotifyDataSetChanged")

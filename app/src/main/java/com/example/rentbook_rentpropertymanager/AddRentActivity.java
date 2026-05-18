@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,7 @@ public class AddRentActivity extends AppCompatActivity {
     private Integer room_rent = 0, billing_start_day = 1;
 
     // 📄 Input Fields
-    private TextInputEditText etRentAmount;
+    private EditText etRentAmount;
 
     // 📅 Date & Time UI
     private TextView tvCustomDate, tvCustomTime, tvRentMonthYear;
@@ -206,6 +207,7 @@ public class AddRentActivity extends AppCompatActivity {
 
         rent_timestamp = System.currentTimeMillis();
 
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
@@ -213,13 +215,29 @@ public class AddRentActivity extends AppCompatActivity {
         tvCustomTime.setText(timeFormat.format(calendar.getTime()));
 
         // Set Current Month Year in the top section (rent month & year)
+        Date currentDate = Calendar.getInstance().getTime();
 
         SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-        String monthYear = sdfMonthYear.format(Calendar.getInstance().getTime());
-        tvRentMonthYear.setText(monthYear);
-        rent_month_year = monthYear;
+        String monthYear = sdfMonthYear.format(currentDate);
+        tvRentMonthYear.setText(monthYear); // April 2026
 
-        rent_period_start = String.format(Locale.ENGLISH, "%02d", billing_start_day) + " " + monthYear;
+        // For Firebase (2026-04)
+        // Get current calendar
+        Calendar cal = Calendar.getInstance();
+
+        // Set to first day of month (important)
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+
+        // Clamp billing day (avoid invalid dates like Feb 31)
+        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int safeDay = Math.min(billing_start_day, maxDay);
+
+        // Set safe day
+        cal.set(Calendar.DAY_OF_MONTH, safeDay);
+
+        // Format full date → 2026-04-26
+        SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        rent_period_start = sdfFull.format(cal.getTime()); // 2026-04-26
 
         rent_period_end = getRentPeriodEndDate(rent_period_start);
 
@@ -278,9 +296,13 @@ public class AddRentActivity extends AppCompatActivity {
                     String selectedMonthYear = MONTHS[selectedMonth] + " " + selectedYear;
                     tvRentMonthYear.setText(selectedMonthYear);
 
-                    rent_month_year = selectedMonthYear;
+                    String month = String.format(Locale.getDefault(), "%02d", selectedMonth + 1); //April → 04
+
+                    rent_month_year = selectedYear + "-" + month; // 2026-04
+
                     // Converting Selected Date (DD MM YYYY) to period start and end dates with timestamp.
-                    rent_period_start = billing_start_day + " " + selectedMonthYear;
+                    rent_period_start = selectedYear + "-" + month + "-" + billing_start_day;
+                    // rent_period_start = billing_start_day + " " + selectedMonthYear;
 
                     rent_period_end = getRentPeriodEndDate(rent_period_start);
                     is_rent_month_custom = true;
@@ -293,14 +315,16 @@ public class AddRentActivity extends AppCompatActivity {
     private String getRentPeriodEndDate(String startDateStr) {
 
         try {
+            // Correct format for input & output
             SimpleDateFormat sdf =
-                    new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
             Date startDate = sdf.parse(startDateStr.trim());
 
             Calendar cal = Calendar.getInstance();
-            assert startDate != null;
-            cal.setTime(startDate);
+            if (startDate != null) {
+                cal.setTime(startDate);
+            }
 
             // Move to next month
             cal.add(Calendar.MONTH, 1);
@@ -359,11 +383,30 @@ public class AddRentActivity extends AppCompatActivity {
         String rentAmount = etRentAmount.getText().toString().trim();
 
         if (!is_rent_month_custom){
-            SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-            String monthYear = sdfMonthYear.format(Calendar.getInstance().getTime());
-            rent_month_year = monthYear;
-            rent_period_start = String.format(Locale.ENGLISH, "%02d", billing_start_day) + " " + monthYear;
+            Calendar cal = Calendar.getInstance();
+
+            // Set to 1st day first (important)
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+
+            // Get max valid day for that month
+            int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+            // Clamp billing day to valid range
+            int safeDay = Math.min(billing_start_day, maxDay);
+
+            // Set safe day
+            cal.set(Calendar.DAY_OF_MONTH, safeDay);
+
+            // Month-Year → 2026-04
+            SimpleDateFormat sdfMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+            rent_month_year = sdfMonth.format(cal.getTime());
+
+            // Full Date → 2026-04-26
+            SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            rent_period_start = sdfFull.format(cal.getTime());
+
             rent_period_end = getRentPeriodEndDate(rent_period_start);
+
         }
 
         if (rentAmount.isEmpty()) {
@@ -387,7 +430,14 @@ public class AddRentActivity extends AppCompatActivity {
             rentReference.child(rent_id).setValue(rentMap)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "Rent Added Successfully", Toast.LENGTH_SHORT).show();
-                        addRentToCollections(property_id, convertMonthYearToKey(rent_month_year), Integer.parseInt(rentAmount));
+
+                        String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+                                .format(new Date());
+
+                        if (rent_month_year != null && rent_month_year.equals(currentMonth)){
+                            updateLastRentMonthInRooms();
+                        }
+                        addRentToCollections(property_id, rent_month_year, Integer.parseInt(rentAmount));
                         addRentActivityLog(Integer.parseInt(rentAmount), rent_month_year, rent_timestamp);
                     })
                     .addOnFailureListener(e ->
@@ -395,14 +445,24 @@ public class AddRentActivity extends AppCompatActivity {
         }
     }
 
+    private void updateLastRentMonthInRooms(){
+
+        roomReference.child("last_rent_month")
+                .setValue(rent_month_year)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firebase", "last_rent_month updated successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Failed to update last_rent_month", e);
+                });
+    }
+
     public void addRentActivityLog(int amount, String rentMY, long ts){
 
         String finalLogTitle = "Rent Recorded";
 
-        String finalLogDesc = "₹" + amount +
-                " rent collected for " + rentMY +
-                " in " + room_name + ", " + property_name +
-                " by " + tenant_name;
+        String finalLogDesc = tenant_name + " • " + room_name + " (" + property_name + ") • " +
+                 convertMonthYearKey(rentMY);
 
         // Create unique Activity Log ID
         String log_id = activityLogReference.push().getKey();
@@ -412,6 +472,7 @@ public class AddRentActivity extends AppCompatActivity {
         logMap.put("log_entity", "RENT");
         logMap.put("log_type", "RENT_ADDED");
         logMap.put("log_ts", rent_timestamp);
+        logMap.put("log_primary_value", amount);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)
@@ -425,13 +486,14 @@ public class AddRentActivity extends AppCompatActivity {
 
     }
 
-    public static String convertMonthYearToKey(String input) {
+    // Convert the month year from 2026-04 → April 2026
+    public static String convertMonthYearKey(String input) {
         try {
             DateFormat inputFormat =
-                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
 
             DateFormat outputFormat =
-                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
             Date date = inputFormat.parse(input);
             return outputFormat.format(date);

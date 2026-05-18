@@ -2,7 +2,7 @@ package com.example.rentbook_rentpropertymanager.model;
 
 public class Rooms {
 
-    public String room_id, room_name, tenant_name, tenant_phone, thumb_tenant_url, tenant_id;
+    public String room_id, room_name, tenant_name, tenant_phone, thumb_tenant_url, tenant_id, last_rent_month;
     public int room_rent, room_no, last_unit_paid;
     public boolean is_occupied, is_room;
 
@@ -12,7 +12,7 @@ public class Rooms {
 
     public Rooms(String room_id, String room_name, int room_no, String tenant_id, String tenant_name,
                  String tenant_phone, String thumb_tenant_url, int last_unit_paid,
-                 int room_rent, boolean is_occupied, boolean is_room) {
+                 int room_rent, boolean is_occupied, boolean is_room, String last_rent_month) {
         this.room_id = room_id;
         this.room_name = room_name;
         this.tenant_name = tenant_name;
@@ -24,6 +24,7 @@ public class Rooms {
         this.is_room = is_room;
         this.room_no = room_no;
         this.last_unit_paid = last_unit_paid;
+        this.last_rent_month = last_rent_month;
     }
 
     public String getRoom_id() {
@@ -112,5 +113,13 @@ public class Rooms {
 
     public void setIs_room(boolean is_room) {
         this.is_room = is_room;
+    }
+
+    public String getLast_rent_month() {
+        return last_rent_month;
+    }
+
+    public void setLast_rent_month(String last_rent_month) {
+        this.last_rent_month = last_rent_month;
     }
 }

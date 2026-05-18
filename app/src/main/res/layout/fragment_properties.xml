@@ -37,7 +37,7 @@
                 android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_value_name"
+                android:text="@string/text_user"
                 android:textColor="@color/text_heading"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -64,98 +64,101 @@
 
     </LinearLayout>
 
-    <!-- TOP ROW -->
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5"
-        android:paddingHorizontal="16dp"
-        android:layout_marginBottom="12dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="2dp"
+        android:layout_marginHorizontal="14dp"
+        android:layout_marginBottom="12dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_dashboard_card"
+        app:cardBackgroundColor="@color/bg_dashboard_card">
 
-        <!-- OCCUPANCY CARD -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="3"
-            app:cardBackgroundColor="@color/bg_dashboard_card"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/border_dashboard_card"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <!-- Circular progress -->
-                <FrameLayout
-                    android:layout_width="84dp"
-                    android:layout_height="84dp">
-
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/occupancyProgressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:max="100"
-                        android:progress="30"
-                        app:indicatorColor="@color/progress_active"
-                        app:indicatorSize="80dp"
-                        app:trackColor="@color/progress_inactive"
-                        app:trackCornerRadius="5dp"
-                        app:trackThickness="7dp" />
-
-                    <TextView
-                        android:id="@+id/tvProgressLabel"
-                        android:layout_width="87dp"
-                        android:layout_height="86dp"
-                        android:gravity="center"
-                        android:text="@string/text_any_number"
-                        android:textColor="@color/text_heading"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:letterSpacing="0.06"
-                    android:text="@string/text_occupancy"
-                    android:textColor="@color/text_heading"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- ROOMS + SHOPS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
 
-            <!-- ROOMS -->
+            <!-- Circular progress -->
+            <FrameLayout
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:layout_gravity="center">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/occupancyProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:progress="30"
+                    android:max="100"
+                    android:layout_gravity="center"
+                    app:indicatorColor="@color/progress_active"
+                    app:indicatorSize="80dp"
+                    app:trackColor="@color/progress_inactive"
+                    app:trackThickness="5dp"
+                    app:trackCornerRadius="5dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/tvProgressLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_any_number"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <TextView
+                        android:id="@+id/tvProgressLabel3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_occupied"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_muted"
+                        android:layout_gravity="center_horizontal"/>
+
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Space -->
+            <View
+                android:layout_width="16dp"
+                android:layout_height="1dp"/>
+
+            <!-- 🧊 Right Compact Card -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/bg_list_layout_primary"
+                android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
+                app:strokeWidth="1dp"
                 app:strokeColor="@color/border_dashboard_card"
-                app:strokeWidth="1dp">
+                app:cardBackgroundColor="@color/bg_list_layout_primary">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical">
+
+                    <!-- 🏢 Rooms -->
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="40dp"
@@ -177,81 +180,68 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_marginStart="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_label_rooms_cap"
-                                android:textColor="@color/text_subheading"
-                                android:textSize="12sp" />
+                                android:text="@string/text_rooms"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_subheading_fade"/>
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
 
                                 <TextView
                                     android:id="@+id/tvCombinedRoomOcc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/text_any_number"
-                                    android:textColor="@color/text_heading"
                                     android:textSize="16sp"
                                     android:textStyle="bold"
-                                    tools:ignore="TooDeepLayout" />
+                                    android:textColor="@color/primary_main"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/text_slash"
-                                    android:textColor="@color/text_heading"
                                     android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:layout_marginHorizontal="3dp"
+                                    android:textColor="@color/text_heading"/>
 
                                 <TextView
                                     android:id="@+id/tvCombinedRoomTotal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/text_any_number"
-                                    android:textColor="@color/text_heading"
                                     android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="@string/text_occupied"
-                                    android:textColor="@color/text_muted"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_heading"/>
 
                             </LinearLayout>
                         </LinearLayout>
 
+                    </LinearLayout>
 
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="0.7dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/light_separator"/>
 
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ROOMS -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/bg_list_layout_primary"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                android:layout_marginTop="12dp"
-                app:strokeColor="@color/border_dashboard_card"
-                app:strokeWidth="1dp">
-
+                    <!-- 🏪 Shops -->
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="40dp"
@@ -267,42 +257,44 @@
                                 android:contentDescription="@string/text_image_desc"
                                 android:padding="9dp"
                                 android:src="@drawable/ic_store_shop"
-                                app:tint="@color/icon_primary" />
+                                app:tint="@color/text_amount" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_marginStart="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_label_shops_cap"
-                                android:textColor="@color/text_subheading"
-                                android:textSize="12sp" />
+                                android:text="@string/text_shops"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_subheading_fade"/>
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
 
                                 <TextView
                                     android:id="@+id/tvCombinedShopOcc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/text_any_number"
-                                    android:textColor="@color/text_heading"
                                     android:textSize="16sp"
                                     android:textStyle="bold"
-                                    tools:ignore="TooDeepLayout" />
+                                    android:textColor="@color/text_amount"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:text="@string/text_slash"
                                     android:textColor="@color/text_heading"
                                     android:textSize="16sp"
+                                    android:layout_marginHorizontal="3dp"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -310,29 +302,22 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/text_any_number"
-                                    android:textColor="@color/text_heading"
                                     android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="@string/text_occupied"
-                                    android:textColor="@color/text_muted"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_heading"/>
 
                             </LinearLayout>
                         </LinearLayout>
 
+                    </LinearLayout>
 
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-    </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
         android:id="@+id/layout_properties_header"
@@ -419,7 +404,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="60dp" />
+            android:layout_marginTop="60dp"
+            android:indeterminateTint="@color/primary_main"/>
 
         <LinearLayout
             android:id="@+id/layoutNoPropertyList"
@@ -433,8 +419,8 @@
             <!-- Icon -->
             <ImageView
                 android:id="@+id/img_empty_property"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
                 android:layout_marginBottom="24dp"
                 android:contentDescription="@string/text_image_desc"
                 android:src="@drawable/ic_property" />
@@ -463,7 +449,7 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnAddProperty1"
+                android:id="@+id/btnAddFirstProperty"
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
                 android:layout_marginTop="32dp"

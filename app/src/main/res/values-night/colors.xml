@@ -17,7 +17,7 @@
     <color name="text_subheading">#AEB9B5</color>
     <color name="text_heading_inv">#e3f6f9</color>
     <color name="text_muted">#BDC9C5</color>
-    <color name="text_purple_300">#7C8CF8</color>
+    <color name="text_purple_300">#666fcf</color>
 
     <color name="text_heading_white_fixed">#e3f6f9</color>
     <color name="text_heading_black_fixed">#020d10</color>
@@ -28,25 +28,29 @@
     <color name="grey_500">#4d4d4d</color>
     <color name="teal_700">#FF018786</color>
 
+    <color name="edit_text_bg">#111415</color>
+    <color name="edit_text_hint">#b3bbc5</color>
+
     <!-- Icon Colors -->
     <color name="icon_primary">#188b7d</color>
 
     <color name="bottom_sheet_handle_grey">#D1D1D1</color>
     <color name="color_separator">#E0E0E0</color>
+    <color name="icon_wallet_color">#b6e4de</color>
 
     <!-- Button Colors -->
     <color name="btn_primary">#188b7d</color>
     <color name="btn_primary_text">#FFFFFF</color>
 
     <color name="bg_btn_call_blue">#5893f3</color>
-    <color name="bg_btn_call_blue_faded">#c8e6f5</color>
+    <color name="bg_btn_call_blue_faded">#1E2A29</color>
     <color name="bg_btn_wa_green">#4ab565</color>
 
     <color name="btn_logout_text">#DC2626</color>
     <color name="border_btn_logout">#2A2222</color>
 
     <!-- Overview/Dashboard Layouts #D5D5D5 -->
-    <color name="light_separator">#2C3948</color>
+    <color name="light_separator">#393e41</color>
     <color name="bg_dashboard_card">#1E2A29</color>
     <color name="border_dashboard_card">#324E49</color>
 
@@ -88,25 +92,30 @@
     <color name="status_occupied">#3BCB9A</color>
     <color name="status_occupied_ring">#B7F3D4</color>
 
+    <!-- Rent Status Colors -->
+    <color name="due_status_text">#f2b248</color>
+    <color name="not_app_status_text">#b4bbc1</color>
+
     <!-- Recent Activity Logs Icon & BG Colors -->
 
     <color name="entity_prop_bg">#151d1d</color>  <!-- Used for Property Activity Logs -->
     <color name="entity_prop_bg_border">#214440</color>
     <color name="entity_prop_icon">#15dccb</color>
 
-    <color name="entity_tenant_bg">#1d1621</color>  <!-- Used for Tenant Activity Logs -->
+    <color name="entity_tenant_bg">#1E1B22</color>  <!-- Used for Tenant Activity Logs -->
     <color name="entity_tenant_bg_border">#342241</color>
-    <color name="entity_tenant_icon">#ca81ff</color>
+    <color name="entity_tenant_icon">#8964B5</color>
 
     <color name="entity_rent_bg">#1b1c20</color>  <!-- Used for Rents Activity Logs -->
     <color name="entity_rent_bg_border">#2e3b45</color>
     <color name="entity_rent_icon">#88c1f2</color>
 
-    <color name="entity_elc_bill_bg">#201c14</color>  <!-- Used for Electricity Bills Activity Logs -->
+    <color name="entity_elc_bill_bg">#211E14</color>  <!-- Used for Electricity Bills Activity Logs -->
     <color name="entity_elc_bill_bg_border">#433318</color>
     <color name="entity_elc_bill_icon">#ffb700</color>
 
     <color name="chip_bg_default">#ffb700</color>
+    <color name="log_activity_timeline">#3f3e42</color>
 
     <!-- (Others) Single Layouts Colors -->
     <color name="payment_mode_online_bg">#1e332b</color>

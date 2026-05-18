@@ -1,163 +1,255 @@
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="3dp"
-    android:layout_marginVertical="8dp"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="1dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/border_list_layout_primary"
-    app:cardBackgroundColor="@color/bg_list_layout_primary">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/layoutHeaderTenantName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="6dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="10dp"
+        android:layout_marginHorizontal="3dp"
+        android:visibility="gone">
 
-        <!-- TOP SECTION -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="@color/light_separator"/>
+
+        <TextView
+            android:id="@+id/tvHeaderTenantName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text="@string/text_value_name"
+            android:textColor="#92959B"
+            android:layout_marginHorizontal="16dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="@color/light_separator"/>
+
+    </LinearLayout>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp"
+        android:layout_marginHorizontal="2dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="1dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_list_layout_primary"
+        android:backgroundTint="@color/bg_list_layout_primary">
+
+        <!-- Content Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-            <!-- Icon -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                android:layout_gravity="center_vertical"
-                app:strokeColor="@color/border_dashboard_card"
-                android:backgroundTint="@color/bg_dashboard_card">
+            <!-- Month Section -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_gravity="center">
 
-                <ImageView
+                <TextView
+                    android:id="@+id/tvCollectionMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_value_month_MMM"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_subheading"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvCollectionYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_value_year"
+                    android:textSize="22sp"
+                    android:textColor="@color/text_heading"
+                    android:textStyle="bold"/>
+
+                <!-- Divider -->
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/text_image_desc"
-                    android:padding="11dp"
-                    android:src="@drawable/ic_calendar_month"
-                    app:tint="@color/icon_primary" />
-            </com.google.android.material.card.MaterialCardView>
+                    android:layout_height="1dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@color/rent_year_underline"/>
 
-            <!-- Text Section -->
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:background="@color/light_separator"/>
+
+            <!-- Right Content -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="16dp">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvCollectionMY"
+                <!-- Top Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvTotalAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/text_value_amount"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_amount"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mcvRentPaymentMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/payment_mode_cash_bg"
+                        app:strokeWidth="0dp"
+                        android:layout_gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="3dp"
+                            tools:ignore="UseCompoundDrawables">
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:contentDescription="@string/text_image_desc"
+                                android:src="@drawable/ic_meter_reading"
+                                app:tint="@color/text_subheading"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="6dp"/>
+
+                            <TextView
+                                android:id="@+id/tvTotalUnitsUsed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_any_number"
+                                android:textColor="@color/text_subheading"
+                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:layout_marginBottom="1dp"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical" />
+                        </LinearLayout>
+
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_value_month_year"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textColor="@color/text_heading"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:id="@+id/tvTotalUnitsUsed"
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_wallet"
+                        app:tint="@color/icon_primary"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_rent_colon"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_subheading_fade"
+                        android:layout_marginStart="6dp"/>
+
+                    <TextView
+                        android:id="@+id/tvTotalRent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_amount"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_marginStart="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_any_number"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_purple_300"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_electric_bolt"
+                        app:tint="@color/bg_orange"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_label_elc_bill"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_subheading_fade"
+                        android:layout_marginStart="6dp"/>
+
+                    <TextView
+                        android:id="@+id/tvTotalElcBill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_value_amount"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_heading"
+                        android:layout_marginStart="4dp"/>
+
+                </LinearLayout>
+
             </LinearLayout>
-
-            <!-- Amount Section -->
-            <TextView
-                android:id="@+id/tvTotalAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_value_amount"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/text_amount"/>
 
         </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            android:layout_marginTop="16dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/border_info_container"
-            app:cardBackgroundColor="@color/bg_info_container">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:padding="8dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_single_bed"
-                    app:tint="@color/icon_primary" />
+    </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="Rent:"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_subheading" />
-
-                <TextView
-                    android:id="@+id/tvTotalRent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@string/text_value_amount"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_heading" />
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/light_separator" />
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_electric_bolt"
-                    app:tint="@color/bg_orange" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="E-Bill:"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_subheading" />
-
-                <TextView
-                    android:id="@+id/tvTotalElcBill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@string/text_value_amount"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_heading" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
+</LinearLayout>

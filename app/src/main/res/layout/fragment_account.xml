@@ -103,7 +103,8 @@
                         android:contentDescription="@string/text_image_desc"
                         android:layout_marginStart="6dp"
                         android:src="@drawable/ic_edit_name"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        app:tint="@color/text_heading"/>
 
                 </LinearLayout>
 
@@ -366,13 +367,13 @@
 
         <!-- Support & Info -->
         <TextView
-            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/text_support_info"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/text_muted"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginVertical="12dp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_support_info"
@@ -382,7 +383,6 @@
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/bg_list_layout_primary"
             app:strokeWidth="1dp"
-            android:layout_marginTop="12dp"
             app:strokeColor="@color/border_list_layout_primary">
 
             <LinearLayout

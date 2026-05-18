@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,6 +69,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -83,6 +86,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     // 📄 Tenant UI Views
     private TextView tvRoomStatus, tvTenantName, tvTenantPhone, tvTenantStartDate;
+    private EditText etReading;
+    private BottomSheetDialog bottomSheetDialog;
     private CircleImageView cimgTenantProfilePic;
     private LinearLayout layoutViewTenantProfile, layoutViewPastTenant;
 
@@ -200,6 +205,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
             Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
             addTenantIntent.putExtra("room_id", room_id);
+            addTenantIntent.putExtra("room_name", room_name);
+            addTenantIntent.putExtra("property_name", property_name);
             startActivity(addTenantIntent);
 
         });
@@ -245,16 +252,120 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 return false; // closes the speed dial
             } else if (actionItem.getId() == R.id.fab_add_elc_bill) {
 
-                Intent addBillIntent = new Intent(RoomDetailsActivity.this, AddEbillActivity.class);
-                addBillIntent.putExtra("room_id", room_id);
-                addBillIntent.putExtra("tenant_id", tenant_id);
-                addBillIntent.putExtra("property_id", property_id);
-                startActivity(addBillIntent);
-
+                handleAddElectricityBill();
                 return false;
             }
             return false;
         });
+    }
+
+    private void handleAddElectricityBill() {
+
+        roomReference.child("meter_start_reading")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if (!snapshot.exists()) {
+                            // ❌ Not initialized
+                            showMeterStartBottomSheet();
+                        } else {
+                            // ✅ Already initialized
+                            openAddElectricityBillScreen();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void showMeterStartBottomSheet() {
+
+        // Create BottomSheetDialog
+        bottomSheetDialog = new BottomSheetDialog(this);
+
+        // Inflate layout for bottom sheet
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_meter_start_reading, null, false);
+        bottomSheetDialog.setContentView(view);
+
+        // Make sure we modify the bottom-sheet container after it is shown
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                // clear default background so your drawable shows through
+                bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheet.setClipToPadding(false);
+            }
+        });
+
+        etReading = view.findViewById(R.id.etMeterStartReading);
+        MaterialCardView btnSave = view.findViewById(R.id.btnSave);
+        MaterialCardView btnSaveAndAddBill = view.findViewById(R.id.btnSaveAndAddBill);
+        TextView btnCancel = view.findViewById(R.id.btnCancel);
+
+        bottomSheetDialog.show();
+
+        btnCancel.setOnClickListener(v -> {
+
+            bottomSheetDialog.dismiss();
+
+        });
+
+        btnSave.setOnClickListener(v -> validateMeterReading(false));
+
+        btnSaveAndAddBill.setOnClickListener(v -> validateMeterReading(true));
+
+    }
+
+    private void validateMeterReading(boolean goToBills) {
+
+        String input = etReading.getText().toString().trim();
+
+        if (input.isEmpty()) {
+            etReading.setError("Enter reading");
+            return;
+        }
+
+        int reading = Integer.parseInt(input);
+
+        if (reading < 0) {
+            etReading.setError("Enter valid reading");
+            return;
+        }
+
+        // ✅ Only called if valid
+        saveMeterReading(reading, bottomSheetDialog, goToBills);
+    }
+
+    private void saveMeterReading(int reading, BottomSheetDialog dialog, boolean goToBills) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("meter_start_reading", reading);
+        map.put("last_unit_paid", reading);
+
+        roomReference.updateChildren(map).addOnSuccessListener(unused -> {
+
+            dialog.dismiss();
+
+            if (goToBills) {
+                openAddElectricityBillScreen();
+            }
+        });
+    }
+
+    private void openAddElectricityBillScreen() {
+
+        Intent addBillIntent = new Intent(RoomDetailsActivity.this, AddEbillActivity.class);
+        addBillIntent.putExtra("room_id", room_id);
+        addBillIntent.putExtra("tenant_id", tenant_id);
+        addBillIntent.putExtra("property_id", property_id);
+        startActivity(addBillIntent);
+
     }
 
     private void loadTenantData() {
@@ -342,7 +453,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
                     //GradientDrawable gradientDrawable = (GradientDrawable) tvRoomStatus.getBackground();
 
-                    if (Boolean.TRUE.equals(is_occupied)) {
+                    if (is_occupied) {
                         addRecordSpeedDial.setVisibility(View.VISIBLE);
                         fabAddTenant.setVisibility(View.GONE);
                         btnContact.setVisibility(View.VISIBLE);
@@ -532,7 +643,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Deleted";
 
-        String finalLogDesc = "Tenant: " + tenant_name + " removed from " + room_name + ", " + property_name;
+        String finalLogDesc = "+91 " + tenant_phone + " • " + tenant_address + " • "
+                + room_name + " (" + property_name + ")";
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -544,6 +656,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         logMap.put("log_entity", "TENANT");
         logMap.put("log_type", "TENANT_DELETED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", tenant_name);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)
@@ -585,7 +698,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         // Set click listeners
         btnCall.setOnClickListener(v -> {
             // handle call action
-            String cleanedPhone = cleanTenantPhone(tenant_phone);  // Clean the phone number with 10 Digit Number only.
+            String cleanedPhone = cleanTenantPhone(tenant_phone);  // Clean the phone number with 10-Digit Number only.
             if (cleanedPhone != null) {
                 bottomSheetDialog.dismiss();
                 // Create an Intent to open the dialer
@@ -682,6 +795,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
             Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
             addTenantIntent.putExtra("room_id", room_id);
+            addTenantIntent.putExtra("room_name", room_name);
+            addTenantIntent.putExtra("property_name", property_name);
             startActivity(addTenantIntent);
 
         });
@@ -869,7 +984,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.action_edit_room);
         if (item == null) return false;
 
-        if (Boolean.TRUE.equals(is_room)) {
+        if (is_room) {
             item.setTitle(R.string.text_menu_edit_room);
         } else {
             item.setTitle(R.string.text_menu_edit_shop);
@@ -914,6 +1029,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
             Intent editRoomIntent = new Intent(RoomDetailsActivity.this, EditRoom.class);
             editRoomIntent.putExtra("room_id", room_id);
             editRoomIntent.putExtra("is_room", is_room);
+            editRoomIntent.putExtra("room_name", room_name);
+            editRoomIntent.putExtra("property_name", property_name);
             startActivity(editRoomIntent);
 
             return true;

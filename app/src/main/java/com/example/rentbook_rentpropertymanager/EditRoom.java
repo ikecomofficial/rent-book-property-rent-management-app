@@ -3,6 +3,7 @@ package com.example.rentbook_rentpropertymanager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +29,10 @@ import java.util.HashMap;
 public class EditRoom extends AppCompatActivity {
 
     private String room_id, newRoomRent, newUnitRate;
+    private String room_name, property_name;
     private int rent_amount = 0;
     private double unit_rate = 0;
-    private TextInputEditText etUpdateRoomRent, etUpdateUnitRate;
+    private EditText etUpdateRoomRent, etUpdateUnitRate;
     private DatabaseReference roomReference, activityLogReference;
 
     @Override
@@ -46,6 +48,8 @@ public class EditRoom extends AppCompatActivity {
 
         room_id = getIntent().getStringExtra("room_id");
         boolean is_room = getIntent().getBooleanExtra("is_room", false);
+        room_name = getIntent().getStringExtra("room_name");
+        property_name = getIntent().getStringExtra("property_name");
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -137,7 +141,9 @@ public class EditRoom extends AppCompatActivity {
 
         String finalLogTitle = "Room Updated";
 
-        String finalLogDesc = "Updated Details - rent: " + newRoomRent + " & elc unit rate ₹" + newUnitRate + "/unit";
+        String finalLogDesc = "Rent: ₹" + newRoomRent + " • Electricity rate ₹" + newUnitRate + "/unit";
+
+        String finalLogUniqueVal = room_name + " (" + property_name + ")";
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -149,6 +155,7 @@ public class EditRoom extends AppCompatActivity {
         logMap.put("log_entity", "PROPERTY");
         logMap.put("log_type", "ROOM_EDITED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", finalLogUniqueVal);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)

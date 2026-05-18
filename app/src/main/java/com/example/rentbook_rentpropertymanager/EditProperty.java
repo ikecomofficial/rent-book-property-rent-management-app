@@ -3,6 +3,7 @@ package com.example.rentbook_rentpropertymanager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -27,8 +28,10 @@ import java.util.Map;
 
 public class EditProperty extends AppCompatActivity {
 
-    private TextInputEditText etPropertyName, etPropertyAddress, etDefaultRentAmount, etDefaultUnitRate;
-    private String user_id, property_id, property_name, property_address;
+    private EditText etPropertyName, etPropertyAddress, etDefaultRentAmount, etDefaultUnitRate;
+    private String property_id;
+    private String property_name;
+    private String property_address;
     private String newPropertyName, newPropertyAddress, newpPropertyDefaultRent, newPropertyUnitRate;
     private int default_rent, newRent;
     private double default_unit_rate, newUnitRate;
@@ -53,7 +56,7 @@ public class EditProperty extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
-        user_id = user.getUid();
+        String user_id = user.getUid();
 
         property_id = getIntent().getStringExtra("property_id");
         property_name = getIntent().getStringExtra("property_name");
@@ -176,8 +179,8 @@ public class EditProperty extends AppCompatActivity {
 
         String finalLogTitle = "Property Updated";
 
-        String finalLogDesc = "Property Updated - " + newPropertyName + ", " + newPropertyAddress + " with rent: ₹"
-                + newpPropertyDefaultRent + " & elc rate ₹" + newPropertyUnitRate + "/unit";
+        String finalLogDesc = newPropertyAddress + " • ₹"
+                + newpPropertyDefaultRent + "/month • ₹" + newPropertyUnitRate + "/unit";
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -189,6 +192,7 @@ public class EditProperty extends AppCompatActivity {
         logMap.put("log_entity", "PROPERTY");
         logMap.put("log_type", "PROP_EDITED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", newPropertyName);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)

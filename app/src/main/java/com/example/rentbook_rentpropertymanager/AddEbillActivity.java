@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -58,12 +59,12 @@ public class AddEbillActivity extends AppCompatActivity {
     private boolean isByUnits = true;
 
     // 📄 Input Fields
-    private TextInputEditText etCurrentReading, etElcBillAmount, etElcLastPaidTill;
+    private EditText etCurrentReading, etElcBillAmount;
 
     // 📊 UI Views
     private TextView tvCustomDate, tvCustomTime, tvPrevPaidTill, tvPrevPaidTillByAmt, tvElcBillMonthYear;
     private LinearLayout layoutLastPaidUnit, layoutElcBillAmount, layoutElcUnitPaid;
-    private MaterialCardView layoutPrevPaidTill, layoutPrevPaidTillByAmt;
+    //private MaterialCardView layoutPrevPaidTill, layoutPrevPaidTillByAmt;
 
     // ⏰ Date & Time
     private Calendar calendar;
@@ -105,15 +106,12 @@ public class AddEbillActivity extends AppCompatActivity {
         // 📄 Input Fields
         etCurrentReading = findViewById(R.id.etCurrentMeterReading);
         etElcBillAmount = findViewById(R.id.etElcBillAmount);
-        etElcLastPaidTill = findViewById(R.id.etElcLastPaidUnit);
+        //etElcLastPaidTill = findViewById(R.id.etElcLastPaidUnit);
 
         // 📊 UI Layouts
         layoutElcUnitPaid = findViewById(R.id.layoutElcUnitPaid);
         layoutElcBillAmount = findViewById(R.id.layoutElcBillAmount);
         layoutElcBillAmount.setVisibility(View.GONE);
-        layoutLastPaidUnit = findViewById(R.id.layoutLastPaidTill);
-        layoutPrevPaidTill = findViewById(R.id.layoutPrevPaidTill);
-        layoutPrevPaidTillByAmt = findViewById(R.id.layoutPrevPaidTillByAmt);
 
         // 🎯 Actions
         MaterialCardView btnSaveElcBill = findViewById(R.id.btnSaveElcBill);
@@ -176,7 +174,7 @@ public class AddEbillActivity extends AppCompatActivity {
     }
 
     private boolean fetchLastPaidUnitFirebase(){
-        roomReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        roomReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) return;
@@ -184,23 +182,9 @@ public class AddEbillActivity extends AppCompatActivity {
                 Long lastPaidUnit = snapshot.child("last_unit_paid").getValue(Long.class);
                 last_paid_upto = (lastPaidUnit != null) ? lastPaidUnit.intValue() : 0;
 
-                    if (last_paid_upto == 0){
-                        layoutLastPaidUnit.setVisibility(View.VISIBLE);
-                        layoutPrevPaidTill.setVisibility(View.GONE);
-                        layoutPrevPaidTillByAmt.setVisibility(View.GONE);
-
-
-                    }else if (last_paid_upto > 0){
-                        layoutLastPaidUnit.setVisibility(View.GONE);
-                        layoutPrevPaidTill.setVisibility(View.VISIBLE);
-                        layoutPrevPaidTillByAmt.setVisibility(View.VISIBLE);
-
-                        String tvPrevPaidUpTo = "Paid: " + last_paid_upto + " units";
-                        tvPrevPaidTill.setText(tvPrevPaidUpTo);
-                        tvPrevPaidTillByAmt.setText(tvPrevPaidUpTo);
-
-                    }
-
+                String tvPrevPaidUpTo = "Paid: " + last_paid_upto + " units";
+                tvPrevPaidTill.setText(tvPrevPaidUpTo);
+                tvPrevPaidTillByAmt.setText(tvPrevPaidUpTo);
 
             }
 
@@ -257,10 +241,15 @@ public class AddEbillActivity extends AppCompatActivity {
         tvCustomTime.setText(ebill_time);
 
         // Set Current Month Year in Top section (rent month & year)
+        Date currentDate = Calendar.getInstance().getTime();
         SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-        String monthYear = sdfMonthYear.format(Calendar.getInstance().getTime());
+        String monthYear = sdfMonthYear.format(currentDate);
         tvElcBillMonthYear.setText(monthYear);
-        elc_bill_month_year = monthYear;
+
+        // 🔹 For Firebase / variable → 2026-04
+        SimpleDateFormat sdfMonthYearFb = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+        elc_bill_month_year = sdfMonthYearFb.format(currentDate);
+
     }
 
     private void showElcBillMonthYearPicker() {
@@ -315,7 +304,9 @@ public class AddEbillActivity extends AppCompatActivity {
                     String selectedMonthYear = MONTHS[selectedMonth] + " " + selectedYear;
                     tvElcBillMonthYear.setText(selectedMonthYear);
 
-                    elc_bill_month_year = selectedMonthYear;
+                    String month = String.format(Locale.getDefault(), "%02d", selectedMonth + 1); //April → 04
+
+                    elc_bill_month_year = selectedYear + "-" + month; // 2026-04
 
                     //is_elc_bill_month_custom = true;
 
@@ -365,15 +356,6 @@ public class AddEbillActivity extends AppCompatActivity {
 
     private void saveElcBillToFirebase(){
 
-        // Step 1: Get previous units
-        if (last_paid_upto == 0) {
-            String prevUnitPaid = Objects.requireNonNull(etElcLastPaidTill.getText()).toString().trim();
-            if (prevUnitPaid.isEmpty()) {
-                etElcLastPaidTill.setError("Enter Previous Units");
-                return;
-            }
-            last_paid_upto = Integer.parseInt(prevUnitPaid);
-        }
         if (isByUnits){
             // Unit Mode
             String unitPaidUpTo = Objects.requireNonNull(etCurrentReading.getText()).toString().trim();
@@ -411,13 +393,13 @@ public class AddEbillActivity extends AppCompatActivity {
         if (ebill_id != null){
             elcBillReference.child(ebill_id).setValue(billMap)
                     .addOnSuccessListener(aVoid -> {
-                        // Update Last Unit Paid in Room Id Data
+                        // Update Last Unit Paid in Room id Data
                         roomReference.child("last_unit_paid").setValue(units_paid_upto)
                                 .addOnSuccessListener(update -> {
                                     Toast.makeText(this, "Bill Added Successfully", Toast.LENGTH_SHORT).show();
                                     int elcBill = (int) Math.round(elc_bill_amount);
                                     int elcUnitsUsed = (int) Math.round(units_used);
-                                    addElcBillToCollections(property_id, convertMonthYearToKey(elc_bill_month_year), elcBill, elcUnitsUsed);
+                                    addElcBillToCollections(property_id, elc_bill_month_year, elcBill, elcUnitsUsed);
                                     addElcBillActivityLog();
                                 });
                     })
@@ -426,19 +408,20 @@ public class AddEbillActivity extends AppCompatActivity {
         }
     }
 
-    public static String convertMonthYearToKey(String input) {
+    // Convert the month year from 2026-04 → April 2026
+    public static String convertMonthYearKey(String input) {
         try {
             DateFormat inputFormat =
-                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
 
             DateFormat outputFormat =
-                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
             Date date = inputFormat.parse(input);
             return outputFormat.format(date);
 
         } catch (ParseException e) {
-            Log.e("DateParse", "Error parsing date", e);
+            Log.e("DateParse", "Error converting key", e);
             return null;
         }
     }
@@ -507,9 +490,8 @@ public class AddEbillActivity extends AppCompatActivity {
 
         String finalLogTitle = "Electricity Bill Recorded";
 
-        String finalLogDesc = "Electricity Bill of ₹" + elc_bill_amount + " added for " +
-                elc_bill_month_year + " (" + units_used + " units consumed & paid up to " +
-                units_paid_upto + " units).";
+        String finalLogDesc = "₹" + elc_bill_amount + " • " + convertMonthYearKey(elc_bill_month_year) +
+                " • Paid up to " + units_paid_upto + " units.";
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -521,6 +503,7 @@ public class AddEbillActivity extends AppCompatActivity {
         logMap.put("log_entity", "UTILITY");
         logMap.put("log_type", "ELC_BILL_ADDED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", units_used);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)

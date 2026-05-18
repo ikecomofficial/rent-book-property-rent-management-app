@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,10 +35,11 @@ import java.util.Map;
 
 public class AddTenantActivity extends AppCompatActivity {
 
-    private TextInputEditText etTenantName, etTenantPhone, etTenantAddress;
+    private EditText etTenantName, etTenantPhone, etTenantAddress;
     private static final int PICK_CONTACT = 1001;
     private String user_id, room_id, tenant_id, property_id;
     private String tenantName, tenantPhone, tenantAddress;
+    private String room_name, property_name;
     private boolean is_room;
     private DatabaseReference tenantReference;
     private DatabaseReference roomReference;
@@ -60,6 +62,8 @@ public class AddTenantActivity extends AppCompatActivity {
         }
 
         room_id = getIntent().getStringExtra("room_id");
+        room_name = getIntent().getStringExtra("room_name");
+        property_name = getIntent().getStringExtra("property_name");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
@@ -229,7 +233,7 @@ public class AddTenantActivity extends AppCompatActivity {
         }
     }
 
-    // Format Picked contact to proper 10 digit number
+    // Format Picked contact to proper 10-digit number
     private String cleanPhoneNumberPick(String cleanNumber){
 
         if (cleanNumber == null) return "";
@@ -253,8 +257,7 @@ public class AddTenantActivity extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Added";
 
-        String finalLogDesc = "Tenant: " + tenantName + " (" + tenantPhone + ") " +
-                " added at " + tenantAddress;
+        String finalLogDesc = room_name + " (" + property_name + ") • +91 " + tenantPhone + " • " + tenantAddress;
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -266,6 +269,7 @@ public class AddTenantActivity extends AppCompatActivity {
         logMap.put("log_entity", "TENANT");
         logMap.put("log_type", "TENANT_ADDED");
         logMap.put("log_ts", currTimestamp);
+        logMap.put("log_primary_value", tenantName);
 
         if (log_id != null){
             activityLogReference.child(log_id).setValue(logMap)

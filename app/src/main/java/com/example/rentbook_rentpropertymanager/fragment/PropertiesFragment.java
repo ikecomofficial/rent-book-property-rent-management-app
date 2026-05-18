@@ -41,6 +41,7 @@ public class PropertiesFragment extends Fragment {
     // 📊 Property List & Empty State
     private RecyclerView propertyList;
     private LinearLayout layoutNoPropertyList;
+    private MaterialCardView btnAddProperty;
 
     // 👤 User Info
     private String user_id;
@@ -83,7 +84,8 @@ public class PropertiesFragment extends Fragment {
         tvCombinedShopTotal = view.findViewById(R.id.tvCombinedShopTotal);
 
         // 🎯 Actions
-        MaterialCardView btnAddProperty = view.findViewById(R.id.btnAddProperty);
+        btnAddProperty = view.findViewById(R.id.btnAddProperty);
+        MaterialCardView btnAddFirstProperty = view.findViewById(R.id.btnAddFirstProperty);
         propertyList = view.findViewById(R.id.propertyListRecycleView);
         propertyList.setHasFixedSize(true);
         propertyList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -116,6 +118,13 @@ public class PropertiesFragment extends Fragment {
 
         });
 
+        btnAddFirstProperty.setOnClickListener(v -> {
+
+            Intent intent = new Intent(getContext(), AddProperty.class);
+            startActivity(intent);
+
+        });
+
         return view;
     }
 
@@ -129,7 +138,7 @@ public class PropertiesFragment extends Fragment {
                     String user_thumb_prof = snapshot.child("thumb_profile_url").getValue(String.class);
 
                     if (user_name == null || user_name.trim().isEmpty()) {
-                        user_name = "User";
+                        user_name = getString(R.string.text_user);
                     }
 
                     tvUserName.setText(user_name);
@@ -238,8 +247,10 @@ public class PropertiesFragment extends Fragment {
                         propertiesItemCount = getItemCount();
                         if (propertiesItemCount == 0) {
                             layoutNoPropertyList.setVisibility(View.VISIBLE);
+                            btnAddProperty.setVisibility(View.GONE);
                         } else {
                             layoutNoPropertyList.setVisibility(View.GONE);
+                            btnAddProperty.setVisibility(View.VISIBLE);
                             String p_count = "Properties" + " (" + propertiesItemCount + ")";
                             tvPropertiesCount.setText(p_count);
                         }

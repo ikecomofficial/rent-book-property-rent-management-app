@@ -3,18 +3,20 @@ package com.example.rentbook_rentpropertymanager.model;
 public class ActivityLog {
 
     private String log_title, log_desc, log_entity, log_type;
+    private Object log_primary_value;
     private long log_ts;
 
     public ActivityLog(){
 
     }
 
-    public ActivityLog(String log_title, String log_desc, String log_entity, String log_type, long log_ts) {
+    public ActivityLog(String log_title, String log_desc, String log_entity, String log_type, long log_ts, Object log_primary_value) {
         this.log_title = log_title;
         this.log_desc = log_desc;
         this.log_entity = log_entity;
         this.log_type = log_type;
         this.log_ts = log_ts;
+        this.log_primary_value = log_primary_value;
     }
 
     public String getLog_title() {
@@ -55,5 +57,13 @@ public class ActivityLog {
 
     public void setLog_ts(long log_ts) {
         this.log_ts = log_ts;
+    }
+
+    public Object getLog_primary_value() {
+        return log_primary_value;
+    }
+
+    public void setLog_primary_value(Object log_primary_value) {
+        this.log_primary_value = log_primary_value;
     }
 }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_bottom_sheet"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp">
+
+        <!-- Drag Handle -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="48dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/light_separator" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTenantHistoryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Property"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_heading" />
+
+        <TextView
+            android:id="@+id/tvDeleteDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This action will permanently delete the property."
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_subheading" />
+
+        <!-- CARD -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:strokeColor="@color/border_dashboard_card"
+            app:strokeWidth="0.5dp"
+            android:layout_marginHorizontal="2dp"
+            android:layout_marginVertical="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- PROPERTY NAME LABEL -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Type 'DELETE' to confirm"
+                    android:textColor="@color/text_subheading"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"
+                    android:paddingBottom="8dp"/>
+
+                <!-- PROPERTY NAME INPUT -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_et_input"
+                    android:paddingHorizontal="16dp">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_meter_reading"
+                        app:tint="@color/icon_primary"/>
+
+                    <EditText
+                        android:id="@+id/etDeleteConfirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter DELETE"
+                        android:textColorHint="@color/text_subheading_fade"
+                        android:textColor="@color/text_heading"
+                        android:background="@android:color/transparent"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="2dp"
+                        android:paddingVertical="8dp"
+                        android:inputType="textCapWords"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/btnCancelDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_cancel"
+                android:textColor="@color/text_subheading_fade"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:paddingVertical="6dp"/>
+
+            <View
+                android:layout_width="28dp"
+                android:layout_height="match_parent"/>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnDeleteProperty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/primary_main"
+                app:cardBackgroundColor="@color/btn_primary">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="@string/text_menu_delete_property"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    android:textColor="#FFFFFF"/>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp"/>
+
+
+    </LinearLayout>
+</ScrollView>

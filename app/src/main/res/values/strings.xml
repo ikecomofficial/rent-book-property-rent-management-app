@@ -6,7 +6,8 @@
 
 
     <!-- Main Activity Strings -->
-    <string name="text_welcome">Welcome Back,</string>
+    <string name="text_welcome">Welcome Back!</string>
+    <string name="text_user">User</string>
     <string name="text_value_name">Rahul Kumar</string>
     <string name="text_occupancy">Occupancy</string>
     <string name="text_some_percentage">0%</string>
@@ -20,10 +21,13 @@
     <string name="text_label_view_summary">View Summary</string>
     <string name="text_value_month_year">Jan 2025</string>
     <string name="text_total_collected">Total Collected</string>
-    <string name="text_value_amount">₹ 2,500</string>
+    <string name="text_value_amount">₹ 0</string>
     <string name="text_properties">Properties</string>
     <string name="text_add_property">Add Property</string>
     <string name="text_elc_meter_readings">Electricity Meter Readings</string>
+
+    <string name="text_label_starting_reading">Set Starting Reading</string>
+    <string name="text_sub_starting_reading">Enter the current meter reading to start tracking usage.</string>
 
     <string name="text_no_properties_added_yet">No properties added yet.</string>
     <string name="text_start_managing_desc">Start managing your\nproperties by adding your\nfirst one!</string>
@@ -34,13 +38,16 @@
     <!-- Main Activity Fragments Texts -->
 
     <string name="text_track_recent_updates">Track Recent Updates Across Properties.</string>
+    <string name="text_monthly_coll_summary">Monthly collection summary for selected property.</string>
 
 
     <!-- Single Property Layout Texts -->
     <string name="text_property_name">Property Name</string>
     <string name="text_value_city">New Delhi</string>
-    <string name="text_rooms">Rooms: </string>
-    <string name="text_shops">Shops: </string>
+    <string name="text_rooms_colon">Rooms: </string>
+    <string name="text_shops_colon">Shops: </string>
+    <string name="text_rooms">Rooms</string>
+    <string name="text_shops">Shops</string>
     <string name="text_slash">/</string>
 
     <!-- Single Activity Log Layout Texts -->
@@ -89,15 +96,22 @@
     <string name="text_label_total_coll_cap">TOTAL COLLECTIONS</string>
     <string name="text_rent_colon">Rent:</string>
     <string name="text_power_colon">Power:</string>
+    <string name="text_electricity_colon">Electricity:</string>
+
+    <string name="text_heading_no_monthly_collection">No Collections Yet</string>
+    <string name="text_sub_no_monthly_collection">Start Tracking Monthly Rent &amp; Electricity Bills for Properties.</string>
 
 
     <!-- Property Details Activity Screen Strings -->
     <string name="text_toolbar_property_details">Property Details</string>
 
     <string name="text_label_overview">Dashboard Overview</string>
-    <string name="text_label_rent_coll_cap">RENT COLLECTED</string>
-    <string name="text_label_elc_bill_cap">ELEC. BILL</string>
-    <string name="text_label_consumed_cap">CONSUMED</string>
+    <string name="text_label_coll_overview">Collections Overview</string>
+    <string name="bullet_dot">\u2022</string>
+    <string name="text_label_rent_collected">Rent Collected</string>
+    <string name="text_label_rent">Rent</string>
+    <string name="text_label_elc_bill">Electricity Bill</string>
+    <string name="text_label_consumed">Consumed</string>
 
     <string name="text_total">Total</string>
     <string name="text_occupied">Occupied</string>
@@ -106,6 +120,11 @@
 
     <string name="text_menu_edit_property">Edit Property</string>
     <string name="text_menu_delete_property">Delete Property</string>
+
+    <string name="text_paid">Paid</string>
+    <string name="text_due">Due</string>
+
+    <string name="delete_property_desc">This action will permanently delete the property: \'%1$s\'. All data, including rents, electricity bills, tenants, and collections, will be lost.</string>
 
     <!-- Single Room Layout Texts -->
     <string name="text_room_01">Room 01</string>
@@ -130,9 +149,9 @@
     <string name="text_label_total_shops">Total Shops</string>
 
     <string name="text_label_financial_cap">FINANCIALS</string>
-    <string name="text_label_base_rent">Base Rent</string>
+    <string name="text_label_base_rent">BASE RENT (₹/mon)</string>
     <string name="text_hint_base_rent_amount">e.g. ₹ 2,500</string>
-    <string name="text_label_elc_unit_rent">Electricity Unit Rate</string>
+    <string name="text_label_elc_unit_rate">ELEC. RATE (₹/unit)</string>
     <string name="text_hint_elc_unit">e.g. ₹7/unit</string>
 
     <string name="text_btn_create_property">Create Property</string>
@@ -156,6 +175,9 @@
     <string name="text_menu_edit_shop">Edit Shop</string>
     <string name="text_menu_edit_tenant">Edit Tenant</string>
     <string name="text_menu_remove_tenant">Remove Tenant</string>
+
+    <string name="text_save_continue">Save &amp; Continue</string>
+    <string name="text_continue">Continue</string>
 
     <!-- Single Rent & E-Bill Activity Screens Strings -->
     <string name="text_value_month_MMM">MAR</string>
@@ -195,7 +217,7 @@
 
     <string name="text_label_last_paid_colon">Last Paid:</string>
     <string name="text_label_curr_meter_reading">Current Meter Reading</string>
-    <string name="text_hint_curr_meter_unit">Enter Current Meter Unit</string>
+    <string name="text_hint_curr_meter_unit">Enter Current Meter Units</string>
     <string name="text_label_ebill_amount_paid">E-Bill Amount Paid</string>
     <string name="text_hint_ebill_amount_paid">Enter Amount Paid for Electricity</string>
     <string name="text_label_last_paid_reading">Last Paid Meter Reading</string>
@@ -257,8 +279,8 @@
     <string name="text_toolbar_prop_collections">Properties Collections</string>
     <string name="text_label_monthly_collections">Monthly Collections</string>
 
-    <string name="text_heading_no_monthly_collection">No Collections Yet</string>
-    <string name="text_sub_no_monthly_collection">Start Tracking Monthly Rent &amp; Electricity Bills for Properties.</string>
+    <string name="text_heading_no_recent_log">No Activity Record</string>
+    <string name="text_sub_no_recent_log">Your actions will be tracked here.</string>
 
 
     <!-- Done Till Here -->

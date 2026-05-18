@@ -29,11 +29,15 @@
     <color name="grey_500">#4d4d4d</color>
     <color name="teal_700">#FF018786</color>
 
+    <color name="edit_text_bg">#f3f4f6</color>
+    <color name="edit_text_hint">#b3bbc5</color>
+
     <!-- Icon Colors -->
     <color name="icon_primary">#0D9488</color>
 
     <color name="bottom_sheet_handle_grey">#D1D1D1</color>
     <color name="color_separator">#E0E0E0</color>
+    <color name="icon_wallet_color">#b6e4de</color>
 
     <!-- Button Colors -->
     <color name="btn_primary">#0D9488</color>
@@ -89,25 +93,32 @@
     <color name="status_occupied">#3BCB9A</color>
     <color name="status_occupied_ring">#B7F3D4</color>
 
+    <!-- Rent Status Colors -->
+    <color name="due_status_text">#f2b248</color>
+    <color name="not_app_status_text">#b4bbc1</color>
+
+
+
     <!-- Recent Activity Logs Icon & BG Colors -->
 
-    <color name="entity_prop_bg">#f7fefc</color>  <!-- Used for Property Activity Logs -->
-    <color name="entity_prop_bg_border">#ccfbf1</color>
-    <color name="entity_prop_icon">#0d9488</color>
+    <color name="entity_prop_bg">#eff9f8</color>  <!-- Used for Property Activity Logs -->
+    <color name="entity_prop_bg_border">#dbf3f0</color>
+    <color name="entity_prop_icon">#059191</color>
 
-    <color name="entity_tenant_bg">#fcfaff</color>  <!-- Used for Tenant Activity Logs -->
-    <color name="entity_tenant_bg_border">#f4eaff</color>
-    <color name="entity_tenant_icon">#9333ea</color>
+    <color name="entity_tenant_bg">#f9f3fc</color>  <!-- Used for Tenant Activity Logs -->
+    <color name="entity_tenant_bg_border">#f3ecfb</color>
+    <color name="entity_tenant_icon">#a146de</color>
 
-    <color name="entity_rent_bg">#f7faff</color>  <!-- Used for Rents Activity Logs -->
-    <color name="entity_rent_bg_border">#dbeafe</color>
-    <color name="entity_rent_icon">#2563eb</color>
+    <color name="entity_rent_bg">#f2f7fe</color>  <!-- Used for Rents Activity Logs -->
+    <color name="entity_rent_bg_border">#e2ecfd</color>
+    <color name="entity_rent_icon">#0b6bed</color>
 
-    <color name="entity_elc_bill_bg">#fffbf6</color>  <!-- Used for Electricity Bills Activity Logs -->
-    <color name="entity_elc_bill_bg_border">#fff1df</color>
-    <color name="entity_elc_bill_icon">#eb621a</color>
+    <color name="entity_elc_bill_bg">#fef8f0</color>  <!-- Used for Electricity Bills Activity Logs -->
+    <color name="entity_elc_bill_bg_border">#fce9d3</color>
+    <color name="entity_elc_bill_icon">#f8772d</color>
 
     <color name="chip_bg_default">#ffffff</color>
+    <color name="log_activity_timeline">#DADADA</color>
 
 
     <!-- (Others) Single Layouts Colors -->

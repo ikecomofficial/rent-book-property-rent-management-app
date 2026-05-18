@@ -82,7 +82,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
     private String tenant_phone, tenant_profile_url, thumb_tenant_url;
 
     // 📄 Tenant UI Views
-    private TextView tvTenantName, tvTenantPhone, tvTenantStartDate, tvTenantEndDate, tvTenantPropRoom, tvBillingStartDay;
+    private TextView tvTenantName, tvTenantPhone, tvTenantAddress, tvTenantStartDate, tvTenantEndDate, tvTenantPropRoom, tvBillingStartDay;
     private CircleImageView cimgTenantProfile;
 
     // 📊 Billing Info
@@ -144,6 +144,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
         cimgTenantProfile = findViewById(R.id.cimgTenantProfile);
         tvTenantName = findViewById(R.id.tvTenantName);
         tvTenantPhone = findViewById(R.id.tvTenantPhone);
+        tvTenantAddress = findViewById(R.id.tvTenantAddress);
         tvTenantStartDate = findViewById(R.id.tvTenantStartDate);
         tvTenantEndDate = findViewById(R.id.tvTenantEndDate);
         tvTenantPropRoom = findViewById(R.id.tvTenantPropRoom);
@@ -334,7 +335,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
                 if (result.isSuccessful()) {
                     Uri croppedUri = result.getUriContent();
                     if (croppedUri != null) {
-                        if (Boolean.FALSE.equals(is_add_doc)){
+                        if (!is_add_doc){
                             cimgTenantProfile.setImageURI(croppedUri);
                         }
                         uploadImage(croppedUri);
@@ -354,7 +355,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
                         // Launch cropper
                         CropImageOptions cropOptions = new CropImageOptions();
                         // Crop Aspect Ratio Based on Btn
-                        if (Boolean.TRUE.equals(is_add_doc)){
+                        if (is_add_doc){
                             cropOptions.aspectRatioX = 4;
                             cropOptions.aspectRatioY = 3;
                         } else {
@@ -404,7 +405,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
         String randomImageName = randomImageName();
         StorageReference fileRef;
-        if (Boolean.FALSE.equals(is_add_doc)){
+        if (!is_add_doc){
             fileRef = profileStorageRef.child(user_id).child(room_id).child(tenant_id).child("profile_" + randomImageName + ".jpg");
         }else {
             fileRef = tenantDocumentRef.child(user_id).child(room_id).child(tenant_id).child("doc_" + randomImageName + ".jpg");
@@ -453,7 +454,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
             byte[] thumbData = byteArrayOutputStream.toByteArray();
 
             StorageReference thumbRef;
-            if (Boolean.FALSE.equals(is_add_doc)){
+            if (!is_add_doc){
                 thumbRef = profileStorageRef.child(user_id).child(room_id).child(tenant_id).child("thumb_"+ randomImageName + ".jpg");
             }else {
                 thumbRef = tenantDocumentRef.child(user_id).child(room_id).child(tenant_id).child("thumb_doc_"+ randomImageName + ".jpg");
@@ -489,7 +490,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
     private void saveUrlsToDatabase(String fullUrl, String thumbUrl, String randomImageName) {
 
-        if (Boolean.FALSE.equals(is_add_doc)){
+        if (!is_add_doc){
             HashMap<String, Object> tenantProfileUrlMap = new HashMap<>();
             tenantProfileUrlMap.put("tenant_profile_url", fullUrl);
             tenantProfileUrlMap.put("thumb_tenant_url", thumbUrl);
@@ -526,30 +527,40 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void deleteOldProfileFromFirebase(){
-        StorageReference oldFullProfileRef = FirebaseStorage.getInstance().getReferenceFromUrl(tenant_profile_url);
-        StorageReference oldThumbProfileRef = FirebaseStorage.getInstance().getReferenceFromUrl(thumb_tenant_url);
+    private void deleteOldProfileFromFirebase() {
 
-        if (tenant_profile_url != null && !tenant_profile_url.isEmpty() && !tenant_profile_url.equals("default")){
+        // 🔹 Full image
+        if (tenant_profile_url != null
+                && !tenant_profile_url.isEmpty()
+                && !tenant_profile_url.equals("default")) {
+
+            StorageReference oldFullProfileRef = FirebaseStorage.getInstance()
+                    .getReferenceFromUrl(tenant_profile_url);
+
             oldFullProfileRef.delete()
                     .addOnSuccessListener(aVoid -> {
-                        Log.d("Firebase Database:", "Full Image Deleted");
+                        Log.d("Firebase", "Full Image Deleted");
                     })
                     .addOnFailureListener(e ->
                             Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-
         }
-        if (thumb_tenant_url != null && !thumb_tenant_url.isEmpty() && !thumb_tenant_url.equals("default")){
+
+        // 🔹 Thumbnail
+        if (thumb_tenant_url != null
+                && !thumb_tenant_url.isEmpty()
+                && !thumb_tenant_url.equals("default")) {
+
+            StorageReference oldThumbProfileRef = FirebaseStorage.getInstance()
+                    .getReferenceFromUrl(thumb_tenant_url);
+
             oldThumbProfileRef.delete()
                     .addOnSuccessListener(aVoid -> {
-                        Log.d("Firebase Database:", "Full Image Deleted");
+                        Log.d("Firebase", "Thumb Image Deleted");
                     })
                     .addOnFailureListener(e ->
                             Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
-
     }
-
 
     private void loadTenantData(){
         tenantReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -557,6 +568,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String tenant_name = snapshot.child("tenant_name").getValue(String.class);
                 tenant_phone = snapshot.child("tenant_phone").getValue(String.class);
+                String tenant_address = snapshot.child("tenant_address").getValue(String.class);
                 thumb_tenant_url = snapshot.child("thumb_tenant_url").getValue(String.class);
                 tenant_profile_url = snapshot.child("tenant_profile_url").getValue(String.class);
                 String tenant_start_date = snapshot.child("tenant_start_date").getValue(String.class);
@@ -569,6 +581,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
                 tvTenantName.setText(tenant_name);
                 tvTenantPhone.setText(tenant_phone);
+                tvTenantAddress.setText(tenant_address);
                 tvTenantStartDate.setText(tenant_start_date);
                 assert tenant_end_date != null;
                 if (tenant_end_date.equals("null")){

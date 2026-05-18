@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mcvRoomsMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="24dp"
@@ -17,7 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="16dp">
 
         <!-- TOP ROW -->
         <LinearLayout
@@ -25,22 +28,23 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingHorizontal="3dp">
 
             <!-- Room name + status -->
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="vertical"
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/tvRoomName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_room_01"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_heading"/>
 
@@ -49,29 +53,32 @@
                     android:id="@+id/cardRoomOccupancy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#DCFCE7">
+                    app:strokeWidth="0dp"
+                    android:layout_marginTop="2dp"
+                    app:cardBackgroundColor="@color/occ_status_bg">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:paddingHorizontal="12dp"
-                        android:paddingTop="3dp"
+                        android:paddingHorizontal="10dp"
+                        android:paddingTop="2dp"
                         android:paddingBottom="4dp">
 
                         <!-- Inner Dot -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/dotRoomOccupancy"
-                            android:layout_width="11dp"
-                            android:layout_height="11dp"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
                             android:layout_gravity="center"
                             app:cardBackgroundColor="@color/status_occupied"
                             app:cardCornerRadius="7dp"
-                            app:cardElevation="0dp" />
+                            app:strokeWidth="0dp"
+                            app:cardElevation="0dp"
+                            android:layout_marginTop="1dp"/>
 
                         <TextView
                             android:id="@+id/tvRoomStatus"
@@ -79,37 +86,92 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:text="@string/text_occupied"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
+                            android:textSize="13sp"
                             android:textColor="#16A34A"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
+            <!-- Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="36dp"
+                android:background="#E5E7EB"
+                android:layout_marginEnd="14dp"/>
+
+            <!-- Monthly Rent Section -->
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
 
-                <!-- Price -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_rupee_symbol"
-                    android:layout_marginEnd="3dp"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_purple_300"/>
+                    android:text="Monthly Rent"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_subheading_fade"/>
 
-                <!-- Price -->
                 <TextView
                     android:id="@+id/tvRoomRent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_any_number"
-                    android:textSize="22sp"
+                    android:text="₹ 2,500"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_purple_300"/>
+                    android:textColor="@color/text_purple_300"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="36dp"
+                android:background="#E5E7EB"
+                android:layout_marginHorizontal="14dp"/>
+
+            <!-- Rent Status Section -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rent Status"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_subheading_fade"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                        android:id="@+id/imgRentStatus"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_verified"
+                        app:tint="@color/occ_status_dot"
+                        android:layout_marginEnd="5dp"/>
+
+                    <TextView
+                        android:id="@+id/tvRoomRentStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Paid"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/occ_status_dot"/>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -119,7 +181,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/bg_info_container"
