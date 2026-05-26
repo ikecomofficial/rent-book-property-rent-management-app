@@ -29,16 +29,16 @@
             android:id="@+id/tvTenantHistoryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_del_prop"
+            android:text="@string/text_remove_tenant_ques"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/text_heading" />
 
         <TextView
-            android:id="@+id/tvDeleteDescription"
+            android:id="@+id/tvBSRoomName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_delete_property_desc"
+            android:text="@string/text_sub_remove_tenant_ques"
             android:layout_marginTop="5dp"
             android:textSize="14sp"
             android:textColor="@color/text_subheading" />
@@ -49,64 +49,61 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="24dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/bg_list_layout_primary"
+            app:cardBackgroundColor="@color/bg_dashboard_card"
             app:strokeColor="@color/border_dashboard_card"
             app:strokeWidth="0.7dp"
             android:layout_marginHorizontal="3dp"
-            android:layout_marginVertical="18dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- PROPERTY NAME LABEL -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Type 'DELETE' to confirm"
-                    android:textColor="@color/text_subheading"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.04"
-                    android:paddingBottom="8dp"/>
-
-                <!-- PROPERTY NAME INPUT -->
+                <!-- Top Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:background="@drawable/bg_et_input"
-                    android:paddingHorizontal="16dp">
+                    android:padding="12dp">
 
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:contentDescription="@string/text_image_desc"
-                        android:src="@drawable/ic_verified_user"
-                        app:tint="@color/icon_primary"/>
+                    <!-- Profile Image -->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgItemTenantProfile"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_tenant_profile_default"
+                        android:scaleType="centerCrop" />
 
-                    <EditText
-                        android:id="@+id/etDeleteConfirmation"
-                        android:layout_width="match_parent"
+                    <!-- Name & Phone -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:autofillHints="name"
-                        android:hint="@string/text_hint_enter_del"
-                        android:textColorHint="@color/text_subheading_fade"
-                        android:textColor="@color/text_heading"
-                        android:background="@android:color/transparent"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="2dp"
-                        android:paddingVertical="14dp"
-                        android:inputType="textCapWords"
-                        android:textSize="15sp"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:id="@+id/tvItemTenantName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_name"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_heading" />
+
+                        <TextView
+                            android:id="@+id/tvItemTenantPhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_mobile_no"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_subheading" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
-            </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,7 +111,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/btnCancelDelete"
+                android:id="@+id/btnCancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/text_cancel"
@@ -126,11 +123,10 @@
 
             <View
                 android:layout_width="28dp"
-                android:layout_height="match_parent" />
-
+                android:layout_height="match_parent"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnDeleteProperty"
+                android:id="@+id/btnRemoveTenant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -162,7 +158,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/text_menu_delete_property"
+                        android:text="@string/text_menu_remove_tenant"
                         android:textSize="16sp"
                         android:textColor="@color/white"/>
                 </LinearLayout>

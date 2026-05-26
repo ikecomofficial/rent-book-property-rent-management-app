@@ -59,11 +59,12 @@ public class ActivityFragment extends Fragment {
     private RecyclerView rvActivityLogs;
     private HorizontalScrollView hsvLogEntityChips;
     private DatabaseReference activityLogsReference;
+    private String user_id;
     private LinearLayout layoutNoActivity;
     private ProgressBar pbActivityLog;
     private static final int ITEMS_TO_LOAD = 40;
     private boolean isLoading = false;
-    private String lastKey = null;
+    private String lastKey = null, selectedEntity = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +74,7 @@ public class ActivityFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
-        String user_id = user.getUid();
+        user_id = user.getUid();
 
         rvActivityLogs = view.findViewById(R.id.rvActivityLogs);
         chipGroup = view.findViewById(R.id.chipGroupActivityLogs);
@@ -115,10 +116,7 @@ public class ActivityFragment extends Fragment {
                 }
             }
         });
-
-
         return view;
-
     }
 
     // ===============================
@@ -148,6 +146,9 @@ public class ActivityFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                // ✅ Always hide loader once Firebase responds
+                pbActivityLog.setVisibility(View.GONE);
+
                 List<ActivityLog> tempList = new ArrayList<>();
 
                 String firstKeyInBatch = null;
@@ -155,7 +156,7 @@ public class ActivityFragment extends Fragment {
                 for (DataSnapshot ds : snapshot.getChildren()) {
 
                     if (firstKeyInBatch == null) {
-                        firstKeyInBatch = ds.getKey();  // save oldest key
+                        firstKeyInBatch = ds.getKey();  // save old key
                     }
 
                     ActivityLog log = ds.getValue(ActivityLog.class);
@@ -174,14 +175,24 @@ public class ActivityFragment extends Fragment {
 
                 // ✅ DATA EXISTS
                 hideNoActivityUI();  // 👈 ADD THIS
-                pbActivityLog.setVisibility(View.GONE);
+                //pbActivityLog.setVisibility(View.GONE);
 
                 if (!tempList.isEmpty()) {
                     lastKey = firstKeyInBatch;  // update for next page
                     Collections.reverse(tempList);
                     fullList.addAll(tempList);
-                    generateDynamicChips();
-                    applyFilter(null);
+
+                    // Generate chips only first time
+                    if (chipGroup.getChildCount() == 0) {
+                        generateDynamicChips();
+                    }
+
+                    // Restore current filter
+                    if (selectedEntity == null) {
+                        activityLogAdapter.updateList(fullList);
+                    } else {
+                        applyFilter(selectedEntity);
+                    }
                 }
                 isLoading = false;
             }
@@ -259,7 +270,7 @@ public class ActivityFragment extends Fragment {
                     return;
                 }
 
-                // ✅ This uncheck happened because another chip was selected
+                // ✅ This un-check happened because another chip was selected
                 setChipUnselected(chip);
             }
         });
@@ -288,12 +299,18 @@ public class ActivityFragment extends Fragment {
     // ===============================
     private void applyFilter(String entity) {
 
+        selectedEntity = entity;
+
         filteredList.clear();
 
         if (entity == null) {
+
             filteredList.addAll(fullList);
+
         } else {
+
             for (ActivityLog log : fullList) {
+
                 if (entity.equals(log.getLog_entity())) {
                     filteredList.add(log);
                 }
@@ -567,6 +584,41 @@ public class ActivityFragment extends Fragment {
         return format.format(amount);
     }
 
+    private void deleteOldActivityLogs() {
+
+        DatabaseReference logsRef = FirebaseDatabase.getInstance()
+                .getReference("activity_log")
+                .child(user_id);
+
+        long currentTime = System.currentTimeMillis();
+
+        long twoYearsMillis =
+                1000L * 60 * 60 * 24 * 365 * 2;
+
+        long cutoffTime = currentTime - twoYearsMillis;
+
+        Query query = logsRef
+                .orderByChild("log_ts")
+                .endAt(cutoffTime);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+
+                    ds.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private void refreshLogsFromStart() {
 
@@ -577,6 +629,7 @@ public class ActivityFragment extends Fragment {
         activityLogAdapter.notifyDataSetChanged();
 
         loadActivityLogs();
+        deleteOldActivityLogs();
     }
 
     @Override

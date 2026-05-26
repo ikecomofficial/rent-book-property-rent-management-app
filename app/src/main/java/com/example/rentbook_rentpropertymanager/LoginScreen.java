@@ -257,7 +257,7 @@ public class LoginScreen extends AppCompatActivity {
                 public void onVerificationFailed(@NonNull FirebaseException e) {
                     Toast.makeText(LoginScreen.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     pbSendOtp.setVisibility(View.GONE);
-                    tvBtnSendOtp.setText(R.string.text_btn_req_otp);
+                    tvBtnSendOtp.setText(R.string.text_btn_send_otp);
                     btnSendOtp.setEnabled(true);
                     is_send_otp = true;
                 }

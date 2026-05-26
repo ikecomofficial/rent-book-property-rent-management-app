@@ -156,7 +156,7 @@ public class AccountFragment extends Fragment {
             } else {
                 user_id = user.getUid();
                 userReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
-                userReference.addValueEventListener(new ValueEventListener() {
+                userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String user_name = snapshot.child("name").getValue(String.class);

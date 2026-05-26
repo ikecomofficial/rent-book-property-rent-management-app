@@ -1,6 +1,7 @@
 package com.example.rentbook_rentpropertymanager;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +48,7 @@ import com.example.rentbook_rentpropertymanager.adapter.RentBillPagerAdapter;
 import com.example.rentbook_rentpropertymanager.model.Tenants;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -81,7 +84,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private boolean is_occupied, is_room;
 
     // 👤 Tenant Info
-    private String tenant_id, tenant_name, tenant_address, tenant_phone, thumb_tenant_url;
+    private String tenant_id, tenant_name, tenant_address, tenant_phone, thumb_tenant_url, tenant_profile_url;
     private String tenant_start_date = "N/A";
 
     // 📄 Tenant UI Views
@@ -89,7 +92,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private EditText etReading;
     private BottomSheetDialog bottomSheetDialog;
     private CircleImageView cimgTenantProfilePic;
-    private LinearLayout layoutViewTenantProfile, layoutViewPastTenant;
+    private LinearLayout layoutViewTenantProfile, layoutViewPastTenant, layoutTenantNameNum;
 
     // 🎯 Actions
     private MaterialCardView btnContact;
@@ -147,6 +150,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         tvRoomStatus = findViewById(R.id.tvRoomStatus);
         tvTenantName = findViewById(R.id.tvTenantName);
         tvTenantPhone = findViewById(R.id.tvTenantPhone);
+        layoutTenantNameNum = findViewById(R.id.layoutTenantNameNum);
         tvTenantStartDate = findViewById(R.id.tvStartDate);
         cimgTenantProfilePic = findViewById(R.id.imgProfile);
         layoutViewTenantProfile = findViewById(R.id.layoutViewTenantProfile);
@@ -202,13 +206,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         }, 10_000); // 10 seconds = 10,000 ms
 
         fabAddTenant.setOnClickListener(view -> {
-
-            Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
-            addTenantIntent.putExtra("room_id", room_id);
-            addTenantIntent.putExtra("room_name", room_name);
-            addTenantIntent.putExtra("property_name", property_name);
-            startActivity(addTenantIntent);
-
+            goToAddTenantActivity();
         });
 
         btnContact.setOnClickListener(view -> showContactBottomSheet());
@@ -259,6 +257,15 @@ public class RoomDetailsActivity extends AppCompatActivity {
         });
     }
 
+
+
+    private void goToAddTenantActivity(){
+        Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
+        addTenantIntent.putExtra("room_id", room_id);
+        addTenantIntent.putExtra("room_name", room_name);
+        addTenantIntent.putExtra("property_name", property_name);
+        startActivity(addTenantIntent);
+    }
     private void handleAddElectricityBill() {
 
         roomReference.child("meter_start_reading")
@@ -282,7 +289,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void showMeterStartBottomSheet() {
 
         // Create BottomSheetDialog
@@ -306,15 +312,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
         etReading = view.findViewById(R.id.etMeterStartReading);
         MaterialCardView btnSave = view.findViewById(R.id.btnSave);
         MaterialCardView btnSaveAndAddBill = view.findViewById(R.id.btnSaveAndAddBill);
-        TextView btnCancel = view.findViewById(R.id.btnCancel);
 
         bottomSheetDialog.show();
-
-        btnCancel.setOnClickListener(v -> {
-
-            bottomSheetDialog.dismiss();
-
-        });
 
         btnSave.setOnClickListener(v -> validateMeterReading(false));
 
@@ -351,6 +350,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         roomReference.updateChildren(map).addOnSuccessListener(unused -> {
 
             dialog.dismiss();
+            Toast.makeText(RoomDetailsActivity.this, "Reading Saved!", Toast.LENGTH_SHORT).show();
 
             if (goToBills) {
                 openAddElectricityBillScreen();
@@ -375,6 +375,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 tenant_name = snapshot.child("tenant_name").getValue(String.class);
                 tenant_phone = snapshot.child("tenant_phone").getValue(String.class);
                 thumb_tenant_url = snapshot.child("thumb_tenant_url").getValue(String.class);
+                tenant_profile_url = snapshot.child("tenant_profile_url").getValue(String.class);
                 tenant_start_date = snapshot.child("tenant_start_date").getValue(String.class);
                 tenant_address = snapshot.child("tenant_address").getValue(String.class);
 
@@ -507,17 +508,19 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private void enableTenantClicks() {
         // Tenant Name
-        tvTenantName.setOnClickListener(v -> showTenantProfileActivity());
+        //tvTenantName.setOnClickListener(v -> showTenantProfileActivity());
 
         // Tenant Phone
-        tvTenantPhone.setOnClickListener(v -> showTenantProfileActivity());
+        //tvTenantPhone.setOnClickListener(v -> showTenantProfileActivity());
+
+        layoutTenantNameNum.setOnClickListener(v -> showTenantProfileActivity());
 
         // Tenant Profile Picture
-        cimgTenantProfilePic.setOnClickListener(v -> showTenantProfileActivity());
+        cimgTenantProfilePic.setOnClickListener(v -> showTenantProfilePic());
 
         // Optional: Add visual feedback
-        tvTenantName.setAlpha(1f);
-        tvTenantPhone.setAlpha(1f);
+        //tvTenantName.setAlpha(1f);
+        layoutTenantNameNum.setAlpha(1f);
         cimgTenantProfilePic.setAlpha(1f);
 
         layoutViewTenantProfile.setVisibility(View.VISIBLE);
@@ -528,8 +531,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private void disableTenantClicks() {
         // Remove any previous click listeners
-        tvTenantName.setOnClickListener(null);
-        tvTenantPhone.setOnClickListener(null);
+        //tvTenantName.setOnClickListener(null);
+        layoutTenantNameNum.setOnClickListener(null);
         cimgTenantProfilePic.setOnClickListener(null);
 
         // Optional: Make them look inactive
@@ -544,6 +547,39 @@ public class RoomDetailsActivity extends AppCompatActivity {
         layoutViewPastTenant.setOnClickListener(v -> showBottomSheetTenants());
     }
 
+    private void showTenantProfilePic(){
+
+        // Create dialog
+        Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+
+        // Create PhotoView dynamically
+        PhotoView photoView = new PhotoView(this);
+        photoView.setBackgroundColor(Color.BLACK);
+        photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        // Set PhotoView as dialog content
+        dialog.setContentView(photoView);
+
+        if (tenant_profile_url.equals("default")){
+            // Load image using Glide
+            Glide.with(this)
+                    .load(R.drawable.ic_tenant_profile_default) // your Firebase image URL
+                    .into(photoView);
+        }else {
+            // Load image using Glide
+            Glide.with(this)
+                    .load(tenant_profile_url) // your Firebase image URL
+                    .placeholder(R.drawable.ic_tenant_profile_default)
+                    .into(photoView);
+        }
+
+
+        // Close dialog on tap
+        photoView.setOnClickListener(view -> dialog.dismiss());
+
+        dialog.show();
+    }
+
     private void showTenantProfileActivity() {
         Intent tenantProfileIntent = new Intent(RoomDetailsActivity.this, TenantDetailsActivity.class);
         tenantProfileIntent.putExtra("tenant_id", tenant_id);
@@ -553,26 +589,71 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void tenantRemoveFromRoomConfirmation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String title = "Remove Tenant: " + tenant_name + "?";
-        builder.setTitle(title);
-        builder.setMessage("Do you want to remove this tenant from this room.");
+    private void showRemoveTenantBottomSheet(){
 
-        // Positive button -> Yes
-        builder.setPositiveButton("Remove", (dialog, which) -> removeTenantFromRoom());
+        // Create BottomSheetDialog
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
 
-        // Negative button -> No
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
-            // Do nothing, just dismiss
-            Toast.makeText(RoomDetailsActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+        // Inflate layout for bottom sheet
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_remove_tenant, null, false);
+        bottomSheetDialog.setContentView(view);
+
+        // Make sure we modify the bottom-sheet container after it is shown
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                // clear default background so your drawable shows through
+                bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheet.setClipToPadding(false);
+            }
         });
 
-        // Show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+        // Find the option buttons inside the sheet
+        TextView tvItemTenantName = view.findViewById(R.id.tvItemTenantName);
+        TextView tvItemTenantPhone = view.findViewById(R.id.tvItemTenantPhone);
+        CircleImageView imgItemTenantProfile = view.findViewById(R.id.imgItemTenantProfile);
+        MaterialCardView btnRemoveTenant = view.findViewById(R.id.btnRemoveTenant);
+        TextView btnCancel = view.findViewById(R.id.btnCancel);
 
+        tvItemTenantName.setText(tenant_name);
+        tvItemTenantPhone.setText(tenant_phone);
+
+        if (thumb_tenant_url == null || thumb_tenant_url.trim().isEmpty() || thumb_tenant_url.equals("default")) {
+            // Show only placeholder
+
+            // ❗ IMPORTANT: Remove tint (because of view recycling)
+            imgItemTenantProfile.clearColorFilter();
+
+            if (!isFinishing() && !isDestroyed()) {
+                Glide.with(RoomDetailsActivity.this)
+                        .load(R.drawable.ic_tenant_profile_default)
+                        .into(imgItemTenantProfile);
+            }
+        } else {
+            if (!isFinishing() && !isDestroyed()) {
+                Glide.with(RoomDetailsActivity.this)
+                        .load(thumb_tenant_url)
+                        .placeholder(R.drawable.ic_tenant_profile_default)
+                        .into(imgItemTenantProfile);
+            }
+        }
+
+        // Set click listeners
+        btnRemoveTenant.setOnClickListener(v -> {
+            removeTenantFromRoom();
+        });
+
+        btnCancel.setOnClickListener(v -> {
+            // handle call action
+            bottomSheetDialog.dismiss();
+        });
+
+        // Set the content and show
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+
+    }
 
     private void removeTenantFromRoom() {
 
@@ -585,6 +666,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         HashMap<String, Object> tenantRemoveMap = new HashMap<>();
         tenantRemoveMap.put("is_occupied", false);
         tenantRemoveMap.put("tenant_id", "null");
+        tenantRemoveMap.put("last_rent_month", "2025-07");
 
         roomReference.updateChildren(tenantRemoveMap);
 
@@ -643,7 +725,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Deleted";
 
-        String finalLogDesc = "+91 " + tenant_phone + " • " + tenant_address + " • "
+        String finalLogDesc = "Phone: " + tenant_phone + " • " + tenant_address + " • "
                 + room_name + " (" + property_name + ")";
 
         long currTimestamp = System.currentTimeMillis();
@@ -792,13 +874,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         MaterialCardView btnBSAddTenant = view.findViewById(R.id.btnBSAddTenant);
 
         btnBSAddTenant.setOnClickListener(view1 -> {
-
-            Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
-            addTenantIntent.putExtra("room_id", room_id);
-            addTenantIntent.putExtra("room_name", room_name);
-            addTenantIntent.putExtra("property_name", property_name);
-            startActivity(addTenantIntent);
-
+            goToAddTenantActivity();
         });
 
         // Set Room & Property Name in Past Tenants List Bottom Sheet.
@@ -1019,7 +1095,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
             return true;
         } else if (id == R.id.action_remove_tenant) {
-            tenantRemoveFromRoomConfirmation();
+            showRemoveTenantBottomSheet();
             return true;
         } else if (id == R.id.action_view_all_tenant) {
             showBottomSheetTenants();

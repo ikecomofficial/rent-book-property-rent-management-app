@@ -257,7 +257,8 @@ public class AddTenantActivity extends AppCompatActivity {
 
         String finalLogTitle = "Tenant Added";
 
-        String finalLogDesc = room_name + " (" + property_name + ") • +91 " + tenantPhone + " • " + tenantAddress;
+        String finalLogDesc = "Phone: +91 " + tenantPhone + " • " + tenantAddress + " • "
+                + room_name + " (" + property_name + ")";
 
         long currTimestamp = System.currentTimeMillis();
 

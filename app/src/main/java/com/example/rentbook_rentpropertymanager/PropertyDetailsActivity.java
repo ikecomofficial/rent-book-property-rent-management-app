@@ -1,11 +1,9 @@
 package com.example.rentbook_rentpropertymanager;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -67,7 +64,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
     private TextView tvMonthTotalRent, tvMonthTotalElcBill, tvMonthTotalUnitsUsed;
     private TextView tvRoomOcc, tvRoomTotal, tvShopOcc, tvShopTotal;
 
-    private boolean isCollectionExpanded = false;
+    private int totalRoomShopOcc = 0;
 
     // 🏠 Room Data & Adapter
     private TextView tvTotalRentPaid, tvTotalRentDue;
@@ -210,7 +207,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     Long tShops = snapshot.child("total_shops").getValue(Long.class);
                     total_shops = tShops != null ? tShops.intValue() : 0;
 
-                    int totalRoomShopOcc = rooms_occupied + shops_occupied;
+                    totalRoomShopOcc = rooms_occupied + shops_occupied;
                     int totalRoomShop = total_rooms + total_shops;
 
                     setProgressBarData(totalRoomShopOcc, totalRoomShop);
@@ -309,7 +306,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
                         int paidRooms = 0;
 
-                        int totalRooms = (int) roomsSnapshot.getChildrenCount(); // ✅ TOTAL ROOMS
+                        //int totalRooms = (int) roomsSnapshot.getChildrenCount(); // ✅ TOTAL ROOMS
 
                         String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault())
                                 .format(new Date());
@@ -329,7 +326,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                                 paidRooms++;
                             }
 
-                            int pendingRooms = totalRooms - paidRooms;
+                            int pendingRooms = totalRoomShopOcc - paidRooms;
 
                             // 🔹 Update UI
                             String finalPaidRooms = paidRooms + " Paid";
@@ -465,7 +462,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         MaterialCardView btnDeleteProperty = view.findViewById(R.id.btnDeleteProperty);
         TextView btnCancelDelete = view.findViewById(R.id.btnCancelDelete);
 
-        String deleteDesc = getString(R.string.delete_property_desc, property_name);
+        String deleteDesc = getString(R.string.text_delete_property_desc, property_name);
 
         tvDeleteDescription.setText(deleteDesc);
 
@@ -498,7 +495,6 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         btnCancelDelete.setOnClickListener(v -> {
             // handle call action
             bottomSheetDialog.dismiss();
-            Toast.makeText(PropertyDetailsActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
         });
 
         // Set the content and show
@@ -511,7 +507,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         String finalLogTitle = "Property Deleted";
 
-        String finalLogDesc = "Property at " + property_address + " deleted.";
+        String finalLogDesc = property_address + " deleted.";
 
         long currTimestamp = System.currentTimeMillis();
 
@@ -572,7 +568,6 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_delete_property) {
             // Confirm and delete property
-            //propertyDeleteConfirmation();
             showPropertyDeleteBottomSheet();
             return true;
         }

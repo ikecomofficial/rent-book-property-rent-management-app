@@ -85,6 +85,7 @@ public class PropertiesFragment extends Fragment {
 
         // 🎯 Actions
         btnAddProperty = view.findViewById(R.id.btnAddProperty);
+        btnAddProperty.setVisibility(View.GONE);
         MaterialCardView btnAddFirstProperty = view.findViewById(R.id.btnAddFirstProperty);
         propertyList = view.findViewById(R.id.propertyListRecycleView);
         propertyList.setHasFixedSize(true);

@@ -569,8 +569,8 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
-            app:strokeWidth="0.6dp"
-            app:strokeColor="@color/border_info_container"
+            app:strokeWidth="0.5dp"
+            app:strokeColor="@color/primary_main"
             android:backgroundTint="@color/bg_info_container">
 
             <LinearLayout

@@ -26,8 +26,8 @@
     <string name="text_add_property">Add Property</string>
     <string name="text_elc_meter_readings">Electricity Meter Readings</string>
 
-    <string name="text_label_starting_reading">Set Starting Reading</string>
-    <string name="text_sub_starting_reading">Enter the current meter reading to start tracking usage.</string>
+    <string name="text_label_starting_reading">Set Meter Start Reading</string>
+    <string name="text_sub_starting_reading">Set the meter units from which electricity bill tracking should begin for this tenant.</string>
 
     <string name="text_no_properties_added_yet">No properties added yet.</string>
     <string name="text_start_managing_desc">Start managing your\nproperties by adding your\nfirst one!</string>
@@ -61,7 +61,7 @@
     <string name="text_hint_mobile_no">e.g. 9876543210</string>
     <string name="text_hint_mob_no_10">Enter 10-digit Number</string>
     <string name="text_hint_enter_code">Enter OTP</string>
-    <string name="text_btn_req_otp">Request OTP</string>
+    <string name="text_btn_send_otp">Send OTP</string>
     <string name="text_btn_verify_otp">Verify OTP</string>
     <string name="text_or">OR</string>
     <string name="text_btn_sign_with_google">Sign In With Google</string>
@@ -88,7 +88,7 @@
     <string name="text_get_assist">Get assistance with your account</string>
     <string name="text_about_app">About App</string>
     <string name="text_version_full">Version 1.1.0</string>
-    <string name="text_version">v2.3.2</string>
+    <string name="text_version">v2.4.0</string>
     <string name="text_btn_logout">Logout</string>
     <string name="text_rentify_copyright">Rentify: Rent Manager App © 2024</string>
 
@@ -100,6 +100,7 @@
 
     <string name="text_heading_no_monthly_collection">No Collections Yet</string>
     <string name="text_sub_no_monthly_collection">Start Tracking Monthly Rent &amp; Electricity Bills for Properties.</string>
+    <string name="text_all_time">All Time</string>
 
 
     <!-- Property Details Activity Screen Strings -->
@@ -124,7 +125,10 @@
     <string name="text_paid">Paid</string>
     <string name="text_due">Due</string>
 
-    <string name="delete_property_desc">This action will permanently delete the property: \'%1$s\'. All data, including rents, electricity bills, tenants, and collections, will be lost.</string>
+    <string name="text_del_prop">Delete Property?</string>
+    <string name="text_delete_property_desc">This action will permanently delete the property: \'%1$s\'. All data, including rents, electricity bills, tenants, and collections, will be lost.</string>
+    <string name="text_hint_enter_del">Enter DELETE</string>
+
 
     <!-- Single Room Layout Texts -->
     <string name="text_room_01">Room 01</string>
@@ -171,12 +175,16 @@
     <string name="text_action_btn_add_rent">Add Rent</string>
     <string name="text_action_btn_add_elc_bill">Add Electricity Bill</string>
 
+    <string name="text_remove_tenant_ques">Remove Tenant?</string>
+    <string name="text_sub_remove_tenant_ques">This will remove the current tenant and mark room as vacant.</string>
+
+
     <string name="text_menu_edit_room">Edit Room</string>
     <string name="text_menu_edit_shop">Edit Shop</string>
     <string name="text_menu_edit_tenant">Edit Tenant</string>
     <string name="text_menu_remove_tenant">Remove Tenant</string>
 
-    <string name="text_save_continue">Save &amp; Continue</string>
+    <string name="text_save_close">Save &amp; Close</string>
     <string name="text_continue">Continue</string>
 
     <!-- Single Rent & E-Bill Activity Screens Strings -->
@@ -198,7 +206,7 @@
 
 
     <!-- Add Rent & Elc Bill Activity Screen Strings -->
-    <string name="text_label_rent_month_cap">RENT MONTH</string>
+    <string name="text_select_rent_month">Select Rent Month</string>
     <string name="text_change">Change</string>
     <string name="text_label_rent_details">RENT DETAILS</string>
     <string name="text_label_rent_paid">Rent Paid</string>
@@ -209,7 +217,7 @@
     <string name="text_value_time">10:00 AM</string>
     <string name="text_btn_add_rent_record">Add Rent Record</string>
 
-    <string name="text_label_ebill_month_cap">E-BILL MONTH</string>    <!-- Add Ebill String Starts here -->
+    <string name="text_select_elc_bill_month">Select E-Bill Month</string>    <!-- Add Ebill String Starts here -->
     <string name="text_label_ebill_details_cap">E-BILL DETAILS</string>
     <string name="text_label_billing_mode">Billing Mode</string>
     <string name="text_toggle_enter_units">Enter Units</string>
@@ -217,7 +225,9 @@
 
     <string name="text_label_last_paid_colon">Last Paid:</string>
     <string name="text_label_curr_meter_reading">Current Meter Reading</string>
+    <string name="text_label_start_meter_reading">Starting Meter Units</string>
     <string name="text_hint_curr_meter_unit">Enter Current Meter Units</string>
+    <string name="text_hint_start_meter_reading">Enter Units to start tracking E-Bill</string>
     <string name="text_label_ebill_amount_paid">E-Bill Amount Paid</string>
     <string name="text_hint_ebill_amount_paid">Enter Amount Paid for Electricity</string>
     <string name="text_label_last_paid_reading">Last Paid Meter Reading</string>
@@ -254,9 +264,12 @@
     <string name="text_msg_via_wa">Message Via WhatsApp</string>
     <string name="text_copy_no">Copy Number</string>
 
-    <string name="text_dialog_uploading_file">Uploading File…</string>
-    <string name="text_sub_being_uploading">Your file is being uploaded…</string>
-    <string name="text_sub_finalizing_upload">Finalizing Your Upload…</string>
+    <string name="text_dialog_uploading_file">Uploading Your Photo</string>
+    <string name="text_sub_being_uploading">Your Upload is being processed</string>
+    <string name="text_sub_finalizing_upload">Optimizing your upload</string>
+
+    <string name="text_almost_done">Please wait, finalizing upload</string>
+    <string name="text_sub_done_shortly">Your picture will be updated shortly.</string>
 
     <!-- Tenant Details Activity Screen Strings -->
     <string name="text_toolbar_tenant_details">Tenant Details</string>
@@ -267,7 +280,7 @@
     <string name="text_contact_tenant">Contact Tenant</string>
     <string name="text_value_prop_name">Sunset, Room 01</string>
     <string name="text_value_call_wa">Call Or WhatsApp</string>
-    <string name="text_value_billing_start">1st Of Every Month</string>
+    <string name="text_value_billing_start">1st of each Month</string>
     <string name="text_billing_start_day">Billing Start Day</string>
     <string name="text_sel_billing_start_day">Select Billing Start Day</string>
     <string name="text_label_files_attachments">Files &amp; Attachments</string>

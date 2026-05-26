@@ -32,32 +32,48 @@
                 android:padding="16dp"
                 android:gravity="center_vertical">
 
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    android:backgroundTint="@color/bg_dashboard_card">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_calendar_month"
+                        app:tint="@color/primary_main"
+                        android:contentDescription="@string/text_image_desc"/>
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- Left Text Section -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginStart="12dp"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvCustomTime1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_label_ebill_month_cap"
-                        android:textColor="@color/primary_main"
-                        android:textSize="13sp"
-                        android:textAllCaps="true"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08"/>
+                        android:text="@string/text_select_elc_bill_month"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_main"/>
 
                     <TextView
                         android:id="@+id/tvElcBillMonthYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
                         android:text="@string/text_value_month_year"
-                        android:textSize="22sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_heading"/>
+
+
                 </LinearLayout>
 
                 <!-- Change Button -->
@@ -86,7 +102,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:contentDescription="@string/text_image_desc"
-                            android:src="@drawable/ic_calendar_month"
+                            android:src="@drawable/ic_edit_pencil"
                             app:tint="@color/icon_primary"/>
 
                         <TextView
@@ -226,7 +242,8 @@
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:paddingHorizontal="10dp"
-                                android:paddingVertical="3dp">
+                                android:paddingVertical="3dp"
+                                tools:ignore="UseCompoundDrawables">
 
                                 <ImageView
                                     android:layout_width="12dp"
@@ -273,11 +290,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/text_hint_curr_meter_unit"
+                            android:importantForAutofill="no"
                             android:textColorHint="@color/text_subheading_fade"
                             android:textColor="@color/text_heading"
                             android:background="@android:color/transparent"
                             android:paddingStart="12dp"
-                            android:paddingVertical="8dp"
+                            android:paddingVertical="14dp"
                             android:paddingEnd="2dp"
                             android:inputType="number"
                             android:textSize="16sp"/>
@@ -325,7 +343,8 @@
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:paddingHorizontal="10dp"
-                                android:paddingVertical="3dp">
+                                android:paddingVertical="3dp"
+                                tools:ignore="UseCompoundDrawables">
 
                                 <ImageView
                                     android:layout_width="12dp"
@@ -376,10 +395,11 @@
                             android:textColor="@color/text_heading"
                             android:background="@android:color/transparent"
                             android:paddingStart="12dp"
-                            android:paddingVertical="8dp"
+                            android:paddingVertical="14dp"
                             android:paddingEnd="2dp"
                             android:inputType="number"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:importantForAutofill="no" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -481,7 +501,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="12dp"
-                        android:src="@drawable/ic_calendar_month"
+                        android:src="@drawable/ic_calendar_clock"
                         app:tint="@color/primary_main"
                         android:contentDescription="@string/text_image_desc"/>
                 </com.google.android.material.card.MaterialCardView>

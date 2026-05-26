@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -22,8 +23,10 @@ import com.example.rentbook_rentpropertymanager.R;
 import com.example.rentbook_rentpropertymanager.model.MonthlyCollections;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,9 +41,14 @@ import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 public class CollectionsFragment extends Fragment {
 
@@ -49,11 +57,19 @@ public class CollectionsFragment extends Fragment {
     private int propTotalAmount, propTotalRent, propTotalElcBill;
     private RecyclerView rvCollectionsList;
     private ChipGroup chipGroupProperties;
+    private View viewNoChipsGap;
     private String preSelectedPropertyId;
     private ProgressBar progressBarCollections;
     private HorizontalScrollView hsvPropertiesChips;
     private LinearLayout layoutNoCollection;
     private FirebaseRecyclerAdapter<MonthlyCollections, CollectionsViewHolder> firebaseRecyclerAdapter;
+    private MaterialCardView mcvYearSelector;
+
+    private MaterialAutoCompleteTextView dropdownYear;
+
+    private final List<String> yearList = new ArrayList<>();
+
+    private String selectedYear = "All Time";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +94,11 @@ public class CollectionsFragment extends Fragment {
 
         chipGroupProperties = view.findViewById(R.id.chipGroupProperties);
         hsvPropertiesChips = view.findViewById(R.id.hsvPropertiesChips);
+
+        viewNoChipsGap = view.findViewById(R.id.viewNoChipsGap);
+
+        dropdownYear = view.findViewById(R.id.dropdownYear);
+        mcvYearSelector = view.findViewById(R.id.mcvYearSelector);
 
         loadPropertyChips();
 
@@ -108,6 +129,7 @@ public class CollectionsFragment extends Fragment {
                 if (!snapshot.hasChildren()) {
 
                     hsvPropertiesChips.setVisibility(View.GONE);
+                    viewNoChipsGap.setVisibility(View.VISIBLE);
 
                     // 🔥 THIS IS WHAT YOU WERE MISSING
                     showNoCollectionUI();
@@ -117,6 +139,7 @@ public class CollectionsFragment extends Fragment {
 
                 // ✅ Properties exist
                 hsvPropertiesChips.setVisibility(View.VISIBLE);
+                viewNoChipsGap.setVisibility(View.GONE);
 
                 Chip chipToSelect = null;
 
@@ -165,6 +188,83 @@ public class CollectionsFragment extends Fragment {
         rvCollectionsList.setVisibility(View.VISIBLE);
     }
 
+    private void loadAvailableYears(String pid){
+
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("collections")
+                .child(pid);
+
+        reference.addValueEventListener(
+                new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(
+                            @NonNull DataSnapshot snapshot) {
+
+                        yearList.clear();
+
+                        yearList.add("All Time");
+
+                        Set<String> uniqueYears = new HashSet<>();
+
+                        for (DataSnapshot dataSnapshot :
+                                snapshot.getChildren()) {
+
+                            String key = dataSnapshot.getKey();
+
+                            if (key != null && key.contains("-")) {
+
+                                String year = key.split("-")[0];
+
+                                uniqueYears.add(year);
+                            }
+                        }
+
+                        List<String> sortedYears =
+                                new ArrayList<>(uniqueYears);
+
+                        Collections.sort(
+                                sortedYears,
+                                Collections.reverseOrder()
+                        );
+
+                        yearList.addAll(sortedYears);
+
+                        ArrayAdapter<String> adapter =
+                                new ArrayAdapter<>(
+                                        requireContext(),
+                                        R.layout.item_collection_year_dropdown,
+                                        yearList
+                                );
+
+                        dropdownYear.setAdapter(adapter);
+
+                        dropdownYear.setText(selectedYear, false);
+
+                        mcvYearSelector.setOnClickListener(v ->
+                                dropdownYear.showDropDown());
+
+                        dropdownYear.setOnClickListener(v ->
+                                dropdownYear.showDropDown());
+
+                        dropdownYear.setOnItemClickListener(
+                                (parent, view, position, id) -> {
+
+                                    selectedYear = yearList.get(position);
+
+                                    loadMonthlyCollectionsFromFirebase(pid);
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(
+                            @NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
     private Chip createChip(String propertyId, String propertyName) {
 
         Chip chip = new Chip(getContext());
@@ -195,7 +295,13 @@ public class CollectionsFragment extends Fragment {
                         )
                 );
 
+                selectedYear = "All Time";
+
+                loadAvailableYears(propertyId);
+
                 loadMonthlyCollectionsFromFirebase(propertyId);
+
+                //loadMonthlyCollectionsFromFirebase(propertyId);
 
             } else {
 
@@ -205,7 +311,7 @@ public class CollectionsFragment extends Fragment {
                     return;
                 }
 
-                // ✅ This uncheck happened because another chip was selected
+                // ✅ This un-check happened because another chip was selected
                 setChipUnselected(chip);
             }
         });
@@ -233,13 +339,30 @@ public class CollectionsFragment extends Fragment {
 
         DatabaseReference collectionsReference = FirebaseDatabase.getInstance().getReference().child("collections").child(pid);
 
-        Query propertyCollections = collectionsReference.orderByKey();
+        Query propertyCollections;
+
+        if (selectedYear.equals("All Time")) {
+
+            propertyCollections =
+                    collectionsReference.orderByKey();
+
+        } else {
+
+            propertyCollections = collectionsReference
+                    .orderByKey()
+                    .startAt(selectedYear + "-01")
+                    .endAt(selectedYear + "-12");
+        }
+
         FirebaseRecyclerOptions<MonthlyCollections> options = new FirebaseRecyclerOptions.Builder<MonthlyCollections>()
                 .setQuery(propertyCollections, MonthlyCollections.class)
                 .build();
 
-        FirebaseRecyclerAdapter<MonthlyCollections, CollectionsViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<MonthlyCollections, CollectionsViewHolder>(options) {
+        if (firebaseRecyclerAdapter != null){
+            firebaseRecyclerAdapter.stopListening();
+        }
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<MonthlyCollections, CollectionsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull CollectionsViewHolder holder, int position, @NonNull MonthlyCollections model) {
 
@@ -276,12 +399,14 @@ public class CollectionsFragment extends Fragment {
                     public void onDataChanged(){
                         super.onDataChanged();
 
+                        progressBarCollections.setVisibility(View.GONE);
                         if (getItemCount() == 0){
                             tvTotalPropAmount.setText(formatAmount(0));
                             tvTotalPropRent.setText(formatAmount(0));
                             tvTotalPropElcBill.setText(formatAmount(0));
                             layoutNoCollection.setVisibility(View.VISIBLE);
                             rvCollectionsList.setVisibility(View.GONE);
+                            //progressBarCollections.setVisibility(View.GONE);
                         }else {
 
                             propTotalAmount = 0;
@@ -306,7 +431,7 @@ public class CollectionsFragment extends Fragment {
                             tvTotalPropRent.setText(formatAmount(propTotalRent));
                             tvTotalPropElcBill.setText(formatAmount(propTotalElcBill));
 
-                            progressBarCollections.setVisibility(View.GONE);
+                            //progressBarCollections.setVisibility(View.GONE);
                             layoutNoCollection.setVisibility(View.GONE);
                             rvCollectionsList.setVisibility(View.VISIBLE);
                         }
@@ -324,6 +449,24 @@ public class CollectionsFragment extends Fragment {
         format.setMaximumFractionDigits(0);
         format.setMinimumFractionDigits(0);
         return format.format(amount);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (firebaseRecyclerAdapter != null){
+            firebaseRecyclerAdapter.stopListening();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (firebaseRecyclerAdapter != null){
+            firebaseRecyclerAdapter.startListening();
+        }
     }
 
     public static class CollectionsViewHolder extends RecyclerView.ViewHolder {

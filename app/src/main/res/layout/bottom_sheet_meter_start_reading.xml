@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -64,7 +65,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_label_curr_meter_reading"
+                    android:text="@string/text_label_start_meter_reading"
                     android:textColor="@color/text_subheading"
                     android:textSize="13sp"
                     android:textAllCaps="true"
@@ -92,14 +93,15 @@
                         android:id="@+id/etMeterStartReading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/text_hint_curr_meter_unit"
+                        android:importantForAutofill="no"
+                        android:hint="@string/text_hint_start_meter_reading"
                         android:textColorHint="@color/text_subheading_fade"
                         android:textColor="@color/text_heading"
                         android:background="@android:color/transparent"
                         android:paddingStart="12dp"
                         android:paddingEnd="2dp"
-                        android:paddingVertical="8dp"
-                        android:inputType="textCapWords"
+                        android:paddingVertical="14dp"
+                        android:inputType="number"
                         android:textSize="15sp"/>
                 </LinearLayout>
 
@@ -107,29 +109,10 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="12dp"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/btnCancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/text_cancel"
-                android:textColor="@color/text_subheading_fade"
-                android:textSize="16sp"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:paddingVertical="6dp"/>
-
-            <View
-                android:layout_width="18dp"
-                android:layout_height="match_parent"/>
+            android:gravity="end">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btnSave"
@@ -138,20 +121,36 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="0.5dp"
+                app:cardUseCompatPadding="true"
                 app:strokeColor="@color/primary_main"
                 app:cardBackgroundColor="@color/bg_list_layout_primary">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="10dp"
-                    android:text="@string/text_save_continue"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"
-                    android:textColor="@color/primary_main"/>
+                    tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_save"
+                        app:tint="@color/icon_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/text_save_close"
+                        android:textSize="16sp"
+                        android:textColor="@color/btn_primary"/>
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -166,20 +165,38 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="0.5dp"
+                app:cardUseCompatPadding="true"
                 app:strokeColor="@color/primary_main"
-                app:cardBackgroundColor="@color/btn_primary">
+                app:cardBackgroundColor="@color/primary_main">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="10dp"
-                    android:text="@string/text_continue"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"
-                    android:textColor="#FFFFFF"/>
+                    tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@string/text_image_desc"
+                        android:src="@drawable/ic_arrow_back_24"
+                        android:rotation="180"
+                        app:tint="@color/white"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/text_continue"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

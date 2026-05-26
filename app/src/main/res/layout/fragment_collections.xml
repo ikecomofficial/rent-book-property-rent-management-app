@@ -27,6 +27,12 @@
             app:chipSpacingHorizontal="8dp"/>
     </HorizontalScrollView>
 
+    <View
+        android:id="@+id/viewNoChipsGap"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:visibility="gone"/>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -221,16 +227,70 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:id="@+id/btnTemp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_label_monthly_collections"
-        android:textSize="20sp"
-        android:layout_marginHorizontal="16sp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
-        android:textStyle="bold"
-        android:textColor="@color/text_heading"/>
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/text_label_monthly_collections"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_heading"/>
+
+        <!-- Property Rent Status Chip -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcvYearSelector"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0.5dp"
+            app:strokeColor="@color/primary_main"
+            android:backgroundTint="@color/bg_list_layout_primary">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/dropdownYear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:text="@string/text_all_time"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/text_heading"
+                android:textSize="13sp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:inputType="none"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:cursorVisible="false"/>
+
+            <ImageView
+                android:id="@+id/ivArrow"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical|end"
+                android:contentDescription="@string/text_image_desc"
+                android:tint="@color/text_heading"
+                android:src="@drawable/ic_exp_arrow_right"
+                android:rotation="90"
+                android:layout_marginEnd="12dp"/>
+
+            </FrameLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

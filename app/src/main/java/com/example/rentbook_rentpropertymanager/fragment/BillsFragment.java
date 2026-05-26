@@ -182,7 +182,7 @@ public class BillsFragment extends Fragment {
         ebillsReference.child(elc_bill_id).removeValue()
                 .addOnSuccessListener(aVoid -> {
                     // ✅ Record deleted successfully
-                    Toast.makeText(getContext(), "Elc Bill Deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Electricity Bill Deleted", Toast.LENGTH_SHORT).show();
                     subtractElcBillFromCollections(pid, elcBillMonthYear, elcBillAmount, elcUnitsUsed);
                     subtractUnitsPaidFromRooms(elcUnitsUsed);
                 })

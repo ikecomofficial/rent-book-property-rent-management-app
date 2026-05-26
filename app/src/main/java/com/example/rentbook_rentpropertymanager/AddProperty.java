@@ -60,12 +60,12 @@ public class AddProperty extends AppCompatActivity {
         etPropertyAddress = findViewById(R.id.editTextPropertyAddress);
         etDefaultRentAmount = findViewById(R.id.editTextDefaultRent);
         etUnitRate = findViewById(R.id.editTextUnitRate);
-        ImageView imgRoomsMinus = findViewById(R.id.imgRoomsMinus);
+        MaterialCardView mcvBtnRoomsMinus = findViewById(R.id.mcvBtnRoomsMinus);
         textTotalRooms = findViewById(R.id.textTotalRooms);
-        ImageView imgRoomsPlus = findViewById(R.id.imgRoomsPlus);
-        ImageView imgShopsMinus = findViewById(R.id.imgShopsMinus);
+        MaterialCardView mcvBtnRoomsPlus = findViewById(R.id.mcvBtnRoomsPlus);
+        MaterialCardView mcvBtnShopsMinus = findViewById(R.id.mcvBtnShopsMinus);
         textTotalShops = findViewById(R.id.textTotalShops);
-        ImageView imgShopsPlus = findViewById(R.id.imgShopsPlus);
+        MaterialCardView mcvBtnShopsPlus = findViewById(R.id.mcvBtnShopsPlus);
         MaterialCardView btnCreateProperty = findViewById(R.id.btnCreateProperty);
 
         textTotalRooms.setText(String.valueOf(currTotalRooms));
@@ -83,13 +83,13 @@ public class AddProperty extends AppCompatActivity {
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
         //Minus Buttons Action On click
-        imgRoomsMinus.setOnClickListener(view -> {
+        mcvBtnRoomsMinus.setOnClickListener(view -> {
             if (currTotalRooms > 0){
                 currTotalRooms--;
                 textTotalRooms.setText(String.valueOf(currTotalRooms));
             }
         });
-        imgShopsMinus.setOnClickListener(view -> {
+        mcvBtnShopsMinus.setOnClickListener(view -> {
             if (currTotalShops > 0){
                 currTotalShops--;
                 textTotalShops.setText(String.valueOf(currTotalShops));
@@ -97,11 +97,11 @@ public class AddProperty extends AppCompatActivity {
         });
 
         // Plus Buttons Action On click
-        imgRoomsPlus.setOnClickListener(view -> {
+        mcvBtnRoomsPlus.setOnClickListener(view -> {
             currTotalRooms++;
             textTotalRooms.setText(String.valueOf(currTotalRooms));
         });
-        imgShopsPlus.setOnClickListener(view -> {
+        mcvBtnShopsPlus.setOnClickListener(view -> {
             currTotalShops++;
             textTotalShops.setText(String.valueOf(currTotalShops));
         });

@@ -116,6 +116,7 @@ public class RentsFragment extends Fragment {
                 // Group Rent Records by Tenant Name
 
                 String currentTenant = model.getTenant_name();
+                String currTenantId = model.getTenant_id();
 
                 boolean showHeader = false;
 
@@ -124,8 +125,9 @@ public class RentsFragment extends Fragment {
                 if (position < getItemCount() - 1) {
 
                     String nextTenant = getItem(position + 1).getTenant_name();
+                    String nextTenantId = getItem(position + 1).getTenant_id();;
 
-                    if (!currentTenant.equals(nextTenant)) {
+                    if (!currentTenant.equals(nextTenant) && !currTenantId.equals(nextTenantId)) {
                         showHeader = true;
                     }
                 }

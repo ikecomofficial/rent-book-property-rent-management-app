@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         // Bottom nav → swipe
         bottomNav.setOnItemSelectedListener(item -> {
 
-
             if (item.getItemId() == R.id.nav_properties) {
                 viewPager.setCurrentItem(0, false);
                 // Hide Toolbar

@@ -2,7 +2,7 @@ package com.example.rentbook_rentpropertymanager.model;
 
 public class Rents {
 
-    public String payment_mode, tenant_name, rent_month_year, rent_period_start, rent_period_end;
+    public String payment_mode, tenant_name, rent_month_year, rent_period_start, rent_period_end, tenant_id;
     public long rent_timestamp;
     public int rent_amount;
 
@@ -11,13 +11,14 @@ public class Rents {
     }
 
     public Rents(long rent_timestamp, String payment_mode, String tenant_name, int rent_amount, String rent_period_start,
-                 String rent_period_end) {
+                 String rent_period_end, String tenant_id) {
         this.payment_mode = payment_mode;
         this.tenant_name = tenant_name;
         this.rent_amount = rent_amount;
         this.rent_timestamp = rent_timestamp;
         this.rent_period_start = rent_period_start;
         this.rent_period_end = rent_period_end;
+        this.tenant_id = tenant_id;
     }
 
     public long getRent_timestamp() {
@@ -70,5 +71,13 @@ public class Rents {
 
     public void setRent_period_end(String rent_period_end) {
         this.rent_period_end = rent_period_end;
+    }
+
+    public String getTenant_id() {
+        return tenant_id;
+    }
+
+    public void setTenant_id(String tenant_id) {
+        this.tenant_id = tenant_id;
     }
 }

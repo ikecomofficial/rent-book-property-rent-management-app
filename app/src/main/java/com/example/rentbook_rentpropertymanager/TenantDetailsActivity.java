@@ -293,7 +293,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
             int selectedDay = numberPicker.getValue();
 
-            String selectedBillingDay = addOrdinalSuffix(selectedDay) + " of month";
+            String selectedBillingDay = addOrdinalSuffix(selectedDay) + " of each month";
             tvBillingStartDay.setText(selectedBillingDay);
 
             billing_start_day = selectedDay;
@@ -356,13 +356,12 @@ public class TenantDetailsActivity extends AppCompatActivity {
                         CropImageOptions cropOptions = new CropImageOptions();
                         // Crop Aspect Ratio Based on Btn
                         if (is_add_doc){
-                            cropOptions.aspectRatioX = 4;
-                            cropOptions.aspectRatioY = 3;
+                            cropOptions.fixAspectRatio = false;
                         } else {
                             cropOptions.aspectRatioX = 1;
                             cropOptions.aspectRatioY = 1;
+                            cropOptions.fixAspectRatio = true;
                         }
-                        cropOptions.fixAspectRatio = true;
                         cropOptions.guidelines = CropImageView.Guidelines.ON;
 
 
@@ -463,7 +462,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
             uploadTask
                     .addOnProgressListener(snapshot -> {
-                        tvUploadDialogSubHeading.setText(R.string.text_sub_finalizing_upload);  // Finalizing Your Upload...
+                        tvUploadDialogSubHeading.setText(R.string.text_sub_finalizing_upload);  // Optimizing your picture...
                         long bytesTransferred = snapshot.getBytesTransferred();
                         long totalBytes = snapshot.getTotalByteCount();
                         //int progress = (int) ((bytesTransferred * 100) / totalBytes);
@@ -576,7 +575,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
                 // Set Tenant Billing Start Day
                 billing_start_day = snapshot.child("billing_start_day").getValue(Integer.class);
-                String finalBillingStartDay = addOrdinalSuffix(billing_start_day) + " of month";
+                String finalBillingStartDay = addOrdinalSuffix(billing_start_day) + " of each month";
                 tvBillingStartDay.setText(finalBillingStartDay);
 
                 tvTenantName.setText(tenant_name);
