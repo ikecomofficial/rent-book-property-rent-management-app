@@ -138,7 +138,7 @@ public class AccountFragment extends Fragment {
                 tvUserName.setText(user.getDisplayName());
                 tvUserEmail.setText(user.getEmail());
 
-                // Taking url of Google Signed In user Profile Pic
+                // Taking url of Google Signed-In user Profile Pic
                 String originalProfileUrl = Objects.requireNonNull(user.getPhotoUrl()).toString();
 
                 // Replace the size suffix (e.g., =s96-c) with your own
@@ -188,13 +188,6 @@ public class AccountFragment extends Fragment {
                                     .load(thumb_profile_url)
                                     .placeholder(R.drawable.ic_tenant_profile_default)
                                     .into(cimgUserProfile);
-                        }
-
-                        assert user_name != null;
-                        if (user_name.equals("User")){
-                            imgUserNameEdit.setVisibility(View.VISIBLE);
-                        }else {
-                            imgUserNameEdit.setVisibility(View.GONE);
                         }
                     }
 
@@ -282,6 +275,7 @@ public class AccountFragment extends Fragment {
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(getContext(), "Name updated successfully", Toast.LENGTH_SHORT).show();
                             layoutEditName.setVisibility(View.GONE);
+                            tvUserName.setText(new_name);
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(getContext(), "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -509,11 +503,11 @@ public class AccountFragment extends Fragment {
         // First, sign out from Firebase
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Sign Out?");
-        builder.setMessage("Want to Sign Out from This Account?");
+        builder.setTitle(R.string.text_sign_out_ques);
+        builder.setMessage(R.string.text_desc_sign_out);
 
         // Positive button -> Yes
-        builder.setPositiveButton("Sign Out", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.text_sign_out, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Perform sign out here
@@ -528,7 +522,7 @@ public class AccountFragment extends Fragment {
         });
 
         // Negative button -> No
-        builder.setNegativeButton("Stay", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing, just dismiss
@@ -544,15 +538,15 @@ public class AccountFragment extends Fragment {
         // First, sign out from Firebase
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Sign Out?");
-        builder.setMessage("Want to Sign Out from This Account?");
+        builder.setTitle(R.string.text_sign_out_ques);
+        builder.setMessage(R.string.text_desc_sign_out);
 
         // Positive button -> Yes
-        builder.setPositiveButton("Sign Out", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.text_sign_out, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mAuth.signOut();
-                // Redirect to login screen
+                // Redirect to log-in screen
                 Intent intent = new Intent(getContext(), LoginScreen.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -562,7 +556,7 @@ public class AccountFragment extends Fragment {
         });
 
         // Negative button -> No
-        builder.setNegativeButton("Stay", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing, just dismiss

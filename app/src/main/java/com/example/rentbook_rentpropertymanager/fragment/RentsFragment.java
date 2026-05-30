@@ -63,7 +63,7 @@ public class RentsFragment extends Fragment {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         assert room_id != null;
         rentsReference = databaseReference.child("rents").child(room_id);
-        roomsReference = databaseReference.child("rooms").child(room_id);
+        roomsReference = databaseReference.child("rooms").child(property_id).child(room_id);
 
         // Rent Recycler View
         rvRentList = view.findViewById(R.id.rvRentRecord);
@@ -96,8 +96,7 @@ public class RentsFragment extends Fragment {
     private void loadRentRecyclerList() {
 
         FirebaseRecyclerOptions<Rents> rent_options = new FirebaseRecyclerOptions.Builder<Rents>()
-                .setQuery(rentsReference, Rents.class)
-                .build();
+                .setQuery(rentsReference, Rents.class).build();
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Rents, RentsFragment.RentsViewHolder>(rent_options) {
             @Override
@@ -145,14 +144,22 @@ public class RentsFragment extends Fragment {
 
                 // Long press to delete
                 holder.itemView.setOnLongClickListener(v -> {
+
+                    int lastPosition = getItemCount() - 1;
+
+                    if (position != lastPosition){
+                        Toast.makeText(v.getContext(), "Only latest record can be deleted", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+
                     new MaterialAlertDialogBuilder(v.getContext())
-                            .setTitle("Delete Rent Record?")
-                            .setMessage("Are you sure you want to delete this rent record?")
-                            .setPositiveButton("Delete", (dialog, which) -> {
+                            .setTitle(R.string.text_label_del_rent)
+                            .setMessage(R.string.text_desc_del_rent)
+                            .setPositiveButton(R.string.text_delete, (dialog, which) -> {
                                 // 🔑 Call your delete function here
                                 deleteRentRecord(getRef(position).getKey(), property_id, rentMonthYear, rentAmount);
                             })
-                            .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                            .setNegativeButton(R.string.text_cancel, (dialog, which) -> dialog.dismiss())
                             .show();
 
                     return true; // ✅ consume the long press
@@ -188,27 +195,27 @@ public class RentsFragment extends Fragment {
         rvRentList.setAdapter(firebaseRecyclerAdapter);
     }
 
-    private String getMonthYear(String timestampStr) {
-        try {
-            long timestamp = Long.parseLong(timestampStr); // convert string → long
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-            return sdf.format(new Date(timestamp));
-        } catch (NumberFormatException e) {
-            Log.e("ParseError", "Invalid number format", e);
-            return ""; // fallback if string is invalid
-        }
-    }
-
     private void deleteRentRecord(String rent_id, String pid, String rentMonthYear, int rentAmount) {
         rentsReference.child(rent_id).removeValue()
                 .addOnSuccessListener(aVoid -> {
                     // ✅ Record deleted successfully
                     Toast.makeText(getContext(), "Rent Deleted", Toast.LENGTH_SHORT).show();
 
+
                     String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
                             .format(new Date());
-                    if (rentMonthYear.equals(currentMonth)){
-                        updateRoomRentStatus();
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, -1);
+
+                    String previousMonth = new SimpleDateFormat(
+                            "yyyy-MM",
+                            Locale.ENGLISH
+                    ).format(cal.getTime());
+
+
+                    if (rentMonthYear.equals(currentMonth) || rentMonthYear.equals(previousMonth)){
+                        updateRoomRentStatus(rentMonthYear);
                     }
                     subtractRentFromCollections(pid, rentMonthYear, rentAmount);
                 })
@@ -218,14 +225,30 @@ public class RentsFragment extends Fragment {
                 });
     }
 
-    public void updateRoomRentStatus(){
-        roomsReference.child("last_rent_month").setValue(null)
+    public void updateRoomRentStatus(String rentMonthYear){
+
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH).parse(rentMonthYear);
+
+            assert date != null;
+            cal.setTime(date);
+            cal.add(Calendar.MONTH, -1);
+
+            String previousMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH).format(cal.getTime());
+
+            roomsReference.child("last_rent_month").setValue(previousMonth)
                     .addOnSuccessListener(aVoid -> {
                         Log.d("Rents Fragment", "Rent Status Changed successfully");
                     })
                     .addOnFailureListener(e ->
                             Log.e("Rents Fragment",
                                     "Failed to add log: " + e.getMessage()));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -238,10 +261,8 @@ public class RentsFragment extends Fragment {
         DatabaseReference rentCollectionReference =
                 FirebaseDatabase.getInstance()
                         .getReference()
-                        .child("collections")
-                        .child(pid)
-                        .child(monthYearKey)
-                        .child("total_rent");
+                        .child("collections").child(pid)
+                        .child(monthYearKey).child("total_rent");
 
         rentCollectionReference.runTransaction(new Transaction.Handler() {
 

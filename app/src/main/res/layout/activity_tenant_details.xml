@@ -457,6 +457,74 @@
 
                 </LinearLayout>
 
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_list_layout_primary" />
+
+                <!-- Billing Day -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <!-- Icon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/bg_dashboard_card">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="9dp"
+                            android:src="@drawable/ic_sync"
+                            app:tint="@color/icon_primary"
+                            android:contentDescription="@string/text_image_desc"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_rent_pref"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_value_rent_pref"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_heading"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                    <!-- Arrow -->
+                    <!-- Toggle -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchAdvanceRent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:showText="false"
+                        app:thumbTint="@color/primary_main"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>

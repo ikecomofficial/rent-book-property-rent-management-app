@@ -65,8 +65,8 @@ public class EditProperty extends AppCompatActivity {
         default_unit_rate = getIntent().getDoubleExtra("prop_unit_rate", 0);
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        propertyReference = databaseReference.child("properties").child(property_id);
-        roomReference = databaseReference.child("rooms");
+        propertyReference = databaseReference.child("properties").child(user_id).child(property_id);
+        roomReference = databaseReference.child("rooms").child(property_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
         etPropertyName = findViewById(R.id.etUpdatePropertyName);
@@ -161,7 +161,7 @@ public class EditProperty extends AppCompatActivity {
                 if (!updates.isEmpty()) {
                     roomReference.updateChildren(updates)
                             .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(EditProperty.this, "Rooms Updated", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(EditProperty.this, "Rooms Updated", Toast.LENGTH_SHORT).show();
                                 editPropertyActivityLog();
                                 finish();
                             })

@@ -20,6 +20,7 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,8 +29,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomViewHolder> {
 
-    private Context context;
-    private List<Rooms> roomList;
+    private final Context context;
+    private final List<Rooms> roomList;
     private OnItemClickListener listener;
 
     public RoomCardAdapter(Context context, List<Rooms> roomList) {
@@ -99,8 +100,13 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
         } else {
             holder.tvTenantName.setText(R.string.text_no_tenant_added);   // "No Tenant Added"
             holder.tvTenantPhone.setText(R.string.text_clk_add_tenant);   // "Click (Add Tenant)"
-            holder.cimgTenantProfile.setImageResource(R.drawable.ic_no_tenant_profile_default);
-            // Apply tint
+
+            // ❗ IMPORTANT: Remove tint (because of view recycling)
+            holder.cimgTenantProfile.clearColorFilter();
+            Glide.with(context).load(room.getThumb_tenant_url())
+                    .placeholder(R.drawable.ic_no_tenant_profile_default)
+                    .into(holder.cimgTenantProfile);
+
             holder.cimgTenantProfile.setColorFilter(
                     ContextCompat.getColor(context, R.color.text_heading),
                     PorterDuff.Mode.SRC_IN
@@ -121,11 +127,24 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             holder.tvRentAmount.setTextColor(ContextCompat.getColor(context, R.color.text_purple_300));
 
             // Set Rent Status
-            String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
-                    .format(new Date());
-            String lastRentMonth = room.getLast_rent_month(); // from Firebase
+            String lastRentMonth = room.getLast_rent_month();
+            Calendar cal = Calendar.getInstance();
 
-            if (lastRentMonth != null && lastRentMonth.equals(currentMonth)) {
+            // If tenant pays for previous month,
+            // expected paid month is previous month
+            boolean isAdvanceRent =
+                    room.isIs_rent_advance() == null || room.isIs_rent_advance();
+
+            if (!isAdvanceRent) {
+                cal.add(Calendar.MONTH, -1);
+            }
+            //if (!room.isIs_rent_advance()) {cal.add(Calendar.MONTH, -1);}
+
+            String expectedMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+                    .format(cal.getTime());
+
+
+            if (lastRentMonth != null && lastRentMonth.equals(expectedMonth)) {
                 // ✅ PAID
                 holder.tvRoomRentStatus.setText(R.string.text_paid);
                 holder.tvRoomRentStatus.setTextColor(ContextCompat.getColor(context, R.color.occ_status_dot));

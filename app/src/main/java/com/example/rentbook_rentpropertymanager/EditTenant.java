@@ -56,15 +56,17 @@ public class EditTenant extends AppCompatActivity {
         }
         String room_id = getIntent().getStringExtra("room_id");
         String tenant_id = getIntent().getStringExtra("tenant_id");
+        String property_id = getIntent().getStringExtra("property_id");
         tenant_name = getIntent().getStringExtra("tenant_name");
         tenant_phone = getIntent().getStringExtra("tenant_phone");
         tenant_address = getIntent().getStringExtra("tenant_address");
 
         assert room_id != null;
         assert tenant_id != null;
+        assert property_id != null;
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         tenantReference = databaseReference.child("tenants")
-                .child(room_id).child(tenant_id);
+                .child(property_id).child(tenant_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
         etTenantName = findViewById(R.id.etEditTenantName);

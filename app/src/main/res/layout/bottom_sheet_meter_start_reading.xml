@@ -123,7 +123,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="1dp"
                 app:strokeWidth="0.5dp"
-                app:cardUseCompatPadding="true"
+                android:layout_margin="2dp"
                 app:strokeColor="@color/primary_main"
                 app:cardBackgroundColor="@color/bg_list_layout_primary">
 
@@ -167,7 +167,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="1dp"
                 app:strokeWidth="0.5dp"
-                app:cardUseCompatPadding="true"
+                android:layout_margin="2dp"
                 app:strokeColor="@color/primary_main"
                 app:cardBackgroundColor="@color/primary_main">
 

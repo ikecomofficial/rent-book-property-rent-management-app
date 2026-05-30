@@ -64,14 +64,16 @@ public class AddTenantActivity extends AppCompatActivity {
         room_id = getIntent().getStringExtra("room_id");
         room_name = getIntent().getStringExtra("room_name");
         property_name = getIntent().getStringExtra("property_name");
+        property_id = getIntent().getStringExtra("property_id");
+        is_room = getIntent().getBooleanExtra("is_room", true);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
         user_id = user.getUid();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        roomReference = databaseReference.child("rooms").child(room_id);
-        tenantReference = databaseReference.child("tenants");
+        roomReference = databaseReference.child("rooms").child(property_id).child(room_id);
+        tenantReference = databaseReference.child("tenants").child(property_id);
         propertyReference = databaseReference.child("properties");
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
@@ -135,10 +137,10 @@ public class AddTenantActivity extends AppCompatActivity {
         tenantMap.put("tenant_start_date", todayDate);
         tenantMap.put("tenant_end_date", "null");
         tenantMap.put("billing_start_day", 1);
-        tenantMap.put("user_id", user_id);
+        tenantMap.put("room_id", room_id);
 
         if (tenant_id != null) {
-            tenantReference.child(room_id).child(tenant_id).setValue(tenantMap)
+            tenantReference.child(tenant_id).setValue(tenantMap)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "Tenant Added Successfully", Toast.LENGTH_SHORT).show();
                         tenantAddedActivityLog();
@@ -159,59 +161,46 @@ public class AddTenantActivity extends AppCompatActivity {
 
     private void updatePropertyOccupancyDataInFirebase(){
 
-        // Get pid from rooms -> rid data
-        roomReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                property_id = snapshot.child("property_id").getValue(String.class);
-                is_room = Boolean.TRUE.equals(snapshot.child("is_room").getValue(Boolean.class));
+        propertyReference.child(user_id).child(property_id)
+                .runTransaction(new Transaction.Handler() {
 
-                propertyReference.child(property_id)
-                        .runTransaction(new Transaction.Handler() {
+                    @NonNull
+                    @Override
+                    public Transaction.Result doTransaction(@NonNull MutableData data) {
 
-                            @NonNull
-                            @Override
-                            public Transaction.Result doTransaction(@NonNull MutableData data) {
+                        if (is_room) {
+                            Integer currentOccRooms =
+                                    data.child("rooms_occupied").getValue(Integer.class);
 
-                                if (is_room) {
-                                    Integer currentOccRooms =
-                                            data.child("rooms_occupied").getValue(Integer.class);
+                            if (currentOccRooms == null) currentOccRooms = 0;
 
-                                    if (currentOccRooms == null) currentOccRooms = 0;
+                            data.child("rooms_occupied").setValue(currentOccRooms + 1);
 
-                                    data.child("rooms_occupied").setValue(currentOccRooms + 1);
+                        } else {
+                            Integer currentOccShops =
+                                    data.child("shops_occupied").getValue(Integer.class);
 
-                                } else {
-                                    Integer currentOccShops =
-                                            data.child("shops_occupied").getValue(Integer.class);
+                            if (currentOccShops == null) currentOccShops = 0;
 
-                                    if (currentOccShops == null) currentOccShops = 0;
+                            data.child("shops_occupied").setValue(currentOccShops + 1);
+                        }
 
-                                    data.child("shops_occupied").setValue(currentOccShops + 1);
-                                }
+                        return Transaction.success(data);
+                    }
 
-                                return Transaction.success(data);
-                            }
-
-                            @Override
-                            public void onComplete(
-                                    DatabaseError error,
-                                    boolean committed,
-                                    DataSnapshot snapshot
-                            ) {
-                                if (error != null) {
-                                    Log.e("Firebase", "Occupancy update failed", error.toException());
-                                } else if (committed) {
-                                    Log.d("Firebase", "Occupancy updated successfully");
-                                }
-                            }
-                        });
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                    @Override
+                    public void onComplete(
+                            DatabaseError error,
+                            boolean committed,
+                            DataSnapshot snapshot
+                    ) {
+                        if (error != null) {
+                            Log.e("Firebase", "Occupancy update failed", error.toException());
+                        } else if (committed) {
+                            Log.d("Firebase", "Occupancy updated successfully");
+                        }
+                    }
+                });
     }
 
     @Override

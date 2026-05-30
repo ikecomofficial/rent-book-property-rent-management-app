@@ -33,7 +33,6 @@ import com.google.firebase.database.Transaction;
 
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -44,7 +43,7 @@ public class BillsFragment extends Fragment {
     private RecyclerView rvElcBillList;
     private String room_id, property_id;
     private ProgressBar progressBarElcBills;
-    private DatabaseReference databaseReference, ebillsReference;
+    private DatabaseReference databaseReference, elcBillsReference;
     private FirebaseRecyclerAdapter<Bills, BillsFragment.BillsViewHolder> firebaseBillsRecyclerAdapter;
 
 
@@ -61,7 +60,7 @@ public class BillsFragment extends Fragment {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         assert room_id != null;
-        ebillsReference = databaseReference.child("e-bills").child(room_id);
+        elcBillsReference = databaseReference.child("e-bills").child(room_id);
 
         // e-bill Recycler View
         rvElcBillList = view.findViewById(R.id.rvElcBillRecord);
@@ -95,7 +94,7 @@ public class BillsFragment extends Fragment {
     private void loadElcBillRecyclerList(){
 
         FirebaseRecyclerOptions<Bills> bill_options = new FirebaseRecyclerOptions.Builder<Bills>()
-                .setQuery(ebillsReference, Bills.class)
+                .setQuery(elcBillsReference, Bills.class)
                 .build();
 
         firebaseBillsRecyclerAdapter = new FirebaseRecyclerAdapter<Bills, BillsFragment.BillsViewHolder>(bill_options) {
@@ -104,17 +103,17 @@ public class BillsFragment extends Fragment {
                 // Bind your data here
 
                 String elcBillMonthYear = model.getElc_bill_month_year();
-                int elcBillAmount = model.getEbill_amount();
+                int elcBillAmount = model.getElc_bill_amount();
                 int elcUnitsUsed = model.getUnits_used();
                 holder.setBillAmount(elcBillAmount);
                 holder.setBillPaymentMode(model.getPayment_mode());
-                holder.setBillUnitPaidTill(model.getPaid_upto());
+                holder.setBillUnitPaidTill(model.getPaid_up_to());
                 holder.setBillUnitUsed(elcUnitsUsed);
                 holder.setElcBillMonthYear(elcBillMonthYear);
                 // etc.
 
                 // Format timestamp into date & time
-                long timestamp = Long.parseLong(model.getEbill_timestamp());
+                long timestamp = Long.parseLong(model.getElc_bill_timestamp());
                 Date date = new Date(timestamp);
 
                 String dateOnly = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
@@ -128,20 +127,18 @@ public class BillsFragment extends Fragment {
                     int lastPosition = getItemCount() - 1;
 
                     if (position != lastPosition){
-                        Toast.makeText(v.getContext(),
-                                "Only latest record can be deleted",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), "Only latest record can be deleted", Toast.LENGTH_SHORT).show();
                         return true;
                     }
 
                     new MaterialAlertDialogBuilder(v.getContext())
                             .setTitle("Delete Electricity Bill?")
                             .setMessage("Are you sure you want to delete this bill record?")
-                            .setPositiveButton("Delete", (dialog, which) -> {
+                            .setPositiveButton(R.string.text_delete, (dialog, which) -> {
                                 // 🔑 Call your delete function here
                                 deleteElcBillRecord(getRef(position).getKey(), property_id, elcBillMonthYear, elcBillAmount, elcUnitsUsed);
                             })
-                            .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                            .setNegativeButton(R.string.text_cancel, (dialog, which) -> dialog.dismiss())
                             .show();
 
                     return true; // ✅ consume the long press
@@ -179,7 +176,7 @@ public class BillsFragment extends Fragment {
 
     private void deleteElcBillRecord(String elc_bill_id, String pid, String elcBillMonthYear,
                                      int elcBillAmount, int elcUnitsUsed) {
-        ebillsReference.child(elc_bill_id).removeValue()
+        elcBillsReference.child(elc_bill_id).removeValue()
                 .addOnSuccessListener(aVoid -> {
                     // ✅ Record deleted successfully
                     Toast.makeText(getContext(), "Electricity Bill Deleted", Toast.LENGTH_SHORT).show();
@@ -253,7 +250,7 @@ public class BillsFragment extends Fragment {
     ) {
 
         DatabaseReference roomsReference =
-                databaseReference.child("rooms").child(room_id).child("last_unit_paid");
+                databaseReference.child("rooms").child(property_id).child(room_id).child("last_unit_paid");
 
         roomsReference.runTransaction(new Transaction.Handler() {
 

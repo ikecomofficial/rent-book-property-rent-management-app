@@ -12,7 +12,7 @@ import com.example.rentbook_rentpropertymanager.fragment.RentsFragment;
 
 public class RentBillPagerAdapter extends FragmentStateAdapter {
 
-    private String room_id, property_id;
+    private final String room_id, property_id;
     public RentBillPagerAdapter(@NonNull FragmentActivity fragmentActivity, String room_id, String property_id) {
         super(fragmentActivity);
         this.room_id = room_id;
@@ -26,16 +26,10 @@ public class RentBillPagerAdapter extends FragmentStateAdapter {
         Bundle bundle = new Bundle();
         bundle.putString("room_id", room_id);
         bundle.putString("property_id", property_id);
-        switch (position){
-            case 0:
-                fragment = new RentsFragment();
-                break;
-            case 1:
-                fragment = new BillsFragment();
-                break;
-            default:
-                fragment = new RentsFragment();
-                break;
+        if (position == 0) {
+            fragment = new RentsFragment();
+        } else {
+            fragment = new BillsFragment();
         }
         fragment.setArguments(bundle); // pass the roomId to fragment
         return fragment;

@@ -79,7 +79,7 @@ public class AddProperty extends AppCompatActivity {
         });
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        propertyReference = databaseReference.child("properties");
+        propertyReference = databaseReference.child("properties").child(user_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
         //Minus Buttons Action On click
@@ -144,7 +144,6 @@ public class AddProperty extends AppCompatActivity {
         propertyMap.put("property_address", propertyAddress);
         propertyMap.put("prop_room_rent", Integer.parseInt(propertyDefaultRent));
         propertyMap.put("prop_unit_rate", Double.parseDouble(propertyDefaultUnitRate));
-        propertyMap.put("user_id", user_id);
         propertyMap.put("total_rooms", Integer.parseInt(String.valueOf(currTotalRooms)));
         propertyMap.put("total_shops", Integer.parseInt(String.valueOf(currTotalShops)));
         propertyMap.put("rooms_occupied", 0);
@@ -164,7 +163,7 @@ public class AddProperty extends AppCompatActivity {
     }
 
     private void createRoomsShopsInFirebase() {
-        DatabaseReference roomsReference = FirebaseDatabase.getInstance().getReference().child("rooms");
+        DatabaseReference roomsReference = FirebaseDatabase.getInstance().getReference().child("rooms").child(pid);
 
         for (int i = 1; i <= currTotalRooms; i++) {
             String room_id = roomsReference.push().getKey();
@@ -184,7 +183,6 @@ public class AddProperty extends AppCompatActivity {
 
                 // Last month paid monthKey.
                 roomsMap.put("tenant_id", "null");
-                roomsMap.put("cm_rent_paid", false);
                 roomsMap.put("last_unit_paid", 0);
                 roomsMap.put("last_rent_month", "2025-07");
 
@@ -213,7 +211,6 @@ public class AddProperty extends AppCompatActivity {
 
                 // Last month paid monthKey.
                 roomsMap.put("tenant_id", "null");
-                roomsMap.put("cm_rent_paid", false);
                 roomsMap.put("last_unit_paid", 0);
                 roomsMap.put("last_rent_month", "2025-07");
 

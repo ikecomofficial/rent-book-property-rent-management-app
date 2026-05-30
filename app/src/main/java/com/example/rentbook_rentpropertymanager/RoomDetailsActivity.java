@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -32,7 +31,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -60,6 +58,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -139,12 +138,10 @@ public class RoomDetailsActivity extends AppCompatActivity {
         }
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        roomReference = databaseReference.child("rooms").child(room_id);
-        tenantReference = databaseReference.child("tenants");
-        propertyReference = databaseReference.child("properties");
+        roomReference = databaseReference.child("rooms").child(property_id).child(room_id);
+        tenantReference = databaseReference.child("tenants").child(property_id);
+        propertyReference = databaseReference.child("properties").child(user_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
-        allTenantReference = tenantReference.child(room_id);
-
 
         // 📄 Tenant UI Views
         tvRoomStatus = findViewById(R.id.tvRoomStatus);
@@ -264,6 +261,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
         addTenantIntent.putExtra("room_id", room_id);
         addTenantIntent.putExtra("room_name", room_name);
         addTenantIntent.putExtra("property_name", property_name);
+        addTenantIntent.putExtra("property_id", property_id);
+        addTenantIntent.putExtra("is_room", is_room);
         startActivity(addTenantIntent);
     }
     private void handleAddElectricityBill() {
@@ -360,7 +359,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private void openAddElectricityBillScreen() {
 
-        Intent addBillIntent = new Intent(RoomDetailsActivity.this, AddEbillActivity.class);
+        Intent addBillIntent = new Intent(RoomDetailsActivity.this, AddElcBillActivity.class);
         addBillIntent.putExtra("room_id", room_id);
         addBillIntent.putExtra("tenant_id", tenant_id);
         addBillIntent.putExtra("property_id", property_id);
@@ -369,7 +368,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
     }
 
     private void loadTenantData() {
-        tenantReference.child(room_id).child(tenant_id).addValueEventListener(new ValueEventListener() {
+        tenantReference.child(tenant_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 tenant_name = snapshot.child("tenant_name").getValue(String.class);
@@ -381,11 +380,11 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
                 // ✅ Null-safe UI
                 tvTenantName.setText(
-                        (tenant_name == null || tenant_name.isEmpty()) ? "N/A" : tenant_name
+                        (tenant_name == null || tenant_name.isEmpty()) ? "No Tenant Added" : tenant_name
                 );
 
                 tvTenantPhone.setText(
-                        (tenant_phone == null || tenant_phone.isEmpty()) ? "N/A" : tenant_phone
+                        (tenant_phone == null || tenant_phone.isEmpty()) ? "Click (Add Tenant)" : tenant_phone
                 );
 
                 tvTenantStartDate.setText(
@@ -507,11 +506,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
     }
 
     private void enableTenantClicks() {
-        // Tenant Name
-        //tvTenantName.setOnClickListener(v -> showTenantProfileActivity());
-
-        // Tenant Phone
-        //tvTenantPhone.setOnClickListener(v -> showTenantProfileActivity());
 
         layoutTenantNameNum.setOnClickListener(v -> showTenantProfileActivity());
 
@@ -584,8 +578,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
         Intent tenantProfileIntent = new Intent(RoomDetailsActivity.this, TenantDetailsActivity.class);
         tenantProfileIntent.putExtra("tenant_id", tenant_id);
         tenantProfileIntent.putExtra("room_id", room_id);
+        tenantProfileIntent.putExtra("property_id", property_id);
         startActivity(tenantProfileIntent);
-
 
     }
 
@@ -661,11 +655,11 @@ public class RoomDetailsActivity extends AppCompatActivity {
         String tenantEndDate = new java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.US)
                 .format(new java.util.Date());
 
-        tenantReference.child(room_id).child(tenant_id).child("tenant_end_date").setValue(tenantEndDate);
+        tenantReference.child(tenant_id).child("tenant_end_date").setValue(tenantEndDate);
 
         HashMap<String, Object> tenantRemoveMap = new HashMap<>();
         tenantRemoveMap.put("is_occupied", false);
-        tenantRemoveMap.put("tenant_id", "null");
+        tenantRemoveMap.put("tenant_id", null);
         tenantRemoveMap.put("last_rent_month", "2025-07");
 
         roomReference.updateChildren(tenantRemoveMap);
@@ -889,9 +883,14 @@ public class RoomDetailsActivity extends AppCompatActivity {
         layoutTenantManager.setStackFromEnd(true);    // optional, usually false
         rvTenants.setLayoutManager(layoutTenantManager);
 
-        FirebaseRecyclerOptions<Tenants> tenants_options = new FirebaseRecyclerOptions.Builder<Tenants>()
-                .setQuery(allTenantReference, Tenants.class)
-                .build();
+        Query roomTenantQuery = tenantReference
+                .orderByChild("room_id")
+                .equalTo(room_id);
+
+        FirebaseRecyclerOptions<Tenants> tenants_options =
+                new FirebaseRecyclerOptions.Builder<Tenants>()
+                        .setQuery(roomTenantQuery, Tenants.class)
+                        .build();
 
         // Bind your data here
         FirebaseRecyclerAdapter<Tenants, TenantsViewHolder> firebaseTenantsRecyclerAdapter = new FirebaseRecyclerAdapter<>(tenants_options) {
@@ -916,6 +915,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
                     Intent tenantProfileIntent = new Intent(RoomDetailsActivity.this, TenantDetailsActivity.class);
                     tenantProfileIntent.putExtra("tenant_id", tid);
                     tenantProfileIntent.putExtra("room_id", room_id);
+                    tenantProfileIntent.putExtra("property_id", property_id);
                     startActivity(tenantProfileIntent);
 
                 });
@@ -1091,6 +1091,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             editTenantIntent.putExtra("tenant_name", tenant_name);
             editTenantIntent.putExtra("tenant_phone", tenant_phone);
             editTenantIntent.putExtra("tenant_address", tenant_address);
+            editTenantIntent.putExtra("property_id", property_id);
             startActivity(editTenantIntent);
 
             return true;
@@ -1107,6 +1108,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             editRoomIntent.putExtra("is_room", is_room);
             editRoomIntent.putExtra("room_name", room_name);
             editRoomIntent.putExtra("property_name", property_name);
+            editRoomIntent.putExtra("property_id", property_id);
             startActivity(editRoomIntent);
 
             return true;

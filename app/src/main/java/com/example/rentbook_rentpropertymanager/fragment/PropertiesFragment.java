@@ -21,6 +21,7 @@ import com.example.rentbook_rentpropertymanager.MainActivity;
 import com.example.rentbook_rentpropertymanager.PropertyDetailsActivity;
 import com.example.rentbook_rentpropertymanager.R;
 import com.example.rentbook_rentpropertymanager.model.Properties;
+import com.example.rentbook_rentpropertymanager.model.Rents;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.card.MaterialCardView;
@@ -108,24 +109,17 @@ public class PropertiesFragment extends Fragment {
         cimgUserProfile.setOnClickListener(v -> {
             ((MainActivity) requireActivity())
                     .goToTab(3, R.id.nav_settings);
-
         });
 
-
         btnAddProperty.setOnClickListener(v -> {
-
             Intent intent = new Intent(getContext(), AddProperty.class);
             startActivity(intent);
-
         });
 
         btnAddFirstProperty.setOnClickListener(v -> {
-
             Intent intent = new Intent(getContext(), AddProperty.class);
             startActivity(intent);
-
         });
-
         return view;
     }
 
@@ -146,10 +140,10 @@ public class PropertiesFragment extends Fragment {
 
                     Glide.with(requireContext())
                             .load((user_thumb_prof == null || user_thumb_prof.trim().isEmpty() || "default".equals(user_thumb_prof))
-                                    ? R.drawable.ic_tenant_profile_default
+                                    ? R.drawable.ic_user_profile
                                     : user_thumb_prof)
-                            .placeholder(R.drawable.ic_tenant_profile_default)
-                            .error(R.drawable.ic_tenant_profile_default)
+                            .placeholder(R.drawable.ic_user_profile)
+                            .error(R.drawable.ic_user_profile)
                             .into(cimgUserProfile);
                 }
 
@@ -163,12 +157,11 @@ public class PropertiesFragment extends Fragment {
     }
 
     private void loadPropertiesFromFirebase() {
-        DatabaseReference propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties");
+        DatabaseReference propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties")
+                .child(user_id);
 
-        Query userProperties = propertiesReference.orderByChild("user_id").equalTo(user_id);
         FirebaseRecyclerOptions<Properties> options = new FirebaseRecyclerOptions.Builder<Properties>()
-                .setQuery(userProperties, Properties.class)
-                .build();
+                .setQuery(propertiesReference, Properties.class).build();
 
         FirebaseRecyclerAdapter<Properties, PropertiesViewHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<>(options) {
@@ -186,7 +179,7 @@ public class PropertiesFragment extends Fragment {
                                 model.getTotal_shops());
                         // etc.
 
-                        // Send pid to PropertyDetails Activity
+                        // Send pid to Property Details Activity
                         String property_id = getRef(position).getKey();
 
                         holder.mView.setOnClickListener(view -> {
@@ -281,7 +274,7 @@ public class PropertiesFragment extends Fragment {
     }
 
     public void setAllPropertiesRoomShopData(int roomOccupied, int totalRoom, int shopOccupied, int totalShop) {
-        if (totalRoom > 0 && totalShop > 0) {
+        if (totalRoom >= 0 && totalShop >= 0) {
             tvCombinedRoomOcc.setText(String.valueOf(roomOccupied));
             tvCombinedRoomTotal.setText(String.valueOf(totalRoom));
             tvCombinedShopOcc.setText(String.valueOf(shopOccupied));

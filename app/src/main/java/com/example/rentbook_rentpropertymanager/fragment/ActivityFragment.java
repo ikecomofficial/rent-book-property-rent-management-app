@@ -119,9 +119,7 @@ public class ActivityFragment extends Fragment {
         return view;
     }
 
-    // ===============================
     // Load & Reverse Logs
-    // ===============================
     private void loadActivityLogs() {
 
         if (isLoading) return;
@@ -216,9 +214,7 @@ public class ActivityFragment extends Fragment {
     }
 
 
-    // ===============================
     // Dynamic Chip Creation
-    // ===============================
     private void generateDynamicChips() {
 
         chipGroup.removeAllViews();
@@ -294,9 +290,7 @@ public class ActivityFragment extends Fragment {
                 ContextCompat.getColor(requireContext(), R.color.text_muted)));
     }
 
-    // ===============================
     // Filtering
-    // ===============================
     private void applyFilter(String entity) {
 
         selectedEntity = entity;
@@ -329,11 +323,7 @@ public class ActivityFragment extends Fragment {
                 entity.substring(1).toLowerCase();
     }
 
-
-
-    // ===============================
     // Adapter Inside Activity
-    // ===============================
     private static class ActivityLogAdapter
             extends RecyclerView.Adapter<ActivityLogAdapter.ActivityLogViewHolder> {
 

@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -76,17 +79,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TenantDetailsActivity extends AppCompatActivity {
 
     // 🏠 IDs
-    private String user_id, room_id, tenant_id;
+    private String user_id, room_id, tenant_id, property_id;
 
     // 👤 Tenant Info
     private String tenant_phone, tenant_profile_url, thumb_tenant_url;
 
     // 📄 Tenant UI Views
-    private TextView tvTenantName, tvTenantPhone, tvTenantAddress, tvTenantStartDate, tvTenantEndDate, tvTenantPropRoom, tvBillingStartDay;
+    private TextView tvTenantName, tvTenantPhone, tvTenantAddress, tvTenantStartDate,
+            tvTenantEndDate, tvTenantPropRoom, tvBillingStartDay;
     private CircleImageView cimgTenantProfile;
 
     // 📊 Billing Info
     private Integer billing_start_day;
+    private SwitchMaterial switchAdvanceRent;
 
     // 📂 Documents (Recycler + Data)
     private RecyclerView rvTenantDocument;
@@ -123,6 +128,7 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
         tenant_id = getIntent().getStringExtra("tenant_id");
         room_id = getIntent().getStringExtra("room_id");
+        property_id = getIntent().getStringExtra("property_id");
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -132,10 +138,10 @@ public class TenantDetailsActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         assert tenant_id != null;
         assert room_id != null;
-        tenantReference = databaseReference.child("tenants").child(room_id).child(tenant_id);
+        tenantReference = databaseReference.child("tenants").child(property_id).child(tenant_id);
         documentReference = databaseReference.child("tenant_docs").child(room_id).child(tenant_id);
-        roomReference = databaseReference.child("rooms").child(room_id);
-        propertyReference = databaseReference.child("properties");
+        roomReference = databaseReference.child("rooms").child(property_id).child(room_id);
+        propertyReference = databaseReference.child("properties").child(user_id);
 
         profileStorageRef = FirebaseStorage.getInstance().getReference().child("tenant_prof_images");
         tenantDocumentRef = FirebaseStorage.getInstance().getReference().child("tenant_doc_images");
@@ -150,6 +156,8 @@ public class TenantDetailsActivity extends AppCompatActivity {
         tvTenantPropRoom = findViewById(R.id.tvTenantPropRoom);
         tvBillingStartDay = findViewById(R.id.tvBillingStartDay);
         ImageView imgEditStartDay = findViewById(R.id.imgEditStartDay);
+        switchAdvanceRent = findViewById(R.id.switchAdvanceRent);
+
 
         // 🎯 Actions
         MaterialCardView btnChangeTenantProfile = findViewById(R.id.btnChangeTenantProfile);
@@ -239,6 +247,17 @@ public class TenantDetailsActivity extends AppCompatActivity {
 
         imgEditStartDay.setOnClickListener(v -> billingStartDaySelector());
 
+        switchAdvanceRent.setOnCheckedChangeListener(
+                (buttonView, isChecked) -> {
+
+                    // UPDATE FIREBASE
+                    tenantReference.child("is_rent_advance").setValue(isChecked)
+                            .addOnSuccessListener(unused -> {
+                                Log.d("Firebase", "Rent cycle updated");
+                            }).addOnFailureListener(e -> {
+                                Log.e("Firebase", e.getMessage());
+                            });
+                });
     }
 
     private void billingStartDaySelector(){
@@ -572,6 +591,26 @@ public class TenantDetailsActivity extends AppCompatActivity {
                 tenant_profile_url = snapshot.child("tenant_profile_url").getValue(String.class);
                 String tenant_start_date = snapshot.child("tenant_start_date").getValue(String.class);
                 String tenant_end_date = snapshot.child("tenant_end_date").getValue(String.class);
+
+                // Get Rent Preference (Previous Month or Advance)
+                // DEFAULT VALUE
+                boolean is_rent_advance = true;
+
+                // CHECK IF KEY EXISTS
+                if(snapshot.hasChild("is_rent_advance")) {
+
+                    Boolean isRentAdvance =
+                            snapshot.child("is_rent_advance")
+                                    .getValue(Boolean.class);
+
+                    if(isRentAdvance != null) {
+
+                        is_rent_advance = isRentAdvance;
+                    }
+                }
+
+                // SET SWITCH STATE
+                switchAdvanceRent.setChecked(is_rent_advance);
 
                 // Set Tenant Billing Start Day
                 billing_start_day = snapshot.child("billing_start_day").getValue(Integer.class);

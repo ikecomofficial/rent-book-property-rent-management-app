@@ -29,7 +29,8 @@ import java.util.HashMap;
 public class EditRoom extends AppCompatActivity {
 
     private String room_id, newRoomRent, newUnitRate;
-    private String room_name, property_name;
+    private String room_name;
+    private String property_name;
     private int rent_amount = 0;
     private double unit_rate = 0;
     private EditText etUpdateRoomRent, etUpdateUnitRate;
@@ -50,15 +51,16 @@ public class EditRoom extends AppCompatActivity {
         boolean is_room = getIntent().getBooleanExtra("is_room", false);
         room_name = getIntent().getStringExtra("room_name");
         property_name = getIntent().getStringExtra("property_name");
+        String property_id = getIntent().getStringExtra("property_id");
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
         String user_id = user.getUid();
 
-
+        assert property_id != null;
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        roomReference = databaseReference.child("rooms");
+        roomReference = databaseReference.child("rooms").child(property_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
         TextView tvBtnUpdate = findViewById(R.id.tvBtnUpdate);

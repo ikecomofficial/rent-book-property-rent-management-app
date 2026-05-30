@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rentbook_rentpropertymanager.adapter.RoomCardAdapter;
 import com.example.rentbook_rentpropertymanager.model.Rooms;
+import com.example.rentbook_rentpropertymanager.model.Tenants;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -42,11 +43,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PropertyDetailsActivity extends AppCompatActivity {
 
@@ -57,6 +60,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
     // 📈 Occupancy Stats
     private int rooms_occupied, shops_occupied, total_rooms, total_shops;
+    private String user_id;
     private TextView tvProgressLabel;
     private CircularProgressIndicator occupancyProgressBar;
 
@@ -69,14 +73,17 @@ public class PropertyDetailsActivity extends AppCompatActivity {
     // 🏠 Room Data & Adapter
     private TextView tvTotalRentPaid, tvTotalRentDue;
     private RoomCardAdapter roomCardAdapter;
-    private List<Rooms> roomsList;
+    //private List<Rooms> roomsList;
 
     // 🔗 Firebase References
     private DatabaseReference roomsReference;
-    private DatabaseReference propertiesReference, databaseReference, collectionsReference, activityLogReference;
-    private DatabaseReference tenantReference;
-    private DatabaseReference rentsReference;
-    private DatabaseReference e_billReference;
+    private DatabaseReference propertiesReference, databaseReference, activityLogReference;
+    private DatabaseReference tenantReference, collectionsReference;
+    private final HashMap<String, Tenants> tenantMap =
+            new HashMap<>();
+
+    private List<Rooms> roomsList =
+            new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +99,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
-        String user_id = user.getUid();
+        user_id = user.getUid();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         property_id = getIntent().getStringExtra("property_id");
@@ -106,13 +113,11 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setSubtitle(property_address);
         }
 
-        propertiesReference = databaseReference.child("properties").child(property_id);
-        roomsReference = databaseReference.child("rooms");
-        tenantReference = databaseReference.child("tenants");
-        rentsReference = databaseReference.child("rents");
-        e_billReference = databaseReference.child("e-bills");
-        collectionsReference = databaseReference.child("collections").child(property_id);
+        propertiesReference = databaseReference.child("properties").child(user_id).child(property_id);
+        roomsReference = databaseReference.child("rooms").child(property_id);
+        tenantReference = databaseReference.child("tenants").child(property_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
+        collectionsReference = databaseReference.child("collections").child(property_id);
 
         // 📈 Occupancy Stats
         tvProgressLabel = findViewById(R.id.tvProgressLabel);
@@ -178,7 +183,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         roomsRecyclerView.setAdapter(roomCardAdapter);
         loadPropertyData();
         loadCurrentMonthCollectionFromFirebase();
-        loadRooms();
+        loadTenants();
 
     }
 
@@ -254,15 +259,10 @@ public class PropertyDetailsActivity extends AppCompatActivity {
     public void loadCurrentMonthCollectionFromFirebase() {
         Date date = new Date();
 
-        String monthYearLabel =
-                new SimpleDateFormat("MMM yyyy", Locale.ENGLISH).format(date);
-
         String monthYearKey =
                 new SimpleDateFormat("yyyy-MM", Locale.ENGLISH).format(date);
 
-        DatabaseReference collectionsReference = databaseReference.child("collections").child(property_id).child(monthYearKey);
-
-        collectionsReference.addValueEventListener(new ValueEventListener() {
+        collectionsReference.child(monthYearKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -295,24 +295,55 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         return format.format(amount);
     }
 
+    private void loadTenants(){
+
+        tenantReference.addValueEventListener(
+                new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(
+                            @NonNull DataSnapshot snapshot) {
+
+                        tenantMap.clear();
+
+                        for (DataSnapshot tenantSnap : snapshot.getChildren()) {
+
+                            String tenantId = tenantSnap.getKey();
+                            Tenants tenant = tenantSnap.getValue(Tenants.class);
+
+                            if (tenantId != null && tenant != null){
+                                tenantMap.put(tenantId, tenant);
+                            }
+                        }
+
+                        // LOAD ROOMS AFTER TENANTS
+                        loadRooms();
+                    }
+
+                    @Override
+                    public void onCancelled(
+                            @NonNull DatabaseError error) {
+
+                    }
+                });
+    }
 
     private void loadRooms() {
-        roomsReference.orderByChild("property_id").equalTo(property_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @SuppressLint("NotifyDataSetChanged")
+
+        roomsReference.addValueEventListener(new ValueEventListener() {
+
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot roomsSnapshot) {
+                    public void onDataChange(
+                            @NonNull DataSnapshot roomsSnapshot) {
+
                         roomsList.clear();
 
                         int paidRooms = 0;
 
-                        //int totalRooms = (int) roomsSnapshot.getChildrenCount(); // ✅ TOTAL ROOMS
-
-                        String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault())
-                                .format(new Date());
-
                         for (DataSnapshot roomSnap : roomsSnapshot.getChildren()) {
+
                             String roomId = roomSnap.getKey();
+
                             String roomName = roomSnap.child("room_name").getValue(String.class);
                             Integer rentAmount = roomSnap.child("room_rent").getValue(Integer.class);
                             Integer lastUnitPaid = roomSnap.child("last_unit_paid").getValue(Integer.class);
@@ -322,71 +353,99 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                             Boolean isRoom = roomSnap.child("is_room").getValue(Boolean.class);
                             String lastRentMonth = roomSnap.child("last_rent_month").getValue(String.class);
 
-                            if (currentMonth.equals(lastRentMonth)) {
-                                paidRooms++;
+                            if (isOccupied != null && isOccupied) {
+
+                                Calendar cal = Calendar.getInstance();
+
+                                boolean isAdvanceRent = true;
+
+                                if (tenantId != null && tenantMap.containsKey(tenantId)) {
+
+                                    Tenants tenant = tenantMap.get(tenantId);
+
+                                    if (tenant != null) {
+                                        Boolean value = tenant.isIs_rent_advance();
+
+                                        isAdvanceRent = (value == null) || value;
+                                    }
+                                }
+
+                                if (!isAdvanceRent) {
+                                    cal.add(Calendar.MONTH, -1);
+                                }
+
+                                String expectedMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+                                        .format(cal.getTime());
+
+                                if (lastRentMonth != null &&
+                                        lastRentMonth.equals(expectedMonth)) {
+
+                                    paidRooms++;
+                                }
                             }
 
-                            int pendingRooms = totalRoomShopOcc - paidRooms;
-
-                            // 🔹 Update UI
-                            String finalPaidRooms = paidRooms + " Paid";
-                            tvTotalRentPaid.setText(finalPaidRooms);
-
-                            String finalDueRooms = pendingRooms + " Due";
-                            tvTotalRentDue.setText(finalDueRooms);
-
                             Rooms model = new Rooms();
+
                             model.setRoom_id(roomId);
                             model.setRoom_name(roomName);
                             model.setRoom_rent(rentAmount != null ? rentAmount : 0);
                             model.setLast_unit_paid(lastUnitPaid != null ? lastUnitPaid : 0);
-
                             model.setIs_occupied(isOccupied != null && isOccupied);
                             model.setRoom_no(roomNo != null ? roomNo : 0);
                             model.setIs_room(isRoom != null && isRoom);
                             model.setLast_rent_month(lastRentMonth);
 
-                            if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
-                                assert roomId != null;
-                                tenantReference.child(roomId).child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @SuppressLint("NotifyDataSetChanged")
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot tenantSnap) {
-                                        if (tenantSnap.exists()) {
-                                            model.setTenant_id(tenantId);
-                                            model.setTenant_name(tenantSnap.child("tenant_name").getValue(String.class));
-                                            model.setTenant_phone(tenantSnap.child("tenant_phone").getValue(String.class));
-                                            model.setThumb_tenant_url(tenantSnap.child("thumb_tenant_url").getValue(String.class));
-                                        } else {
-                                            model.setTenant_name("No Tenant");
-                                            model.setTenant_phone("");
-                                            model.setThumb_tenant_url(null);
-                                        }
-                                        roomsList.add(model);
-                                        // 🔥 sort by room_name (numeric if possible)
-                                        roomsList.sort(Comparator.comparingInt(Rooms::getRoom_no));
-                                        roomCardAdapter.notifyDataSetChanged();
-                                    }
+                            // TENANT DETAILS
+                            if (tenantId != null && !tenantId.isEmpty()) {
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                    }
-                                });
+                                Tenants tenant = tenantMap.get(tenantId);
+
+                                if (tenant != null){
+                                    model.setTenant_id(tenantId);
+
+                                    model.setTenant_name(tenant.getTenant_name());
+                                    model.setTenant_phone(tenant.getTenant_phone());
+                                    model.setThumb_tenant_url(tenant.getThumb_tenant_url());
+                                    model.setIs_rent_advance(tenant.isIs_rent_advance());
+
+                                } else {
+
+                                    model.setTenant_name("No Tenant");
+                                    model.setTenant_phone("");
+                                    model.setThumb_tenant_url(null);
+                                }
 
                             } else {
+
                                 model.setTenant_name("No Tenant");
                                 model.setTenant_phone("");
                                 model.setThumb_tenant_url(null);
-                                roomsList.add(model);
-                                // 🔥 sort by room_name (numeric if possible)
-                                roomsList.sort(Comparator.comparingInt(Rooms::getRoom_no));
-                                roomCardAdapter.notifyDataSetChanged();
                             }
+
+                            roomsList.add(model);
                         }
+
+                        // SORT ONLY ONCE
+                        roomsList.sort(
+                                Comparator.comparingInt(Rooms::getRoom_no)
+                        );
+
+                        // UPDATE ADAPTER ONLY ONCE
+                        roomCardAdapter.notifyDataSetChanged();
+
+                        // UPDATE UI ONLY ONCE
+                        int pendingRooms = totalRoomShopOcc - paidRooms;
+
+                        String finalPaidRooms = paidRooms + " Paid";
+                        tvTotalRentPaid.setText(finalPaidRooms);
+                        String finalDueRooms = pendingRooms + " Due";
+                        tvTotalRentDue.setText(finalDueRooms);
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                    public void onCancelled(
+                            @NonNull DatabaseError error) {
+
                     }
                 });
     }
@@ -397,36 +456,33 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         roomsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashMap<String, Object> updates = new HashMap<>();
                 for (DataSnapshot roomDeleteSnap : snapshot.getChildren()) {
-                    String roomPropertyId = roomDeleteSnap.child("property_id").getValue(String.class);
 
-                    if (roomPropertyId != null && roomPropertyId.equals(property_id)) {
-                        String del_room_id = roomDeleteSnap.getKey();
-
-                        // Delete Tenant, Rent and Elc Bills for all rooms of the opened property.
-                        assert del_room_id != null;
-                        rentsReference.child(del_room_id).removeValue();
-                        e_billReference.child(del_room_id).removeValue();
-                        tenantReference.child(del_room_id).removeValue();
-                        // Delete this room
-                        roomsReference.child(del_room_id).removeValue();
+                    String del_room_id = roomDeleteSnap.getKey();
+                    if (del_room_id != null) {
+                        updates.put("rents/" + del_room_id, null);
+                        updates.put("e-bills/" + del_room_id, null);
                     }
                 }
-                collectionsReference.removeValue().addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(PropertyDetailsActivity.this, "Failed to delete collections", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    propertiesReference.removeValue().addOnCompleteListener(task2 -> {
-                        if (task2.isSuccessful()) {
+
+                // Property related deletes
+                updates.put("tenants/" + property_id, null);
+                updates.put("rooms/" + property_id, null);
+                updates.put("collections/" + property_id, null);
+                updates.put("properties/" + user_id + "/" + property_id, null);
+
+                databaseReference.updateChildren(updates)
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("DeleteProperty", "Rents & Bills deleted");
                             Toast.makeText(PropertyDetailsActivity.this, "Property Deleted", Toast.LENGTH_SHORT).show();
                             deletePropertyActivityLog();
                             finish();
-                        } else {
-                            Toast.makeText(PropertyDetailsActivity.this, "Failed to delete property", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                });
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("DeleteProperty", Objects.requireNonNull(e.getMessage()));
+                            Toast.makeText(PropertyDetailsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
             }
 
             @Override

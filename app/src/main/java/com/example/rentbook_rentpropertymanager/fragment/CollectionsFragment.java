@@ -115,11 +115,12 @@ public class CollectionsFragment extends Fragment {
 
     private void loadPropertyChips() {
 
-        DatabaseReference propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties");
+        DatabaseReference propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties")
+                .child(user_id);
 
-        Query userProperties = propertiesReference.orderByChild("user_id").equalTo(user_id);
+        //Query userProperties = propertiesReference.orderByChild("user_id").equalTo(user_id);
 
-        userProperties.addListenerForSingleValueEvent(new ValueEventListener() {
+        propertiesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -190,13 +191,10 @@ public class CollectionsFragment extends Fragment {
 
     private void loadAvailableYears(String pid){
 
-        DatabaseReference reference = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("collections")
-                .child(pid);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("collections").child(pid);
 
-        reference.addValueEventListener(
-                new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(
@@ -208,51 +206,34 @@ public class CollectionsFragment extends Fragment {
 
                         Set<String> uniqueYears = new HashSet<>();
 
-                        for (DataSnapshot dataSnapshot :
-                                snapshot.getChildren()) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                             String key = dataSnapshot.getKey();
-
                             if (key != null && key.contains("-")) {
-
                                 String year = key.split("-")[0];
-
                                 uniqueYears.add(year);
                             }
                         }
 
-                        List<String> sortedYears =
-                                new ArrayList<>(uniqueYears);
+                        List<String> sortedYears = new ArrayList<>(uniqueYears);
 
-                        Collections.sort(
-                                sortedYears,
-                                Collections.reverseOrder()
-                        );
+                        Collections.sort(sortedYears, Collections.reverseOrder());
 
                         yearList.addAll(sortedYears);
 
-                        ArrayAdapter<String> adapter =
-                                new ArrayAdapter<>(
-                                        requireContext(),
-                                        R.layout.item_collection_year_dropdown,
-                                        yearList
-                                );
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                        requireContext(), R.layout.item_collection_year_dropdown, yearList);
 
                         dropdownYear.setAdapter(adapter);
 
                         dropdownYear.setText(selectedYear, false);
 
-                        mcvYearSelector.setOnClickListener(v ->
-                                dropdownYear.showDropDown());
+                        mcvYearSelector.setOnClickListener(v -> dropdownYear.showDropDown());
 
-                        dropdownYear.setOnClickListener(v ->
-                                dropdownYear.showDropDown());
+                        dropdownYear.setOnClickListener(v -> dropdownYear.showDropDown());
 
-                        dropdownYear.setOnItemClickListener(
-                                (parent, view, position, id) -> {
-
+                        dropdownYear.setOnItemClickListener((parent, view, position, id) -> {
                                     selectedYear = yearList.get(position);
-
                                     loadMonthlyCollectionsFromFirebase(pid);
                                 });
                     }
@@ -296,12 +277,8 @@ public class CollectionsFragment extends Fragment {
                 );
 
                 selectedYear = "All Time";
-
                 loadAvailableYears(propertyId);
-
                 loadMonthlyCollectionsFromFirebase(propertyId);
-
-                //loadMonthlyCollectionsFromFirebase(propertyId);
 
             } else {
 
@@ -342,21 +319,15 @@ public class CollectionsFragment extends Fragment {
         Query propertyCollections;
 
         if (selectedYear.equals("All Time")) {
-
-            propertyCollections =
-                    collectionsReference.orderByKey();
-
+            propertyCollections = collectionsReference.orderByKey();
         } else {
-
-            propertyCollections = collectionsReference
-                    .orderByKey()
+            propertyCollections = collectionsReference.orderByKey()
                     .startAt(selectedYear + "-01")
                     .endAt(selectedYear + "-12");
         }
 
         FirebaseRecyclerOptions<MonthlyCollections> options = new FirebaseRecyclerOptions.Builder<MonthlyCollections>()
-                .setQuery(propertyCollections, MonthlyCollections.class)
-                .build();
+                .setQuery(propertyCollections, MonthlyCollections.class).build();
 
         if (firebaseRecyclerAdapter != null){
             firebaseRecyclerAdapter.stopListening();
@@ -528,27 +499,6 @@ public class CollectionsFragment extends Fragment {
 
         }
     }
-
-    /*public static String convertKeyToMonthYear(String input) {
-        if (input == null || input.trim().isEmpty()) return "N/A";
-
-        try {
-            DateFormat inputFormat =
-                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
-
-            DateFormat outputFormat =
-                    new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
-
-            Date date = inputFormat.parse(input.trim());
-            assert date != null;
-            return outputFormat.format(date);
-
-        } catch (ParseException e) {
-            return "N/A";
-        }
-    }
-
-     */
 
 }
 

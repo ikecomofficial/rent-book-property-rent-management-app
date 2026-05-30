@@ -53,7 +53,7 @@ public class AddRentActivity extends AppCompatActivity {
     // 📅 Rent Details
     private String rent_period_start, rent_period_end, rent_month_year;
     private long rent_timestamp;
-    private boolean is_rent_month_custom = false;
+    private boolean is_rent_month_custom = false, is_rent_advance = true;
 
     // 💳 Payment Info
     private String paymentMode = "Cash";
@@ -99,8 +99,8 @@ public class AddRentActivity extends AppCompatActivity {
         property_name = getIntent().getStringExtra("property_name");
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        roomReference = databaseReference.child("rooms").child(room_id);
-        tenantReference = databaseReference.child("tenants").child(room_id).child(tenant_id);
+        roomReference = databaseReference.child("rooms").child(property_id);
+        tenantReference = databaseReference.child("tenants").child(property_id).child(tenant_id);
         rentReference = databaseReference.child("rents").child(room_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
 
@@ -140,7 +140,7 @@ public class AddRentActivity extends AppCompatActivity {
         });
 
         //setCurrentDateTime();
-        setCurrentRentMonthAndTime();
+        //setCurrentRentMonthAndTime();
 
         // 1️⃣ Click to Change Payment Date & Time
         btnChangeDateTime.setOnClickListener(v -> {
@@ -157,7 +157,7 @@ public class AddRentActivity extends AppCompatActivity {
     }
 
     private void fetchRentTenantFirebase(){
-        roomReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        roomReference.child(room_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Long rentValue = snapshot.child("room_rent").getValue(Long.class);
@@ -177,6 +177,19 @@ public class AddRentActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 tenant_name = snapshot.child("tenant_name").getValue(String.class);
                 billing_start_day = snapshot.child("billing_start_day").getValue(Integer.class);
+                if (snapshot.hasChild("is_rent_advance")) {
+
+                    Boolean value =
+                            snapshot.child("is_rent_advance")
+                                    .getValue(Boolean.class);
+
+                    if (value != null) {
+                        is_rent_advance = value;
+                    }
+                }
+
+                setCurrentRentMonthAndTime();
+
             }
 
             @Override
@@ -201,49 +214,56 @@ public class AddRentActivity extends AppCompatActivity {
     }
 
     // Get current date & time
+    private void setCurrentRentMonthAndTime() {
 
-    private void setCurrentRentMonthAndTime(){
-        // Set Current Month Year and the date and time.
-
+        // Current timestamp
         rent_timestamp = System.currentTimeMillis();
 
+        // Current date & time display
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        SimpleDateFormat timeFormat =
+                new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
         tvCustomDate.setText(dateFormat.format(calendar.getTime()));
         tvCustomTime.setText(timeFormat.format(calendar.getTime()));
 
-        // Set Current Month Year in the top section (rent month & year)
-        Date currentDate = Calendar.getInstance().getTime();
+        // Determine Rent Month
+        Calendar rentCal = Calendar.getInstance();
 
-        SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-        String monthYear = sdfMonthYear.format(currentDate);
-        tvRentMonthYear.setText(monthYear); // April 2026
+        if (!is_rent_advance) {
+            rentCal.add(Calendar.MONTH, -1);
+        }
 
-        // For Firebase (2026-04)
-        // Get current calendar
-        Calendar cal = Calendar.getInstance();
+        // Rent Month Text
+        SimpleDateFormat sdfMonthYear =
+                new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
-        // Set to first day of month (important)
-        cal.set(Calendar.DAY_OF_MONTH, 1);
+        tvRentMonthYear.setText(
+                sdfMonthYear.format(rentCal.getTime())
+        );
 
-        // Clamp billing day (avoid invalid dates like Feb 31)
-        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        // Rent Month For Firebase
+        // Example: 2026-05
+        SimpleDateFormat sdfRentMonth =
+                new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+
+        rent_month_year = sdfRentMonth.format(rentCal.getTime());
+
+        // Rent Period Start
+        Calendar startCal = (Calendar) rentCal.clone();
+
+        int maxDay = startCal.getActualMaximum(Calendar.DAY_OF_MONTH);
         int safeDay = Math.min(billing_start_day, maxDay);
 
-        // Set safe day
-        cal.set(Calendar.DAY_OF_MONTH, safeDay);
-
-        // Format full date → 2026-04-26
+        startCal.set(Calendar.DAY_OF_MONTH, safeDay);
         SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        rent_period_start = sdfFull.format(cal.getTime()); // 2026-04-26
+        rent_period_start = sdfFull.format(startCal.getTime());
 
+        // Rent Period End
         rent_period_end = getRentPeriodEndDate(rent_period_start);
-
-
     }
-
     private void showRentMonthYearPicker() {
 
         String[] MONTHS = new DateFormatSymbols(Locale.getDefault()).getMonths();
@@ -302,7 +322,6 @@ public class AddRentActivity extends AppCompatActivity {
 
                     // Converting Selected Date (DD MM YYYY) to period start and end dates with timestamp.
                     rent_period_start = selectedYear + "-" + month + "-" + billing_start_day;
-                    // rent_period_start = billing_start_day + " " + selectedMonthYear;
 
                     rent_period_end = getRentPeriodEndDate(rent_period_start);
                     is_rent_month_custom = true;
@@ -382,31 +401,36 @@ public class AddRentActivity extends AppCompatActivity {
     private void saveRentToFirebase(){
         String rentAmount = etRentAmount.getText().toString().trim();
 
-        if (!is_rent_month_custom){
+        if (!is_rent_month_custom) {
+
             Calendar cal = Calendar.getInstance();
 
-            // Set to 1st day first (important)
-            cal.set(Calendar.DAY_OF_MONTH, 1);
+            // Previous month tenant
+            if (!is_rent_advance) {
+                cal.add(Calendar.MONTH, -1);
+            }
 
-            // Get max valid day for that month
+            // Safe billing day
             int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-            // Clamp billing day to valid range
             int safeDay = Math.min(billing_start_day, maxDay);
 
-            // Set safe day
             cal.set(Calendar.DAY_OF_MONTH, safeDay);
 
-            // Month-Year → 2026-04
-            SimpleDateFormat sdfMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+            // Rent Month Year
+            SimpleDateFormat sdfMonth =
+                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+
             rent_month_year = sdfMonth.format(cal.getTime());
 
-            // Full Date → 2026-04-26
-            SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            // Rent Period Start
+            SimpleDateFormat sdfFull =
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
             rent_period_start = sdfFull.format(cal.getTime());
 
-            rent_period_end = getRentPeriodEndDate(rent_period_start);
-
+            // Rent Period End
+            rent_period_end =
+                    getRentPeriodEndDate(rent_period_start);
         }
 
         if (rentAmount.isEmpty()) {
@@ -434,9 +458,9 @@ public class AddRentActivity extends AppCompatActivity {
                         String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
                                 .format(new Date());
 
-                        if (rent_month_year != null && rent_month_year.equals(currentMonth)){
-                            updateLastRentMonthInRooms();
-                        }
+                        //if (rent_month_year != null && rent_month_year.equals(currentMonth)){updateLastRentMonthInRooms();}
+
+                        updateLastRentMonthInRooms();
                         addRentToCollections(property_id, rent_month_year, Integer.parseInt(rentAmount));
                         addRentActivityLog(Integer.parseInt(rentAmount), rent_month_year, rent_timestamp);
                     })
@@ -447,7 +471,7 @@ public class AddRentActivity extends AppCompatActivity {
 
     private void updateLastRentMonthInRooms(){
 
-        roomReference.child("last_rent_month")
+        roomReference.child(room_id).child("last_rent_month")
                 .setValue(rent_month_year)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firebase", "last_rent_month updated successfully");

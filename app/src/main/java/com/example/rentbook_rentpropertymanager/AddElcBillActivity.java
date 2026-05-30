@@ -22,7 +22,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,34 +42,33 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
-public class AddEbillActivity extends AppCompatActivity {
+public class AddElcBillActivity extends AppCompatActivity {
 
     // 🏠 IDs
     private String room_id, property_id, tenant_id;
 
     // 💳 Payment Info
     private String paymentMode = "Cash";
-    private String ebill_timestamp;
+    private String elc_bill_timestamp;
     private String elc_bill_month_year;
 
     // 🔢 Electricity Data
-    private int last_paid_upto = -1;
-    private double elc_unit_rate = 0, elc_bill_amount = 0, units_used = 0, units_paid_upto = 0;
-    private boolean isByUnits = true;
+    private int last_paid_up_to = -1;
+    private double elc_unit_rate = 0, elc_bill_amount = 0, units_used = 0, units_paid_up_to = 0;
+    private boolean isByUnits = true, is_rent_advance = true, is_elc_bill_month_custom = false;
 
     // 📄 Input Fields
     private EditText etCurrentReading, etElcBillAmount;
 
     // 📊 UI Views
     private TextView tvCustomDate, tvCustomTime, tvPrevPaidTill, tvPrevPaidTillByAmt, tvElcBillMonthYear;
-    private LinearLayout layoutLastPaidUnit, layoutElcBillAmount, layoutElcUnitPaid;
-    //private MaterialCardView layoutPrevPaidTill, layoutPrevPaidTillByAmt;
+    private LinearLayout layoutElcBillAmount, layoutElcUnitPaid;
 
     // ⏰ Date & Time
     private Calendar calendar;
 
     // 🔗 Firebase References
-    private DatabaseReference roomReference, elcBillReference, activityLogReference;
+    private DatabaseReference roomReference, elcBillReference, activityLogReference, tenantReference;
 
 
     @Override
@@ -99,9 +97,10 @@ public class AddEbillActivity extends AppCompatActivity {
         property_id = getIntent().getStringExtra("property_id");
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        roomReference = databaseReference.child("rooms").child(room_id);
+        roomReference = databaseReference.child("rooms").child(property_id).child(room_id);
         elcBillReference = databaseReference.child("e-bills").child(room_id);
         activityLogReference = databaseReference.child("activity_log").child(user_id);
+        tenantReference = databaseReference.child("tenants").child(property_id).child(tenant_id);
 
         // 📄 Input Fields
         etCurrentReading = findViewById(R.id.etCurrentMeterReading);
@@ -158,7 +157,7 @@ public class AddEbillActivity extends AppCompatActivity {
             }
         });
 
-        setCurrentElcBillMonthAndTime();
+        //setCurrentElcBillMonthAndTime();
 
         // 1️⃣ Click on Change Date Time Button Layout (Date + Time)
         btnChangeDateTime.setOnClickListener(v -> {
@@ -180,9 +179,9 @@ public class AddEbillActivity extends AppCompatActivity {
                 if (!snapshot.exists()) return;
 
                 Long lastPaidUnit = snapshot.child("last_unit_paid").getValue(Long.class);
-                last_paid_upto = (lastPaidUnit != null) ? lastPaidUnit.intValue() : 0;
+                last_paid_up_to = (lastPaidUnit != null) ? lastPaidUnit.intValue() : 0;
 
-                String tvPrevPaidUpTo = "Paid: " + last_paid_upto + " units";
+                String tvPrevPaidUpTo = "Paid: " + last_paid_up_to + " units";
                 tvPrevPaidTill.setText(tvPrevPaidUpTo);
                 tvPrevPaidTillByAmt.setText(tvPrevPaidUpTo);
 
@@ -210,6 +209,30 @@ public class AddEbillActivity extends AppCompatActivity {
 
             }
         });
+
+        tenantReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("is_rent_advance")) {
+
+                    Boolean value =
+                            snapshot.child("is_rent_advance").getValue(Boolean.class);
+
+                    if (value != null) {
+                        is_rent_advance = value;
+                    }
+                }
+
+                setCurrentElcBillMonthAndTime();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     // Helper method to update TextViews
@@ -228,7 +251,7 @@ public class AddEbillActivity extends AppCompatActivity {
 
     private void setCurrentElcBillMonthAndTime(){
 
-        ebill_timestamp = String.valueOf(System.currentTimeMillis());
+        elc_bill_timestamp = String.valueOf(System.currentTimeMillis());
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
@@ -240,16 +263,25 @@ public class AddEbillActivity extends AppCompatActivity {
         tvCustomDate.setText(ebill_date);
         tvCustomTime.setText(ebill_time);
 
-        // Set Current Month Year in Top section (rent month & year)
-        Date currentDate = Calendar.getInstance().getTime();
-        SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-        String monthYear = sdfMonthYear.format(currentDate);
-        tvElcBillMonthYear.setText(monthYear);
+        // Determine Rent Month
+        Calendar rentCal = Calendar.getInstance();
 
-        // 🔹 For Firebase / variable → 2026-04
-        SimpleDateFormat sdfMonthYearFb = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
-        elc_bill_month_year = sdfMonthYearFb.format(currentDate);
+        if (!is_rent_advance) {
+            rentCal.add(Calendar.MONTH, -1);
+        }
 
+        // Rent Month Text
+        SimpleDateFormat sdfMonthYear =
+                new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+
+        tvElcBillMonthYear.setText(
+                sdfMonthYear.format(rentCal.getTime())
+        );
+
+        // Rent Month For Firebase
+        // Example: 2026-05
+        SimpleDateFormat sdfRentMonth = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+        elc_bill_month_year = sdfRentMonth.format(rentCal.getTime());
     }
 
     private void showElcBillMonthYearPicker() {
@@ -308,10 +340,10 @@ public class AddEbillActivity extends AppCompatActivity {
 
                     elc_bill_month_year = selectedYear + "-" + month; // 2026-04
 
-                    //is_elc_bill_month_custom = true;
+                    is_elc_bill_month_custom = true;
 
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.text_cancel, null)
                 .show();
     }
 
@@ -322,7 +354,7 @@ public class AddEbillActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                AddEbillActivity.this,
+                AddElcBillActivity.this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     calendar.set(Calendar.YEAR, selectedYear);
                     calendar.set(Calendar.MONTH, selectedMonth);
@@ -333,7 +365,7 @@ public class AddEbillActivity extends AppCompatActivity {
                     int minute = calendar.get(Calendar.MINUTE);
 
                     TimePickerDialog timePickerDialog = new TimePickerDialog(
-                            AddEbillActivity.this,
+                            AddElcBillActivity.this,
                             (timeView, selectedHour, selectedMinute) -> {
                                 calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                                 calendar.set(Calendar.MINUTE, selectedMinute);
@@ -342,7 +374,7 @@ public class AddEbillActivity extends AppCompatActivity {
                                 updateDateTimeViews(calendar);
 
                                 // Get final timestamp
-                                ebill_timestamp = getTimestamp(calendar);
+                                elc_bill_timestamp = getTimestamp(calendar);
 
                             }, hour, minute, false // false for 12-hour format
                     );
@@ -356,6 +388,22 @@ public class AddEbillActivity extends AppCompatActivity {
 
     private void saveElcBillToFirebase(){
 
+        if (!is_elc_bill_month_custom) {
+
+            Calendar cal = Calendar.getInstance();
+
+            // Previous month tenant
+            if (!is_rent_advance) {
+                cal.add(Calendar.MONTH, -1);
+            }
+
+            // Rent Month Year
+            SimpleDateFormat sdfMonth =
+                    new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+
+            elc_bill_month_year = sdfMonth.format(cal.getTime());
+        }
+
         if (isByUnits){
             // Unit Mode
             String unitPaidUpTo = Objects.requireNonNull(etCurrentReading.getText()).toString().trim();
@@ -363,8 +411,8 @@ public class AddEbillActivity extends AppCompatActivity {
                 etCurrentReading.setError("Enter Current Meter Reading");
                 return;
             }
-            units_paid_upto = Integer.parseInt(unitPaidUpTo);
-            units_used = units_paid_upto - last_paid_upto;
+            units_paid_up_to = Integer.parseInt(unitPaidUpTo);
+            units_used = units_paid_up_to - last_paid_up_to;
             elc_bill_amount = units_used * elc_unit_rate;
         }else {
             String elcBillAmount = Objects.requireNonNull(etElcBillAmount.getText()).toString().trim();
@@ -375,26 +423,26 @@ public class AddEbillActivity extends AppCompatActivity {
             elc_bill_amount = Integer.parseInt(elcBillAmount);
             double unitsUsedDouble = (double) elc_bill_amount / elc_unit_rate;
             units_used = (int) Math.round(unitsUsedDouble);
-            units_paid_upto = last_paid_upto + units_used;
+            units_paid_up_to = last_paid_up_to + units_used;
         }
         // Create unique rent ID
-        String ebill_id = elcBillReference.push().getKey();
+        String elc_bill_id = elcBillReference.push().getKey();
         HashMap<String, Object> billMap = new HashMap<>();
         billMap.put("room_id", room_id);
         billMap.put("tenant_id", tenant_id);
         billMap.put("payment_mode", paymentMode);
-        billMap.put("ebill_timestamp", ebill_timestamp);
-        billMap.put("paid_upto", Math.round(units_paid_upto));
+        billMap.put("elc_bill_timestamp", elc_bill_timestamp);
+        billMap.put("paid_up_to", Math.round(units_paid_up_to));
         billMap.put("units_used", Math.round(units_used));
-        billMap.put("ebill_amount", Math.round(elc_bill_amount));
-        billMap.put("last_paid_upto", last_paid_upto);
+        billMap.put("elc_bill_amount", Math.round(elc_bill_amount));
+        billMap.put("last_paid_upto", last_paid_up_to);
         billMap.put("elc_bill_month_year", elc_bill_month_year);
 
-        if (ebill_id != null){
-            elcBillReference.child(ebill_id).setValue(billMap)
+        if (elc_bill_id != null){
+            elcBillReference.child(elc_bill_id).setValue(billMap)
                     .addOnSuccessListener(aVoid -> {
                         // Update Last Unit Paid in Room id Data
-                        roomReference.child("last_unit_paid").setValue(units_paid_upto)
+                        roomReference.child("last_unit_paid").setValue(units_paid_up_to)
                                 .addOnSuccessListener(update -> {
                                     Toast.makeText(this, "Bill Added Successfully", Toast.LENGTH_SHORT).show();
                                     int elcBill = (int) Math.round(elc_bill_amount);
@@ -476,7 +524,7 @@ public class AddEbillActivity extends AppCompatActivity {
             ) {
                 if (error != null) {
                     Log.e("Firebase", "Transaction failed", error.toException());
-                    Toast.makeText(AddEbillActivity.this, "Transaction failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddElcBillActivity.this, "Transaction failed", Toast.LENGTH_SHORT).show();
 
                 } else if (committed) {
                     Log.d("Firebase", "E-Bill updated successfully");
@@ -491,7 +539,7 @@ public class AddEbillActivity extends AppCompatActivity {
         String finalLogTitle = "Electricity Bill Recorded";
 
         String finalLogDesc = "₹" + elc_bill_amount + " • " + convertMonthYearKey(elc_bill_month_year) +
-                " • Paid up to " + units_paid_upto + " units.";
+                " • Paid up to " + units_paid_up_to + " units.";
 
         long currTimestamp = System.currentTimeMillis();
 

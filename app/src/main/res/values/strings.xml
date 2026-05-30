@@ -7,6 +7,8 @@
 
     <!-- Main Activity Strings -->
     <string name="text_welcome">Welcome Back!</string>
+    <string name="text_sub_welcome">Manage your properties effortlessly.</string>
+    <string name="text_login_w_phone">Login With Phone</string>
     <string name="text_user">User</string>
     <string name="text_value_name">Rahul Kumar</string>
     <string name="text_occupancy">Occupancy</string>
@@ -78,17 +80,21 @@
     <string name="text_owner">Owner</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_update">Update</string>
+    <string name="text_delete">Delete</string>
     <string name="text_label_mobile_cap">MOBILE</string>
     <string name="text_label_email_cap">E-MAIL</string>
     <string name="text_any_number">0</string>
     <string name="text_value_email">rahulraj82@gmail.com</string>
+    <string name="text_sign_out">Sign Out</string>
+    <string name="text_sign_out_ques">Sign Out?</string>
+    <string name="text_desc_sign_out">Are you sure you want to log out of your account?</string>
 
     <string name="text_support_info">Support &amp; Info</string>
     <string name="text_contact_support">Contact Support</string>
     <string name="text_get_assist">Get assistance with your account</string>
     <string name="text_about_app">About App</string>
     <string name="text_version_full">Version 1.1.0</string>
-    <string name="text_version">v2.4.0</string>
+    <string name="text_version">v2.4.1</string>
     <string name="text_btn_logout">Logout</string>
     <string name="text_rentify_copyright">Rentify: Rent Manager App © 2024</string>
 
@@ -111,6 +117,8 @@
     <string name="bullet_dot">\u2022</string>
     <string name="text_label_rent_collected">Rent Collected</string>
     <string name="text_label_rent">Rent</string>
+    <string name="text_book">Book</string>
+    <string name="text_prop_rent_manager">Property Rent Manager</string>
     <string name="text_label_elc_bill">Electricity Bill</string>
     <string name="text_label_consumed">Consumed</string>
 
@@ -136,6 +144,8 @@
     <string name="text_rupee_symbol">₹</string>
     <string name="text_value_mobile_no">9876543210</string>
     <string name="text_meter_cap">METER</string>
+    <string name="text_monthly_rent">Monthly Rent</string>
+    <string name="text_rent_status">Rent Status</string>
 
     <string name="text_no_tenant_added">No Tenant Added</string>
     <string name="text_clk_add_tenant">Click (Add Tenant)</string>
@@ -177,7 +187,8 @@
 
     <string name="text_remove_tenant_ques">Remove Tenant?</string>
     <string name="text_sub_remove_tenant_ques">This will remove the current tenant and mark room as vacant.</string>
-
+    <string name="text_label_del_rent">Delete Rent Record?</string>
+    <string name="text_desc_del_rent">Are you sure you want to delete this rent record?</string>
 
     <string name="text_menu_edit_room">Edit Room</string>
     <string name="text_menu_edit_shop">Edit Shop</string>
@@ -282,6 +293,8 @@
     <string name="text_value_call_wa">Call Or WhatsApp</string>
     <string name="text_value_billing_start">1st of each Month</string>
     <string name="text_billing_start_day">Billing Start Day</string>
+    <string name="text_value_rent_pref">Rent Paid in Advance</string>
+    <string name="text_rent_pref">Rent Preference</string>
     <string name="text_sel_billing_start_day">Select Billing Start Day</string>
     <string name="text_label_files_attachments">Files &amp; Attachments</string>
     <string name="text_documents">Documents</string>

@@ -4,7 +4,7 @@ public class Rooms {
 
     public String room_id, room_name, tenant_name, tenant_phone, thumb_tenant_url, tenant_id, last_rent_month;
     public int room_rent, room_no, last_unit_paid;
-    public boolean is_occupied, is_room;
+    public Boolean is_occupied, is_room, is_rent_advance;
 
     public Rooms(){
 
@@ -12,7 +12,7 @@ public class Rooms {
 
     public Rooms(String room_id, String room_name, int room_no, String tenant_id, String tenant_name,
                  String tenant_phone, String thumb_tenant_url, int last_unit_paid,
-                 int room_rent, boolean is_occupied, boolean is_room, String last_rent_month) {
+                 int room_rent, boolean is_occupied, boolean is_room, String last_rent_month, Boolean is_rent_advance) {
         this.room_id = room_id;
         this.room_name = room_name;
         this.tenant_name = tenant_name;
@@ -25,6 +25,7 @@ public class Rooms {
         this.room_no = room_no;
         this.last_unit_paid = last_unit_paid;
         this.last_rent_month = last_rent_month;
+        this.is_rent_advance = is_rent_advance;
     }
 
     public String getRoom_id() {
@@ -121,5 +122,13 @@ public class Rooms {
 
     public void setLast_rent_month(String last_rent_month) {
         this.last_rent_month = last_rent_month;
+    }
+
+    public Boolean isIs_rent_advance() {
+        return is_rent_advance;
+    }
+
+    public void setIs_rent_advance(Boolean is_rent_advance) {
+        this.is_rent_advance = is_rent_advance;
     }
 }

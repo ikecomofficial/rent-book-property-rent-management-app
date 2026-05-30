@@ -103,7 +103,6 @@
                         android:contentDescription="@string/text_image_desc"
                         android:layout_marginStart="6dp"
                         android:src="@drawable/ic_edit_name"
-                        android:visibility="gone"
                         app:tint="@color/text_heading"/>
 
                 </LinearLayout>
@@ -134,7 +133,8 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/text_hint_user_name"
                             android:textColor="@color/text_heading"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:inputType="textCapWords"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
                     <LinearLayout

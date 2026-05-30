@@ -32,8 +32,8 @@
 
                 <!-- ICON CARD -->
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/bg_dashboard_card"

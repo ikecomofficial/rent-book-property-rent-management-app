@@ -3,15 +3,18 @@ package com.example.rentbook_rentpropertymanager.model;
 public class Tenants {
 
     public String tenant_name, thumb_tenant_url, tenant_phone, tenant_start_date, tenant_end_date;
+    public Boolean is_rent_advance;
 
     public Tenants(){}
 
-    public Tenants(String tenant_name, String thumb_tenant_url, String tenant_phone, String tenant_start_date, String tenant_end_date) {
+    public Tenants(String tenant_name, String thumb_tenant_url, String tenant_phone, String tenant_start_date,
+                   String tenant_end_date, Boolean is_rent_advance) {
         this.tenant_name = tenant_name;
         this.thumb_tenant_url = thumb_tenant_url;
         this.tenant_phone = tenant_phone;
         this.tenant_start_date = tenant_start_date;
         this.tenant_end_date = tenant_end_date;
+        this.is_rent_advance = is_rent_advance;
     }
 
     public String getTenant_name() {
@@ -52,5 +55,13 @@ public class Tenants {
 
     public void setTenant_end_date(String tenant_end_date) {
         this.tenant_end_date = tenant_end_date;
+    }
+
+    public Boolean isIs_rent_advance() {
+        return is_rent_advance;
+    }
+
+    public void setIs_rent_advance(Boolean is_rent_advance) {
+        this.is_rent_advance = is_rent_advance;
     }
 }
